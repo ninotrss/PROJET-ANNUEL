@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "influencer-agency",
+      "runtimeExecutable": "powershell",
+      "runtimeArgs": ["-Command", "cd 'C:\\Users\\ninot\\Documents\\ESGI PA\\influencer-agency'; $l=New-Object Net.HttpListener; $l.Prefixes.Add('http://localhost:3333/'); $l.Start(); while($l.IsListening){$c=$l.GetContext(); $f='C:\\Users\\ninot\\Documents\\ESGI PA\\influencer-agency\\index.html'; $b=[IO.File]::ReadAllBytes($f); $c.Response.ContentType='text/html; charset=utf-8'; $c.Response.ContentLength64=$b.Length; $c.Response.OutputStream.Write($b,0,$b.Length); $c.Response.Close()}"],
+      "port": 3333
+    }
+  ]
+}

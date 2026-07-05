@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(]'[^']*'\" | grep \"'[a-zA-ZÀ-ÿ]\" | grep -v \"^\\\\s*//\" | head -30)",
+      "Bash(grep -v \"^[0-9]*:.*[\\\\\"` ]'[^']*'\" | grep \"'[a-zA-ZÀ-ÿ]\" | grep -v \"^\\\\s*//\" | head -30)",
+      "Bash(grep -v \"^\\\\s*//\")",
+      "Bash(grep -v \"DB\\\\.\\\\|brand\\\\|logo\\\\|niche\\\\|description\\\\|URSSAF\\\\|//\\\\|<!--\")",
+      "WebFetch(domain:www.agencemusthave.com)",
+      "WebFetch(domain:www.instagram.com)",
+      "WebFetch(domain:www.tiktok.com)",
+      "mcp__Claude_Preview__preview_start",
+      "mcp__Claude_in_Chrome__list_connected_browsers",
+      "mcp__Claude_in_Chrome__select_browser",
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "mcp__Claude_in_Chrome__navigate",
+      "mcp__Claude_in_Chrome__switch_browser",
+      "PowerShell(\\(Get-Command python3\\).Source; \\(Get-Command python\\).Source)",
+      "Skill(artifact-design)",
+      "Skill(artifact-design:*)",
+      "Bash(git config *)"
+    ]
+  }
+}
