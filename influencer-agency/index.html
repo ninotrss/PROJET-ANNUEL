@@ -287,6 +287,20 @@
   .talent-stat-val { font-size: 14px; font-weight: 700; }
   .talent-stat-lab { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: .3px; }
 
+  /* ── TrustPass ── */
+  .trust-chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 9px; border-radius: 99px; font-size: 10px; font-weight: 700; background: var(--green-soft); color: var(--green); border: 1px solid var(--green); margin-top: 4px; }
+  .trust-chip.pending { background: var(--bg3); color: var(--text3); border-color: var(--border); }
+  .trustpass-card { border: 1px solid var(--green); background: var(--green-soft); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 20px; }
+  .trustpass-card.pending { border-color: var(--border); background: var(--bg3); }
+  .trustpass-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+  .trustpass-title { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 800; color: var(--green); }
+  .trustpass-card.pending .trustpass-title { color: var(--text2); }
+  .trustpass-code { font-family: monospace; font-size: 11px; color: var(--text3); }
+  .trustpass-meta { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-top: 12px; }
+  .trustpass-meta div { text-align: center; }
+  .trustpass-meta .v { font-size: 15px; font-weight: 800; }
+  .trustpass-meta .l { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: .3px; }
+
   /* ── URSSAF ── */
   .urssaf-form { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; max-width: 720px; }
   .urssaf-header { background: #002395; color: #fff; border-radius: 10px; padding: 20px; margin-bottom: 24px; display: flex; align-items: center; gap: 16px; }
@@ -765,6 +779,7 @@ const ICONS = {
   check:       `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
   plus:        `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`,
   mail_send:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>`,
+  shield:      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5z"/><polyline points="9 12 11 14 15 10"/></svg>`,
 };
 function ic(name, size=16, cls='') {
   const svg = (ICONS[name]||'').replace('<svg ', `<svg width="${size}" height="${size}" style="flex-shrink:0" `);
@@ -1292,6 +1307,53 @@ function statusBadge(status) {
 }
 
 // ═══════════════════════════════════════════════════════════════════
+// TRUSTPASS — passeport de performance certifié
+// ═══════════════════════════════════════════════════════════════════
+function trustChip(t) {
+  return t.trustCertifiedAt
+    ? `<span class="trust-chip">${ic('shield',10)} TrustPass</span>`
+    : '';
+}
+
+function trustPassSection(t, { canCertify }) {
+  if (t.trustCertifiedAt) {
+    return `<div class="trustpass-card">
+      <div class="trustpass-head">
+        <span class="trustpass-title">${ic('shield',15)} Profil certifié TrustPass™</span>
+        <span class="trustpass-code">${t.trustCode}</span>
+      </div>
+      <div style="font-size:12px;color:var(--text2)">Certifié le ${fmtDate(t.trustCertifiedAt)} · signé MustHave · données figées au moment de la certification</div>
+      <div class="trustpass-meta">
+        <div><div class="v">${t.followers}</div><div class="l">Followers</div></div>
+        <div><div class="v">${t.engagement}</div><div class="l">Engagement</div></div>
+        <div><div class="v">${(t.platforms||[]).length}</div><div class="l">Plateformes</div></div>
+        <div><div class="v">✓</div><div class="l">Vérifié</div></div>
+      </div>
+      ${canCertify ? `<div style="margin-top:14px"><button class="btn btn-ghost btn-sm" onclick="certifyTalent('${t.id}')">Recertifier</button></div>` : ''}
+    </div>`;
+  }
+  return `<div class="trustpass-card pending">
+    <div class="trustpass-head">
+      <span class="trustpass-title">${ic('shield',15)} Profil non certifié</span>
+    </div>
+    <div style="font-size:12px;color:var(--text3)">Aucun passeport TrustPass généré — les statistiques affichées ne sont pas encore vérifiées.</div>
+    ${canCertify ? `<div style="margin-top:14px"><button class="btn btn-accent btn-sm" onclick="certifyTalent('${t.id}')">Certifier le profil</button></div>` : ''}
+  </div>`;
+}
+
+function certifyTalent(id) {
+  const t = DB.talents.find(x=>x.id===id);
+  if (!t) return;
+  t.trustCertifiedAt = new Date().toISOString();
+  t.trustCode = 'TP-' + id.toUpperCase() + '-' + today().replace(/-/g,'');
+  DB.auditLog.unshift({ id:uid(), userId:'s1', action:'Profil certifié TrustPass', target:t.name, date:new Date().toISOString(), ip:'92.184.12.4' });
+  DB.notifications.push({ id:'notif-'+uid(), talentId:t.id, type:'trustpass_certified', title:'Profil certifié TrustPass™', message:`Votre profil a été vérifié et certifié par MustHave (${t.trustCode})`, date:new Date().toISOString(), read:false });
+  showToast(`Profil de ${t.name} certifié TrustPass ✓`);
+  if (document.getElementById('modal').classList.contains('open')) openTalentDetail(id);
+  else navigate('talents');
+}
+
+// ═══════════════════════════════════════════════════════════════════
 // KANBAN DRAG & DROP
 // ═══════════════════════════════════════════════════════════════════
 let draggedLeadId = null;
@@ -1530,7 +1592,7 @@ function renderTalents() {
             <div class="talent-name">${t.name}</div>
             <div class="talent-niche">${t.niche}</div>
             ${t.handle ? `<a href="https://instagram.com/${t.handle.replace('@','')}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="font-size:11px;color:var(--accent);text-decoration:none;font-weight:600">${t.handle}</a>` : ''}
-            <div style="margin-top:4px">${statusBadge(t.status)}</div>
+            <div style="margin-top:4px;display:flex;gap:6px;flex-wrap:wrap">${statusBadge(t.status)}${trustChip(t)}</div>
           </div>
         </div>
         <div style="margin-bottom:14px">
@@ -1574,6 +1636,7 @@ function openTalentDetail(id) {
         <div style="font-size:11px;color:var(--text3)">${l}</div>
       </div>`).join('')}
     </div>
+    ${trustPassSection(t, { canCertify: true })}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
       <div style="padding:12px;background:var(--bg3);border-radius:8px">
         <div style="font-size:11px;color:var(--text3);margin-bottom:4px">SIRET</div>
@@ -2199,6 +2262,7 @@ function sendInvite() {
 // ═══════════════════════════════════════════════════════════════════
 const DEFAULT_WIDGETS = [
   { id:'banner',    label:'Profil & réseaux',   icon:'user',      mandatory:true },
+  { id:'trustpass', label:'Passeport TrustPass', icon:'shield',   mandatory:false },
   { id:'stats',     label:'Statistiques clés',  icon:'dashboard', mandatory:false },
   { id:'contracts', label:'Contrats actifs',    icon:'contracts', mandatory:false },
   { id:'offers',    label:'Offres en attente',  icon:'offers',    mandatory:false },
@@ -2245,6 +2309,8 @@ function renderTalentDashboard() {
         <div style="display:flex;gap:6px;flex-wrap:wrap">${platformChips(talent.platforms, talent.handle, 'padding:4px 12px;font-size:12px')}</div>
       </div>
     </div>`,
+
+    trustpass: `<div class="widget-block">${trustPassSection(talent, { canCertify: false })}</div>`,
 
     stats: `<div class="stats-grid widget-block">
       <div class="stat-card"><div class="stat-label">Revenus encaissés</div><div class="stat-value" style="color:var(--green)">${fmtEur(earned)}</div><div class="stat-sub up">2026</div></div>
@@ -2936,8 +3002,8 @@ function toggleNotifPanel() {
 function renderNotifPanel() {
   const notifs = [...myNotifs()].sort((a,b) => b.date.localeCompare(a.date));
   const unread = notifs.filter(n => !n.read).length;
-  const iconMap = { payment_received:'💸', invoice_validated:'✅', commission:'🏦', offer_new:'📩' };
-  const colorMap = { payment_received:'var(--green-soft)', invoice_validated:'var(--blue-soft)', commission:'var(--yellow-soft)', offer_new:'var(--accent-soft)' };
+  const iconMap = { payment_received:'💸', invoice_validated:'✅', commission:'🏦', offer_new:'📩', trustpass_certified:'🛡️' };
+  const colorMap = { payment_received:'var(--green-soft)', invoice_validated:'var(--blue-soft)', commission:'var(--yellow-soft)', offer_new:'var(--accent-soft)', trustpass_certified:'var(--green-soft)' };
   document.getElementById('notif-panel').innerHTML = `
     <div class="notif-panel-header">
       <span class="notif-panel-title">Notifications ${unread>0?`<span class="notif-badge" style="position:static;margin-left:6px;border:none">${unread}</span>`:''}</span>

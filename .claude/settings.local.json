@@ -17,7 +17,15 @@
       "PowerShell(\\(Get-Command python3\\).Source; \\(Get-Command python\\).Source)",
       "Skill(artifact-design)",
       "Skill(artifact-design:*)",
-      "Bash(git config *)"
+      "Bash(git config *)",
+      "Bash(gh --version)",
+      "Bash(pandoc -t markdown \"C:\\\\Users\\\\ninot\\\\Downloads\\\\InfluenceOS_MustHave_COMPLET.docx\")",
+      "Bash(perl \"C:\\\\Users\\\\ninot\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-ninot-Documents-TRANSFERT-NOUVEAU-PC-DOCUMENT-ESGI-PA-ESGI-PA\\\\cbeacf05-53c0-46cb-8f53-bb33c6926ec9\\\\scratchpad\\\\extract_headings.pl\" \"C:\\\\Users\\\\ninot\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-ninot-Documents-TRANSFERT-NOUVEAU-PC-DOCUMENT-ESGI-PA-ESGI-PA\\\\cbeacf05-53c0-46cb-8f53-bb33c6926ec9\\\\scratchpad\\\\docx_unpack\\\\word\\\\document.xml\")",
+      "Bash(perl \"C:\\\\Users\\\\ninot\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-ninot-Documents-TRANSFERT-NOUVEAU-PC-DOCUMENT-ESGI-PA-ESGI-PA\\\\cbeacf05-53c0-46cb-8f53-bb33c6926ec9\\\\scratchpad\\\\extract_all.pl\" \"C:\\\\Users\\\\ninot\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-ninot-Documents-TRANSFERT-NOUVEAU-PC-DOCUMENT-ESGI-PA-ESGI-PA\\\\cbeacf05-53c0-46cb-8f53-bb33c6926ec9\\\\scratchpad\\\\docx_unpack\\\\word\\\\document.xml\")",
+      "Bash(perl \"C:\\\\Users\\\\ninot\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-ninot-Documents-TRANSFERT-NOUVEAU-PC-DOCUMENT-ESGI-PA-ESGI-PA\\\\cbeacf05-53c0-46cb-8f53-bb33c6926ec9\\\\scratchpad\\\\extract_all.pl\" \"C:\\\\Users\\\\ninot\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-ninot-Documents-TRANSFERT-NOUVEAU-PC-DOCUMENT-ESGI-PA-ESGI-PA\\\\cbeacf05-53c0-46cb-8f53-bb33c6926ec9\\\\scratchpad\\\\docx_unpack\\\\word\\\\document.xml\" headings)",
+      "Bash(find \"C:\\\\Users\\\\ninot\\\\AppData\\\\Local\\\\Temp\" -iname \"*.jpg\" -o -iname \"*.jpeg\" -o -iname \"*.png\" 2>/dev/null | grep -i -E \"preview|screenshot|claude\" | head -30)",
+      "Bash('/c/Program Files/Google/Chrome/Application/chrome.exe' --headless --disable-gpu --hide-scrollbars --force-device-scale-factor=1 --window-size=1440,900 --virtual-time-budget=2000 --screenshot=/c/Users/ninot/AppData/Local/Temp/claude/C--Users-ninot-Documents-TRANSFERT-NOUVEAU-PC-DOCUMENT-ESGI-PA-ESGI-PA/cbeacf05-53c0-46cb-8f53-bb33c6926ec9/scratchpad/shot_login.png file:////c/Users/ninot/AppData/Local/Temp/claude/C--Users-ninot-Documents-TRANSFERT-NOUVEAU-PC-DOCUMENT-ESGI-PA-ESGI-PA/cbeacf05-53c0-46cb-8f53-bb33c6926ec9/scratchpad/index_shot.html)",
+      "Bash(where soffice *)"
     ]
   }
 }
