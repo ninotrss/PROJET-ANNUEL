@@ -40,6 +40,28 @@ input,select,textarea{font-family:inherit}
 .login-card2 .form-group{margin-bottom:10px;text-align:left}
 .login-card2 input{width:100%;padding:10px 13px;border:1px solid var(--color-border);border-radius:var(--radius-sm);font-size:13px;background:#fff;outline:none}
 .login-card2 input:focus{border-color:var(--color-accent)}
+.email-wrap{position:relative}
+.email-wrap input.detected{border-color:var(--color-green);padding-right:34px}
+.email-check{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--color-green);font-weight:700;display:none}
+.email-check.show{display:block}
+.sso-detect-panel{display:none;align-items:center;gap:10px;padding:9px 13px;background:rgba(26,107,74,.07);border:1px solid var(--color-green);border-radius:10px;margin-bottom:14px;text-align:left}
+.sso-detect-panel.show{display:flex;animation:fadeIn .2s ease}
+.sso-detect-panel .label{font-size:12px;font-weight:700;color:var(--color-green);flex:1}
+.sso-detect-panel .proto{font-size:10.5px;color:var(--color-warm-gray)}
+
+/* ── SSO redirect overlay ── */
+#sso-redirect{display:none;position:fixed;inset:0;z-index:600;background:var(--color-cream);align-items:center;justify-content:center;flex-direction:column;gap:28px}
+#sso-redirect.open{display:flex}
+.sso-redirect-logo{width:64px;height:64px;border-radius:16px;background:#fff;border:1px solid var(--color-border);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
+.sso-redirect-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;text-align:center}
+.sso-redirect-sub{font-size:13px;color:var(--color-warm-gray);text-align:center;margin-top:-18px}
+.sso-steps{display:flex;flex-direction:column;gap:10px;min-width:340px}
+.sso-step{display:flex;align-items:center;gap:12px;padding:12px 16px;background:#fff;border:1px solid var(--color-border);border-radius:10px;font-size:13px;font-weight:500;color:var(--color-warm-gray);opacity:.55;transition:all .3s}
+.sso-step.active{opacity:1;border-color:var(--color-accent);color:var(--color-black);font-weight:600}
+.sso-step.done{opacity:1;border-color:var(--color-green);color:var(--color-green);font-weight:600}
+.sso-step-icon{width:20px;height:20px;border-radius:50%;border:2px solid currentColor;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+.sso-step.active .sso-step-icon{animation:spin .8s linear infinite;border-top-color:transparent}
+@keyframes spin{to{transform:rotate(360deg)}}
 .pill-btn{width:100%;padding:12px;border-radius:99px;border:none;background:var(--color-accent);color:var(--color-black);font-weight:700;font-size:14px;margin-top:6px}
 .pill-btn:hover{background:#b8977a}
 .login-divider{display:flex;align-items:center;gap:10px;color:var(--color-warm-gray);font-size:11px;margin:18px 0}
@@ -290,15 +312,39 @@ tr:hover td{background:rgba(200,168,130,.05)}
       <button class="login-tab active" id="login-tab-agency" onclick="switchLoginTab('agency')">Espace Agence</button>
       <button class="login-tab" id="login-tab-talent" onclick="switchLoginTab('talent')">Espace Talent</button>
     </div>
-    <div class="form-group"><input id="login-email" value="agence@musthave.com"></div>
-    <div class="form-group"><input type="password" id="login-pass" value="••••"></div>
-    <button class="pill-btn" onclick="doLogin()">Se connecter →</button>
+    <div class="form-group email-wrap">
+      <input id="login-email" value="agence@musthave.com" oninput="checkSsoDomain()">
+      <span class="email-check" id="email-check">✓</span>
+    </div>
+    <div class="form-group" id="login-pass-group"><input type="password" id="login-pass" value="••••"></div>
+    <div class="sso-detect-panel" id="sso-detect-panel">
+      <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.52 12.27c0-.85-.08-1.67-.22-2.45H12v4.64h6.46a5.53 5.53 0 0 1-2.4 3.63v3h3.87c2.27-2.09 3.58-5.17 3.58-8.82z"/><path fill="#34A853" d="M12 24c3.24 0 5.96-1.07 7.94-2.91l-3.87-3c-1.08.72-2.46 1.15-4.07 1.15-3.13 0-5.78-2.11-6.73-4.96H1.27v3.1A12 12 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.27 14.28A7.2 7.2 0 0 1 4.89 12c0-.79.14-1.56.38-2.28v-3.1H1.27A12 12 0 0 0 0 12c0 1.94.46 3.77 1.27 5.38z"/><path fill="#EA4335" d="M12 4.75c1.76 0 3.34.6 4.58 1.79l3.43-3.43C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.69 1.27 6.62l4 3.1C6.22 6.86 8.87 4.75 12 4.75z"/></svg>
+      <span class="label">SSO activé · Google Workspace</span>
+      <span class="proto">OAuth 2.0</span>
+    </div>
+    <button class="pill-btn" onclick="doLogin()" id="login-submit-btn">Continuer →</button>
     <div class="login-divider">ou</div>
     <button class="google-btn" onclick="doLogin()">
       <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.52 12.27c0-.85-.08-1.67-.22-2.45H12v4.64h6.46a5.53 5.53 0 0 1-2.4 3.63v3h3.87c2.27-2.09 3.58-5.17 3.58-8.82z"/><path fill="#34A853" d="M12 24c3.24 0 5.96-1.07 7.94-2.91l-3.87-3c-1.08.72-2.46 1.15-4.07 1.15-3.13 0-5.78-2.11-6.73-4.96H1.27v3.1A12 12 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.27 14.28A7.2 7.2 0 0 1 4.89 12c0-.79.14-1.56.38-2.28v-3.1H1.27A12 12 0 0 0 0 12c0 1.94.46 3.77 1.27 5.38z"/><path fill="#EA4335" d="M12 4.75c1.76 0 3.34.6 4.58 1.79l3.43-3.43C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.69 1.27 6.62l4 3.1C6.22 6.86 8.87 4.75 12 4.75z"/></svg>
       Continuer avec Google Workspace
     </button>
     <div class="login-demo">Démo : agence@musthave.com ou talent@musthave.com — n'importe quel mot de passe</div>
+  </div>
+</div>
+
+<div id="sso-redirect">
+  <div class="sso-redirect-logo">
+    <svg width="30" height="30" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.52 12.27c0-.85-.08-1.67-.22-2.45H12v4.64h6.46a5.53 5.53 0 0 1-2.4 3.63v3h3.87c2.27-2.09 3.58-5.17 3.58-8.82z"/><path fill="#34A853" d="M12 24c3.24 0 5.96-1.07 7.94-2.91l-3.87-3c-1.08.72-2.46 1.15-4.07 1.15-3.13 0-5.78-2.11-6.73-4.96H1.27v3.1A12 12 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.27 14.28A7.2 7.2 0 0 1 4.89 12c0-.79.14-1.56.38-2.28v-3.1H1.27A12 12 0 0 0 0 12c0 1.94.46 3.77 1.27 5.38z"/><path fill="#EA4335" d="M12 4.75c1.76 0 3.34.6 4.58 1.79l3.43-3.43C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.69 1.27 6.62l4 3.1C6.22 6.86 8.87 4.75 12 4.75z"/></svg>
+  </div>
+  <div>
+    <div class="sso-redirect-title">Authentification via Google Workspace</div>
+    <div class="sso-redirect-sub" id="sso-redirect-email">admin@musthave.com</div>
+  </div>
+  <div class="sso-steps" id="sso-steps">
+    <div class="sso-step" data-step="0"><span class="sso-step-icon"></span>Redirection vers accounts.google.com…</div>
+    <div class="sso-step" data-step="1"><span class="sso-step-icon"></span>Vérification du token OAuth 2.0…</div>
+    <div class="sso-step" data-step="2"><span class="sso-step-icon"></span>Récupération du profil Google Workspace…</div>
+    <div class="sso-step" data-step="3"><span class="sso-step-icon"></span>Établissement de la session sécurisée…</div>
   </div>
 </div>
 
@@ -782,8 +828,35 @@ function switchLoginTab(space){
   document.getElementById('login-tab-agency').classList.toggle('active', space==='agency');
   document.getElementById('login-tab-talent').classList.toggle('active', space==='talent');
   document.getElementById('login-email').value = space==='agency' ? 'agence@musthave.com' : 'talent@musthave.com';
+  checkSsoDomain();
 }
-function doLogin(){ loginAs(loginSpace); }
+function checkSsoDomain(){
+  const email = document.getElementById('login-email').value.trim().toLowerCase();
+  const detected = email.endsWith('@musthave.com');
+  document.getElementById('login-email').classList.toggle('detected', detected);
+  document.getElementById('email-check').classList.toggle('show', detected);
+  document.getElementById('sso-detect-panel').classList.toggle('show', detected);
+  document.getElementById('login-pass-group').style.display = detected ? 'none' : 'block';
+  document.getElementById('login-submit-btn').textContent = detected ? 'Continuer →' : 'Se connecter →';
+}
+function doLogin(){
+  const email = document.getElementById('login-email').value.trim().toLowerCase();
+  if (email.endsWith('@musthave.com')) runSsoAnimation(loginSpace, email);
+  else loginAs(loginSpace);
+}
+function runSsoAnimation(role, email){
+  document.getElementById('sso-redirect-email').textContent = email;
+  const steps = document.querySelectorAll('#sso-steps .sso-step');
+  steps.forEach(s=>s.classList.remove('active','done'));
+  document.getElementById('sso-redirect').classList.add('open');
+  const setStep = (i, cls) => { if (steps[i]) steps[i].classList.add(cls); };
+  const clearStep = (i, cls) => { if (steps[i]) steps[i].classList.remove(cls); };
+  setStep(0,'done'); setStep(1,'active');
+  setTimeout(()=>{ clearStep(1,'active'); setStep(1,'done'); setStep(2,'active'); }, 650);
+  setTimeout(()=>{ clearStep(2,'active'); setStep(2,'done'); setStep(3,'active'); }, 1300);
+  setTimeout(()=>{ clearStep(3,'active'); setStep(3,'done'); }, 1950);
+  setTimeout(()=>{ document.getElementById('sso-redirect').classList.remove('open'); loginAs(role); }, 2500);
+}
 function loginAs(role){
   currentUser = role==='agency' ? {role:'agency', name:'Sophie Martin', roleLabel:'Talent Manager'} : {role:'talent', talentId:'t1', name:'Mahaut Ctrr', roleLabel:'Créatrice de contenu'};
   document.getElementById('login-screen').style.display='none';
@@ -897,6 +970,7 @@ function openModal(title, body, buttons=[], wide=false){
 }
 function closeModal(){ document.getElementById('modal-overlay').classList.remove('open'); }
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+checkSsoDomain();
 
 function showToast(msg, type='success'){
   const iconMap = {success:'check', warning:'clock', error:'x', info:'sparkles'};
