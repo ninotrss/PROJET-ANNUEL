@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>InfluenceOS — must-have</title>
+<script>
+(function(){
+  try {
+    var saved = localStorage.getItem('theme');
+    var wantsDark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (wantsDark) document.documentElement.classList.add('dark');
+  } catch(e) {}
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -15,7 +24,23 @@
   --color-red:#B83232; --color-purple:#5A4A8C; --color-purple-soft:#EEF0FA;
   --radius:12px; --radius-sm:8px;
   --shadow:0 1px 3px rgba(0,0,0,0.06);
+  --color-surface-soft:#F2EFE9; --color-white:#FFFFFF; --color-accent2:#8C6A3C;
 }
+html.dark{
+  --color-cream:#17140F; --color-black:#F3EEE4; --color-warm-gray:#A79E8E;
+  --color-border:#322C22; --color-card:#211D16; --color-accent:#D8B88C;
+  --color-accent-soft:#2C2518; --color-green:#4CAE82; --color-amber:#E0A23D;
+  --color-red:#E07575; --color-purple:#9385C4; --color-purple-soft:#211D2E;
+  --color-surface-soft:#241F17; --color-white:#211D16; --color-accent2:#E3C9A0;
+  --shadow:0 1px 3px rgba(0,0,0,0.35);
+}
+html.dark body{background:var(--color-cream);color:var(--color-black)}
+html.dark .btn-accent{color:#17140F}
+html.dark .btn-green,html.dark .btn-red,html.dark .btn-purple{color:#17140F}
+html.dark .msg-row.out .msg-bubble{color:#17140F}
+html.dark .indy-wordmark{color:var(--color-black)}
+html.dark .avatar-sm{color:#17140F}
+html.dark .nav-badge{color:#fff}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',system-ui,sans-serif;background:var(--color-cream);color:var(--color-black);min-height:100vh;font-size:14px;line-height:1.6}
 h1,h2,.serif{font-family:'Cormorant Garamond',serif}
@@ -30,7 +55,7 @@ input,select,textarea{font-family:inherit}
 
 /* ── Login ── */
 #login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--color-cream);padding:24px}
-.login-card2{background:#fff;border-radius:20px;box-shadow:0 8px 32px rgba(10,10,10,.08);padding:40px 36px;width:100%;max-width:380px;text-align:center}
+.login-card2{background:var(--color-card);border-radius:20px;box-shadow:0 8px 32px rgba(10,10,10,.08);padding:40px 36px;width:100%;max-width:380px;text-align:center}
 .login-brand2{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;margin-bottom:6px}
 .login-brand2 .dot{color:var(--color-accent)}
 .login-tagline{font-size:10.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--color-warm-gray);margin-bottom:14px}
@@ -39,11 +64,11 @@ input,select,textarea{font-family:inherit}
 .field-label{display:block;font-size:12.5px;font-weight:600;color:var(--color-black);margin-bottom:6px}
 .sso-error-panel{display:none;align-items:center;gap:8px;padding:9px 13px;background:rgba(184,50,50,.06);border:1px solid var(--color-red);border-radius:10px;margin-bottom:14px;text-align:left;font-size:12px;color:var(--color-red);font-weight:600}
 .sso-error-panel.show{display:flex;animation:fadeIn .2s ease}
-.login-tabs{display:flex;background:#F2EFE9;border-radius:99px;padding:4px;margin-bottom:20px}
+.login-tabs{display:flex;background:var(--color-surface-soft);border-radius:99px;padding:4px;margin-bottom:20px}
 .login-tab{flex:1;border:none;background:transparent;padding:9px 0;border-radius:99px;font-size:12.5px;font-weight:600;color:var(--color-warm-gray)}
-.login-tab.active{background:var(--color-black);color:#fff}
+.login-tab.active{background:var(--color-black);color:var(--color-cream)}
 .login-card2 .form-group{margin-bottom:10px;text-align:left}
-.login-card2 input{width:100%;padding:10px 13px;border:1px solid var(--color-border);border-radius:var(--radius-sm);font-size:13px;background:#fff;outline:none}
+.login-card2 input{width:100%;padding:10px 13px;border:1px solid var(--color-border);border-radius:var(--radius-sm);font-size:13px;background:var(--color-card);outline:none}
 .login-card2 input:focus{border-color:var(--color-accent)}
 .email-wrap{position:relative}
 .email-wrap input.detected{border-color:var(--color-green);padding-right:34px}
@@ -57,28 +82,29 @@ input,select,textarea{font-family:inherit}
 /* ── SSO redirect overlay ── */
 #sso-redirect{display:none;position:fixed;inset:0;z-index:600;background:var(--color-cream);align-items:center;justify-content:center;flex-direction:column;gap:28px}
 #sso-redirect.open{display:flex}
-.sso-redirect-logo{width:64px;height:64px;border-radius:16px;background:#fff;border:1px solid var(--color-border);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
+.sso-redirect-logo{width:64px;height:64px;border-radius:16px;background:var(--color-card);border:1px solid var(--color-border);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
 .sso-redirect-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;text-align:center}
-.sso-redirect-sub{font-size:13px;color:var(--color-warm-gray);text-align:center;margin-top:-18px}
+.sso-redirect-sub{font-size:13px;color:var(--color-warm-gray);text-align:center;margin-top:4px}
 .sso-steps{display:flex;flex-direction:column;gap:10px;min-width:340px}
-.sso-step{display:flex;align-items:center;gap:12px;padding:12px 16px;background:#fff;border:1px solid var(--color-border);border-radius:10px;font-size:13px;font-weight:500;color:var(--color-warm-gray);opacity:.55;transition:all .3s}
+.sso-step{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--color-card);border:1px solid var(--color-border);border-radius:10px;font-size:13px;font-weight:500;color:var(--color-warm-gray);opacity:.55;transition:all .3s}
 .sso-step.active{opacity:1;border-color:var(--color-accent);color:var(--color-black);font-weight:600}
 .sso-step.done{opacity:1;border-color:var(--color-green);color:var(--color-green);font-weight:600}
-.sso-step-icon{width:20px;height:20px;border-radius:50%;border:2px solid currentColor;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+.sso-step-icon{width:20px;height:20px;border-radius:50%;border:2px solid currentColor;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;line-height:1}
+.sso-step.done .sso-step-icon::after{content:'✓'}
 .sso-step.active .sso-step-icon{animation:spin .8s linear infinite;border-top-color:transparent}
 @keyframes spin{to{transform:rotate(360deg)}}
-.pill-btn{width:100%;padding:12px;border-radius:99px;border:none;background:var(--color-accent);color:var(--color-black);font-weight:700;font-size:14px;margin-top:6px}
+.pill-btn{width:100%;padding:12px;border-radius:99px;border:none;background:var(--color-accent);color:#0A0A0A;font-weight:700;font-size:14px;margin-top:6px}
 .pill-btn:hover{background:#b8977a}
 .login-divider{display:flex;align-items:center;gap:10px;color:var(--color-warm-gray);font-size:11px;margin:18px 0}
 .login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:var(--color-border)}
-.google-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:11px;border-radius:99px;border:1px solid var(--color-border);background:#fff;font-size:13px;font-weight:600;color:var(--color-black)}
+.google-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:11px;border-radius:99px;border:1px solid var(--color-border);background:var(--color-card);font-size:13px;font-weight:600;color:var(--color-black)}
 .google-btn:hover{border-color:var(--color-accent);background:var(--color-accent-soft)}
 .login-demo{margin-top:20px;font-size:10.5px;color:var(--color-warm-gray);line-height:1.5}
 
 /* ── App shell ── */
 #app{display:none}
 #app.visible{display:flex}
-.sidebar{width:240px;background:var(--color-black);color:#fff;height:100vh;position:fixed;top:0;left:0;display:flex;flex-direction:column;flex-shrink:0;z-index:100}
+.sidebar{width:240px;background:#0A0A0A;color:#fff;height:100vh;position:fixed;top:0;left:0;display:flex;flex-direction:column;flex-shrink:0;z-index:100}
 .sidebar-logo{padding:22px 20px;font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;border-bottom:1px solid rgba(255,255,255,.1)}
 .sidebar-logo span{color:var(--color-accent)}
 .sidebar-space{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:rgba(255,255,255,.4);padding:14px 20px 4px;font-weight:600}
@@ -109,10 +135,16 @@ input,select,textarea{font-family:inherit}
 .profile-menu-divider{height:1px;background:rgba(255,255,255,.08);margin:4px 10px}
 
 /* ── Notification bell ── */
-.notif-bell{position:relative;width:34px;height:34px;border-radius:99px;border:1px solid var(--color-border);background:#fff;display:flex;align-items:center;justify-content:center;color:var(--color-black)}
+.notif-bell{position:relative;width:34px;height:34px;border-radius:99px;border:1px solid var(--color-border);background:var(--color-card);display:flex;align-items:center;justify-content:center;color:var(--color-black)}
+.theme-toggle{width:34px;height:34px;border-radius:99px;border:1px solid var(--color-border);background:var(--color-card);display:flex;align-items:center;justify-content:center;color:var(--color-black);flex-shrink:0}
+.theme-toggle:hover{border-color:var(--color-accent)}
+.theme-icon{display:none}
+.theme-icon-moon{display:block}
+html.dark .theme-icon-moon{display:none}
+html.dark .theme-icon-sun{display:block}
 .notif-bell:hover{border-color:var(--color-accent)}
 .notif-badge{position:absolute;top:-4px;right:-4px;background:var(--color-red);color:#fff;font-size:9.5px;font-weight:800;min-width:16px;height:16px;border-radius:99px;display:flex;align-items:center;justify-content:center;padding:0 3px;border:2px solid var(--color-cream)}
-.notif-panel{position:absolute;top:56px;right:32px;width:340px;background:#fff;border:1px solid var(--color-border);border-radius:14px;box-shadow:0 8px 32px rgba(10,10,10,.12);z-index:300;display:none;overflow:hidden}
+.notif-panel{position:absolute;top:56px;right:32px;width:340px;background:var(--color-card);border:1px solid var(--color-border);border-radius:14px;box-shadow:0 8px 32px rgba(10,10,10,.12);z-index:300;display:none;overflow:hidden}
 .notif-panel.open{display:block}
 .notif-panel-head{padding:14px 16px;border-bottom:1px solid var(--color-border);font-weight:700;font-size:13px}
 .notif-item{display:flex;gap:10px;padding:12px 16px;border-bottom:1px solid var(--color-border)}
@@ -135,20 +167,21 @@ input,select,textarea{font-family:inherit}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── Buttons ── */
-.btn{padding:9px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;border:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:32px;padding:0 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;line-height:1;border:1px solid transparent;white-space:nowrap;box-sizing:border-box}
 .btn-accent{background:var(--color-accent);color:#fff}
 .btn-accent:hover{background:#b8977a}
-.btn-dark{background:var(--color-black);color:#fff}
+.btn-dark{background:var(--color-black);color:var(--color-cream)}
 .btn-dark:hover{background:#222}
 .btn-ghost{background:transparent;border:1px solid var(--color-border);color:var(--color-black)}
 .btn-ghost:hover{background:var(--color-accent-soft)}
 .btn-purple{background:var(--color-purple);color:#fff}
 .btn-purple:hover{background:#493a73}
-.btn-sm{padding:6px 12px;font-size:12px}
+.btn-sm{height:28px;padding:0 12px;font-size:12px}
 .btn-green{background:var(--color-green);color:#fff}
 .btn-red{background:var(--color-red);color:#fff}
-.icon-btn{width:32px;height:32px;border-radius:var(--radius-sm);border:1px solid var(--color-border);background:#fff;display:flex;align-items:center;justify-content:center}
+.icon-btn{width:32px;height:32px;border-radius:var(--radius-sm);border:1px solid var(--color-border);background:var(--color-card);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;box-sizing:border-box}
 .icon-btn:hover{border-color:var(--color-accent)}
+.icon-btn.btn-sm{width:28px;height:28px}
 
 /* ── Cards / KPIs ── */
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px}
@@ -176,12 +209,21 @@ tr:hover td{background:rgba(200,168,130,.05)}
 
 /* ── Badges ── */
 .pill{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:99px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap}
+.pill-accent{background:var(--color-accent-soft);color:var(--color-accent2)}
+.pill-purple{background:var(--color-purple-soft);color:var(--color-purple)}
+.pill-amber{background:rgba(181,114,10,.12);color:var(--color-amber)}
+.pill-green{background:rgba(26,107,74,.12);color:var(--color-green)}
+.pill-red{background:rgba(184,50,50,.10);color:var(--color-red)}
+.pill-gray{background:var(--color-surface-soft);color:var(--color-warm-gray)}
+html.dark .pill-amber{background:rgba(224,162,61,.14)}
+html.dark .pill-green{background:rgba(76,174,130,.14)}
+html.dark .pill-red{background:rgba(224,117,117,.13)}
 
 /* ── Deadlines ── */
 .deadline-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:var(--radius-sm);margin-bottom:8px;border:1px solid var(--color-border)}
-.deadline-row.urgent{background:#FCEBEB;border-color:var(--color-red)}
-.deadline-row.soon{background:#FFF3DC;border-color:var(--color-amber)}
-.deadline-row.ok{background:#E1F5EE;border-color:var(--color-green)}
+.deadline-row.urgent{background:rgba(184,50,50,.08);border-color:var(--color-red)}
+.deadline-row.soon{background:rgba(181,114,10,.09);border-color:var(--color-amber)}
+.deadline-row.ok{background:rgba(26,107,74,.08);border-color:var(--color-green)}
 .deadline-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .deadline-row.urgent .deadline-dot{background:var(--color-red)}
 .deadline-row.soon .deadline-dot{background:var(--color-amber)}
@@ -189,7 +231,7 @@ tr:hover td{background:rgba(200,168,130,.05)}
 
 /* ── Kanban ── */
 .kanban{display:flex;gap:14px;overflow-x:auto;padding-bottom:12px;align-items:flex-start}
-.kanban-col{background:#F2EFE9;border-radius:var(--radius);min-width:260px;width:260px;flex-shrink:0}
+.kanban-col{background:var(--color-surface-soft);border-radius:var(--radius);min-width:260px;width:260px;flex-shrink:0}
 .kanban-col-head{padding:12px 14px;font-size:12px;font-weight:700;display:flex;justify-content:space-between;align-items:center;color:var(--color-black)}
 .kanban-count{font-size:10px;color:var(--color-warm-gray);font-weight:500}
 .kanban-cards{padding:0 8px 8px;display:flex;flex-direction:column;gap:10px;min-height:60px}
@@ -211,7 +253,7 @@ tr:hover td{background:rgba(200,168,130,.05)}
 .talent-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;flex-shrink:0}
 .talent-name{font-weight:700;font-size:14px}
 .talent-niche{font-size:11.5px;color:var(--color-warm-gray)}
-.platform-chip{display:inline-block;font-size:10px;padding:2px 8px;border-radius:99px;background:var(--color-accent-soft);color:#8C6A3C;margin-right:4px;margin-bottom:4px;font-weight:600}
+.platform-chip{display:inline-block;font-size:10px;padding:2px 8px;border-radius:99px;background:var(--color-accent-soft);color:var(--color-accent2);margin-right:4px;margin-bottom:4px;font-weight:600}
 .talent-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:12px 0;text-align:center}
 .talent-stat-val{font-weight:700;font-size:14px}
 .talent-stat-lab{font-size:9.5px;color:var(--color-warm-gray);text-transform:uppercase}
@@ -219,7 +261,7 @@ tr:hover td{background:rgba(200,168,130,.05)}
 /* ── Modal ── */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(10,10,10,.4);z-index:1000;align-items:center;justify-content:center;padding:20px}
 .modal-overlay.open{display:flex}
-.modal{background:#fff;border-radius:16px;width:640px;max-width:96vw;max-height:88vh;overflow-y:auto}
+.modal{background:var(--color-card);border-radius:16px;width:640px;max-width:96vw;max-height:88vh;overflow-y:auto}
 .modal.wide{width:840px}
 .modal-head{padding:22px 24px 0;display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
 .modal-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600}
@@ -229,20 +271,20 @@ tr:hover td{background:rgba(200,168,130,.05)}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .form-group{margin-bottom:14px}
 .form-group label{display:block;font-size:12px;color:var(--color-warm-gray);margin-bottom:5px;font-weight:500}
-.form-group input,.form-group select,.form-group textarea{width:100%;padding:9px 11px;border:1px solid var(--color-border);border-radius:var(--radius-sm);font-size:13px;outline:none;background:#fff}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:9px 11px;border:1px solid var(--color-border);border-radius:var(--radius-sm);font-size:13px;outline:none;background:var(--color-card)}
 .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--color-accent)}
 .form-group textarea{resize:vertical;min-height:70px}
 
 /* ── Toast ── */
 #toast-wrap{position:fixed;top:20px;right:20px;z-index:2000;display:flex;flex-direction:column;gap:8px}
-.toast{background:#fff;border:1px solid var(--color-border);border-left:4px solid var(--color-accent);border-radius:10px;padding:12px 16px;font-size:13px;font-weight:500;box-shadow:0 4px 16px rgba(0,0,0,.1);display:flex;align-items:center;gap:8px;min-width:260px;transform:translateX(120%);opacity:0;transition:all .25s ease}
+.toast{background:var(--color-card);border:1px solid var(--color-border);border-left:4px solid var(--color-accent);border-radius:10px;padding:12px 16px;font-size:13px;font-weight:500;box-shadow:0 4px 16px rgba(0,0,0,.1);display:flex;align-items:center;gap:8px;min-width:260px;transform:translateX(120%);opacity:0;transition:all .25s ease}
 .toast.show{transform:translateX(0);opacity:1}
 .toast.success{border-left-color:var(--color-green)}
 .toast.warning{border-left-color:var(--color-amber)}
 .toast.error{border-left-color:var(--color-red)}
 
 /* ── Tabs / stepper ── */
-.tabs{display:flex;gap:4px;background:#F2EFE9;border-radius:99px;padding:4px;width:fit-content;margin-bottom:20px}
+.tabs{display:flex;gap:4px;background:var(--color-surface-soft);border-radius:99px;padding:4px;width:fit-content;margin-bottom:20px}
 .tab{padding:7px 16px;border-radius:99px;font-size:12.5px;font-weight:600;border:none;background:transparent;color:var(--color-warm-gray)}
 .tab.active{background:var(--color-black);color:#fff}
 .stepper{display:flex;overflow-x:auto;gap:0;margin-bottom:20px}
@@ -250,7 +292,7 @@ tr:hover td{background:rgba(200,168,130,.05)}
 .step::before{content:'';position:absolute;top:11px;left:-50%;width:100%;height:2px;background:var(--color-border);z-index:0}
 .step:first-child::before{display:none}
 .step.done::before{background:var(--color-green)}
-.step-dot{width:22px;height:22px;border-radius:50%;background:#fff;border:2px solid var(--color-border);margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;position:relative;z-index:1;color:var(--color-warm-gray)}
+.step-dot{width:22px;height:22px;border-radius:50%;background:var(--color-card);border:2px solid var(--color-border);margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;position:relative;z-index:1;color:var(--color-warm-gray)}
 .step.done .step-dot{background:var(--color-green);border-color:var(--color-green);color:#fff}
 .step.current .step-dot{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
 .step-label{font-size:10.5px;color:var(--color-warm-gray);font-weight:600}
@@ -277,18 +319,29 @@ tr:hover td{background:rgba(200,168,130,.05)}
 .verified-seal{display:inline-flex;align-items:center;gap:6px;background:var(--color-green);color:#fff;padding:6px 14px;border-radius:99px;font-size:12px;font-weight:700}
 
 /* ── Messaging ── */
-.msg-shell{display:flex;height:calc(100vh - 190px);border:0.5px solid var(--color-border);border-radius:var(--radius);overflow:hidden;background:#fff}
-.msg-list{width:280px;border-right:0.5px solid var(--color-border);overflow-y:auto;flex-shrink:0}
-.msg-list-item{padding:14px 16px;border-bottom:1px solid var(--color-border);cursor:pointer}
+.msg-shell{display:flex;height:calc(100vh - 190px);border:0.5px solid var(--color-border);border-radius:var(--radius);overflow:hidden;background:var(--color-card);box-shadow:var(--shadow)}
+.msg-list{width:300px;border-right:0.5px solid var(--color-border);overflow-y:auto;flex-shrink:0}
+.msg-list-item{display:flex;gap:10px;align-items:flex-start;padding:14px 16px;border-bottom:1px solid var(--color-border);cursor:pointer}
 .msg-list-item:hover,.msg-list-item.active{background:var(--color-accent-soft)}
-.msg-thread{flex:1;display:flex;flex-direction:column}
-.msg-thread-body{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px}
-.msg-bubble{max-width:70%;padding:10px 14px;border-radius:14px;font-size:13px}
-.msg-bubble.out{align-self:flex-end;background:var(--color-accent-soft);border-bottom-right-radius:4px}
-.msg-bubble.in{align-self:flex-start;background:#F2EFE9;border-bottom-left-radius:4px}
-.msg-meta{font-size:10px;color:var(--color-warm-gray);margin-top:4px}
+.msg-list-item-name{font-size:13px;font-weight:700}
+.msg-list-item-preview{font-size:11.5px;color:var(--color-warm-gray);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
+.msg-list-item-time{font-size:10px;color:var(--color-warm-gray);flex-shrink:0}
+.msg-thread{flex:1;display:flex;flex-direction:column;min-width:0}
+.msg-thread-head{padding:14px 20px;border-bottom:0.5px solid var(--color-border);display:flex;align-items:center;gap:10px}
+.msg-thread-body{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:3px;scroll-behavior:smooth}
+.msg-date-sep{align-self:center;font-size:10.5px;color:var(--color-warm-gray);background:var(--color-surface-soft);padding:3px 12px;border-radius:99px;margin:14px 0 10px;text-transform:uppercase;letter-spacing:.3px}
+.msg-row{display:flex;gap:8px;align-items:flex-end;margin-bottom:2px}
+.msg-row.out{flex-direction:row-reverse}
+.msg-row-spacer{width:26px;flex-shrink:0}
+.msg-bubble{max-width:65%;padding:9px 13px;border-radius:14px;font-size:13px;line-height:1.45}
+.msg-row.out .msg-bubble{background:var(--color-accent);color:#fff;border-bottom-right-radius:4px}
+.msg-row.in .msg-bubble{background:var(--color-surface-soft);color:var(--color-black);border-bottom-left-radius:4px}
+.msg-row.grouped{margin-top:-1px}
+.msg-meta{font-size:10px;color:var(--color-warm-gray);margin:3px 2px 10px;display:flex;gap:5px;align-items:center}
+.msg-meta.out{justify-content:flex-end}
 .msg-input-row{display:flex;gap:8px;padding:14px;border-top:0.5px solid var(--color-border)}
-.msg-input-row input{flex:1;padding:10px 14px;border-radius:99px;border:1px solid var(--color-border);outline:none}
+.msg-input-row textarea{flex:1;padding:10px 14px;border-radius:16px;border:1px solid var(--color-border);outline:none;resize:none;font-family:inherit;font-size:13px;max-height:80px}
+.msg-input-row textarea:focus{border-color:var(--color-accent)}
 
 /* ── Empty state ── */
 .empty{text-align:center;padding:50px 20px;color:var(--color-warm-gray)}
@@ -299,38 +352,38 @@ tr:hover td{background:rgba(200,168,130,.05)}
 .search-box{position:relative;flex:1;min-width:200px}
 .search-box input{width:100%;padding:9px 12px 9px 34px;border:1px solid var(--color-border);border-radius:99px;outline:none;font-size:13px}
 .search-box svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--color-warm-gray)}
-.filter-select{padding:9px 12px;border:1px solid var(--color-border);border-radius:99px;font-size:12.5px;background:#fff;outline:none}
+.filter-select{padding:9px 12px;border:1px solid var(--color-border);border-radius:99px;font-size:12.5px;background:var(--color-card);outline:none}
 
 /* ── Doc card ── */
 .doc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
-.doc-card{background:#fff;border:0.5px solid var(--color-border);border-radius:var(--radius-sm);padding:16px}
+.doc-card{background:var(--color-card);border:0.5px solid var(--color-border);border-radius:var(--radius-sm);padding:16px}
 .doc-icon{width:36px;height:36px;border-radius:8px;background:var(--color-accent-soft);display:flex;align-items:center;justify-content:center;margin-bottom:10px;color:var(--color-accent)}
 
 /* ── Invoice / contract preview ── */
 .doc-preview{border:1px solid var(--color-border);border-radius:12px;overflow:hidden;font-size:12.5px}
 .doc-preview-row{display:flex;justify-content:space-between;padding:10px 18px;border-bottom:1px solid var(--color-border)}
 .doc-preview-row:last-child{border-bottom:none}
-.doc-preview-head{background:#F2EFE9;padding:14px 18px;font-weight:700;display:flex;justify-content:space-between}
+.doc-preview-head{background:var(--color-surface-soft);padding:14px 18px;font-weight:700;display:flex;justify-content:space-between}
 .doc-preview-total{background:var(--color-accent-soft);font-weight:700;font-size:14px}
 
 /* ── Indy integration ── */
-.indy-connect{background:#fff;border:0.5px solid var(--color-border);border-radius:var(--radius);padding:48px 24px;text-align:center}
+.indy-connect{background:var(--color-card);border:0.5px solid var(--color-border);border-radius:var(--radius);padding:48px 24px;text-align:center}
 .indy-logo-big{width:72px;height:72px;border-radius:18px;background:#1a1a2e;color:#6C63FF;display:inline-flex;align-items:center;justify-content:center;font-weight:900;font-size:22px;letter-spacing:-1px;margin-bottom:18px}
-.indy-perk{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#F8F6F2;border-radius:8px;font-size:12.5px;text-align:left}
+.indy-perk{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--color-surface-soft);border-radius:8px;font-size:12.5px;text-align:left}
 .indy-frame{border:0.5px solid var(--color-border);border-radius:var(--radius);overflow:hidden}
-.indy-topbar{background:#fff;padding:14px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--color-border)}
+.indy-topbar{background:var(--color-card);padding:14px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--color-border)}
 .indy-wordmark{font-size:18px;font-weight:900;color:#1a1a2e;letter-spacing:-.5px}
 .indy-wordmark span{color:#6C63FF}
 .indy-chip{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;background:#E1F5EE;color:var(--color-green)}
-.indy-tabs{display:flex;background:#F2EFE9;border-bottom:1px solid var(--color-border)}
+.indy-tabs{display:flex;background:var(--color-surface-soft);border-bottom:1px solid var(--color-border)}
 .indy-tab{padding:11px 18px;font-size:12.5px;font-weight:600;color:var(--color-warm-gray);cursor:pointer;border-bottom:2px solid transparent}
-.indy-tab.active{color:#6C63FF;border-bottom-color:#6C63FF;background:#fff}
-.indy-body{padding:20px;background:#fff}
+.indy-tab.active{color:#6C63FF;border-bottom-color:#6C63FF;background:var(--color-card)}
+.indy-body{padding:20px;background:var(--color-card)}
 .invoice-card{border:1px solid var(--color-border);border-radius:10px;padding:16px;margin-bottom:12px}
 .invoice-card.indy-src{border-left:3px solid #6C63FF}
 .indy-badge-src{font-size:9.5px;font-weight:900;color:#6C63FF;background:#6C63FF18;padding:2px 7px;border-radius:4px}
 .mh-badge-src{font-size:9.5px;font-weight:700;color:var(--color-accent);background:var(--color-accent-soft);padding:2px 7px;border-radius:4px}
-.inv-line-row{display:grid;grid-template-columns:1fr 60px 100px 28px;gap:8px;margin-bottom:8px}
+.inv-line-row{display:grid;grid-template-columns:1fr 60px 100px 32px;gap:8px;margin-bottom:8px;align-items:center}
 
 @media(max-width:1280px){body{min-width:1280px;overflow-x:auto}}
 </style>
@@ -402,6 +455,10 @@ tr:hover td{background:rgba(200,168,130,.05)}
       </div>
       <div style="display:flex;align-items:center;gap:12px">
         <div class="topbar-actions" id="topbar-actions"></div>
+        <button class="theme-toggle" id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Basculer le thème clair/sombre" title="Thème clair/sombre">
+          <svg class="theme-icon theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="theme-icon theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
         <div style="position:relative">
           <button class="notif-bell" onclick="toggleNotifPanel()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
             <span class="notif-badge" id="notif-badge" style="display:none">0</span>
@@ -699,14 +756,26 @@ const urssafDeclarations = [
 
 const messages = [
   { id:'m1', from:'agence', fromName:'Sophie (TM)', to:'t1',
-    campaignId:'c1', content:"Retours Aesop sur la v1 : cadrage trop serré sur le produit, ils veulent voir plus le contexte \"matin chez soi\". Peux-tu refaire le plan d'intro ?",
-    sentAt:'2026-06-23T10:42:00', read:false },
+    campaignId:'ct3', content:"Contrat Mugler à signer ASAP, deadline pour la marque vendredi. Lis bien les clauses exclusivité p.3.",
+    sentAt:'2026-06-21T09:15:00', read:true },
+  { id:'m1b', from:'talent', fromName:'Mahaut Ctrr', to:'t1',
+    campaignId:'ct3', content:"Reçu, je regarde ça ce soir et je signe dans la journée !",
+    sentAt:'2026-06-21T09:42:00', read:true },
   { id:'m2', from:'agence', fromName:'Sophie (TM)', to:'t1',
     campaignId:null, content:"Charlotte Tilbury a adoré ta dernière preview, bravo ! Contrat Mugler en cours de finalisation.",
     sentAt:'2026-06-22T16:30:00', read:true },
   { id:'m3', from:'agence', fromName:'Sophie (TM)', to:'t1',
-    campaignId:'ct3', content:"Contrat Mugler à signer ASAP, deadline pour la marque vendredi. Lis bien les clauses exclusivité p.3.",
-    sentAt:'2026-06-21T09:15:00', read:true }
+    campaignId:'c1', content:"Retours Aesop sur la v1 : cadrage trop serré sur le produit, ils veulent voir plus le contexte \"matin chez soi\". Peux-tu refaire le plan d'intro ?",
+    sentAt:'2026-06-23T10:42:00', read:false },
+  { id:'m3b', from:'talent', fromName:'Mahaut Ctrr', to:'t1',
+    campaignId:'c1', content:"Oui pas de souci, je retourne ça demain matin avec un plan plus large sur le contexte.",
+    sentAt:'2026-06-23T11:20:00', read:false },
+  { id:'m4', from:'agence', fromName:'Sophie (TM)', to:'t2',
+    campaignId:'c2', content:"Palace veut valider les dates de tournage avant vendredi, tu es dispo cette semaine ?",
+    sentAt:'2026-06-20T14:05:00', read:true },
+  { id:'m4b', from:'talent', fromName:'Lucas Ferreira', to:'t2',
+    campaignId:'c2', content:"Oui carrément, je suis dispo toute la semaine sauf jeudi après-midi.",
+    sentAt:'2026-06-20T14:30:00', read:true },
 ];
 
 const offers = [
@@ -814,15 +883,15 @@ function talentById(id){ return talents.find(t=>t.id===id); }
 function daysUntil(dateStr){ const d=new Date(dateStr); const now=new Date('2026-06-23'); return Math.ceil((d-now)/86400000); }
 
 const BADGE_MAP = {
-  new:['#F2EDE4','#8C6A3C','Nouveau'], contacted:['#EEF0FA','#3A2E7A','Contacté'],
-  negotiation:['#FFF3DC','#8A5C00','Négociation'], signed:['#E1F5EE','#1A6B4A','Signé'],
-  active:['#E1F5EE','#1A6B4A','Actif'], pending:['#FFF3DC','#8A5C00','En attente'],
-  paid:['#E1F5EE','#1A6B4A','Payé'], urgent:['#FCEBEB','#8A2020','Urgent'],
-  preview_pending:['#FFF3DC','#8A5C00','Preview en attente'], feedback:['#FCEBEB','#8A2020','Retours'],
-  brief_received:['#EEF0FA','#3A2E7A','Brief reçu'], accepted:['#E1F5EE','#1A6B4A','Accepté'],
-  refused:['#FCEBEB','#8A2020','Refusé'], sent:['#EEF0FA','#3A2E7A','Envoyée'],
+  new:['pill-accent','Nouveau'], contacted:['pill-purple','Contacté'],
+  negotiation:['pill-amber','Négociation'], signed:['pill-green','Signé'],
+  active:['pill-green','Actif'], pending:['pill-amber','En attente'],
+  paid:['pill-green','Payé'], urgent:['pill-red','Urgent'],
+  preview_pending:['pill-amber','Preview en attente'], feedback:['pill-red','Retours'],
+  brief_received:['pill-purple','Brief reçu'], accepted:['pill-green','Accepté'],
+  refused:['pill-red','Refusé'], sent:['pill-purple','Envoyée'],
 };
-function badge(status){ const [bg,fg,label] = BADGE_MAP[status] || ['#F2EFE9','#8C8880',status]; return `<span class="pill" style="background:${bg};color:${fg}">${label}</span>`; }
+function badge(status){ const [cls,label] = BADGE_MAP[status] || ['pill-gray',status]; return `<span class="pill ${cls}">${label}</span>`; }
 
 function calculateAIScore(lead, talent){
   let score = 0;
@@ -991,8 +1060,8 @@ function renderProfilePanel(){
       </div>
     </div>
     <div class="profile-menu">
-      <div class="profile-menu-item" onclick="toggleProfilePanel();showToast('Édition du profil (démo)','info')">${ic('user',15)} Modifier le profil</div>
-      <div class="profile-menu-item" onclick="toggleProfilePanel();showToast('Sécurité du compte (démo)','info')">${ic('shield',15)} Sécurité du compte</div>
+      <div class="profile-menu-item" onclick="toggleProfilePanel();openEditProfileModal()">${ic('user',15)} Modifier le profil</div>
+      <div class="profile-menu-item" onclick="toggleProfilePanel();openSecurityModal()">${ic('shield',15)} Sécurité du compte</div>
       ${u.role==='agency' ? `<div class="profile-menu-item" onclick="toggleProfilePanel();navigate('settings')">${ic('settings',15)} Paramètres</div>
       <div class="profile-menu-item" onclick="toggleProfilePanel();navigate('admin')">${ic('admin',15)} Administration <span class="badge-admin">ADMIN</span></div>` : ''}
       <div class="profile-menu-divider"></div>
@@ -1003,6 +1072,41 @@ function renderProfilePanel(){
 function toggleProfilePanel(){
   document.getElementById('profile-panel').classList.toggle('open');
   document.getElementById('footer-chevron').classList.toggle('open');
+}
+function openEditProfileModal(){
+  const u = currentUser;
+  openModal('Modifier le profil', `
+    <div class="form-group"><label>Nom</label><input id="ep-name" value="${u.name}"></div>
+    <div class="form-group"><label>Email</label><input id="ep-email" value="${u.email}"></div>
+  `, [
+    {label:'Annuler', cls:'btn-ghost', fn:'closeModal()'},
+    {label:'Enregistrer', cls:'btn-accent', fn:'saveProfileEdit()'},
+  ]);
+}
+function saveProfileEdit(){
+  const name = document.getElementById('ep-name').value.trim();
+  const email = document.getElementById('ep-email').value.trim();
+  if (!name || !email) { showToast('Nom et email obligatoires', 'error'); return; }
+  currentUser.name = name; currentUser.email = email;
+  setupSidebar(); closeModal(); showToast('Profil mis à jour ✓');
+}
+function openSecurityModal(){
+  openModal('Sécurité du compte', `
+    <div class="sso-note" style="margin-bottom:16px">${ic('shield',13)} Connexion protégée par SSO Google Workspace — aucun mot de passe local à gérer.</div>
+    <div class="form-group"><label>Mot de passe actuel</label><input type="password" placeholder="••••••••" id="sec-current"></div>
+    <div class="form-group"><label>Nouveau mot de passe</label><input type="password" placeholder="••••••••" id="sec-new"></div>
+    <div class="form-group"><label>Confirmer le nouveau mot de passe</label><input type="password" placeholder="••••••••" id="sec-confirm"></div>
+  `, [
+    {label:'Annuler', cls:'btn-ghost', fn:'closeModal()'},
+    {label:'Mettre à jour', cls:'btn-accent', fn:'saveSecurityUpdate()'},
+  ]);
+}
+function saveSecurityUpdate(){
+  const n = document.getElementById('sec-new').value;
+  const c = document.getElementById('sec-confirm').value;
+  if (!n || n.length<6) { showToast('Le nouveau mot de passe doit faire au moins 6 caractères', 'error'); return; }
+  if (n!==c) { showToast('Les mots de passe ne correspondent pas', 'error'); return; }
+  closeModal(); showToast('Mot de passe mis à jour ✓');
 }
 
 /* ── Notifications ── */
@@ -1032,6 +1136,10 @@ function toggleNotifPanel(){
   const opening = !panel.classList.contains('open');
   panel.classList.toggle('open');
   if (opening) renderNotifPanel();
+}
+function toggleTheme(){
+  const isDark = document.documentElement.classList.toggle('dark');
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
 }
 function renderNotifPanel(){
   const n = myNotifications();
@@ -1097,6 +1205,152 @@ function showToast(msg, type='success'){
   wrap.appendChild(t);
   requestAnimationFrame(()=>t.classList.add('show'));
   setTimeout(()=>{ t.classList.remove('show'); setTimeout(()=>t.remove(),300); }, 3000);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PRINT / EXPORT / EMAIL — real, dependency-free actions
+   (window.print() → the browser's own "Save as PDF"; mailto: → user's
+   mail client; Blob + <a download> → real CSV file)
+═══════════════════════════════════════════════════════════════════ */
+function openPrintWindow(title, bodyHtml){
+  const win = window.open('', '_blank');
+  if (!win) { showToast("Autorisez les pop-ups pour imprimer ce document", 'error'); return; }
+  const css = document.querySelector('style')?.textContent || '';
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>${css}
+      body{background:var(--color-card);padding:36px;max-width:760px;margin:0 auto}
+      .print-actions{margin-bottom:24px}
+      @media print{ .print-actions{display:none} }
+    </style></head><body>
+    <div class="print-actions"><button class="btn btn-dark" onclick="window.print()">${'Imprimer / Enregistrer en PDF'}</button></div>
+    ${bodyHtml}
+    </body></html>`);
+  win.document.close();
+  setTimeout(()=>{ try{ win.focus(); win.print(); }catch(e){} }, 450);
+}
+function mailtoOpen(subject, body){
+  location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+function downloadCsv(filename, rows){
+  const csv = rows.map(r=>r.map(cell=>`"${String(cell).replace(/"/g,'""')}"`).join(',')).join('\r\n');
+  const blob = new Blob(['﻿'+csv], {type:'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function printInvoicePdf(paymentId){
+  const p = payments.find(x=>x.id===paymentId); const t = talentById(p.talentId);
+  const under36800 = t.caYtd < 36800;
+  openPrintWindow('Facture — '+p.brand, `
+    <h1 class="serif" style="font-size:24px;margin-bottom:4px">Facture</h1>
+    <div class="doc-preview">
+      <div class="doc-preview-row"><span>Émetteur</span><span style="text-align:right">${t.name}<br><span style="font-size:11px;color:var(--color-warm-gray)">Auto-entrepreneur · SIRET ${t.siret}</span></span></div>
+      <div class="doc-preview-row"><span>Client</span><span>${p.brand}</span></div>
+      <div class="doc-preview-row"><span>Prestation</span><span>${p.type} — Réf. contrat ${p.contractId||'—'}</span></div>
+      <div class="doc-preview-row"><span>${under36800?"TVA non applicable, art. 293 B du CGI":"TVA 20%"}</span><span></span></div>
+      <div class="doc-preview-row doc-preview-total"><span>Total net à payer</span><span>${fmtEur(p.amount)}</span></div>
+    </div>
+    <div style="margin-top:24px;font-size:11px;color:var(--color-warm-gray)">Document généré par InfluenceOS — must-have</div>
+  `);
+}
+function emailInvoice(paymentId){
+  const p = payments.find(x=>x.id===paymentId); const t = talentById(p.talentId);
+  mailtoOpen(`Facture — ${p.brand}`, `Bonjour,\n\nVeuillez trouver ci-joint la facture pour ${p.brand} (${p.type}) d'un montant de ${fmtEur(p.amount)}.\n\nCordialement,\n${t.name}`);
+}
+function printTalentInvoicePdf(invoiceId){
+  const inv = invoices.find(i=>i.id===invoiceId); const t = talentById(inv.talentId);
+  const { commission, net } = invoiceNet(inv);
+  openPrintWindow('Facture — '+inv.brand, `
+    <h1 class="serif" style="font-size:24px;margin-bottom:4px">Facture ${inv.indyId||inv.id.toUpperCase()}</h1>
+    <div class="doc-preview">
+      <div class="doc-preview-row"><span>Émetteur</span><span>${t.name} · SIRET ${t.siret}</span></div>
+      <div class="doc-preview-row"><span>Client</span><span>${inv.brand}</span></div>
+      <div class="doc-preview-row"><span>Date / Échéance</span><span>${fmtDate(inv.date)} → ${fmtDate(inv.dueDate)}</span></div>
+      ${inv.lines.map(l=>`<div class="doc-preview-row"><span>${l.label} × ${l.qty}</span><span>${fmtEur(l.qty*l.unitPrice)}</span></div>`).join('')}
+      <div class="doc-preview-row"><span>Montant HT</span><span style="font-weight:700">${fmtEur(inv.amount)}</span></div>
+      ${commission>0?`<div class="doc-preview-row"><span>Commission agence (${Math.round(inv.commissionRate*100)}%)</span><span>− ${fmtEur(commission)}</span></div>`:''}
+      <div class="doc-preview-row doc-preview-total"><span>Net perçu</span><span>${fmtEur(net)}</span></div>
+    </div>
+  `);
+}
+function printTrustPassPdf(talentId){
+  const t = talentById(talentId); const tp = trustpasses[talentId];
+  if (!tp) { showToast('Générez le TrustPass avant de le télécharger', 'error'); return; }
+  openPrintWindow('TrustPass — '+t.name, trustPassCardHtml(t, tp).split('<div style="display:flex;gap:10px">')[0]);
+}
+function emailTrustPass(talentId){
+  const t = talentById(talentId); const tp = trustpasses[talentId];
+  if (!tp) { showToast('Générez le TrustPass avant de l’envoyer', 'error'); return; }
+  mailtoOpen(`TrustPass certifié — ${t.name}`, `Bonjour,\n\nVoici le TrustPass certifié de ${t.name} (${t.handle}) :\nID ${tp.id} — certifié le ${fmtDate(tp.generatedAt)}\nHash de vérification : ${tp.hash}\n\nCordialement,\nMust-Have Agency`);
+}
+function printUrssafRecap(talentId, declarationId){
+  const t = talentById(talentId);
+  const decl = urssafDeclarations.find(d=>d.id===declarationId);
+  const bd = urssafBreakdown(decl.revenue);
+  openPrintWindow('Récapitulatif URSSAF — '+t.name, `
+    <h1 class="serif" style="font-size:24px;margin-bottom:4px">Récapitulatif URSSAF</h1>
+    <div style="font-size:12.5px;color:var(--color-warm-gray);margin-bottom:16px">${t.name} · SIRET ${t.siret}</div>
+    <div class="doc-preview">
+      <div class="doc-preview-row"><span>Trimestre</span><span>T${decl.quarter} ${decl.year}</span></div>
+      <div class="doc-preview-row"><span>Chiffre d'affaires</span><span style="font-weight:700">${fmtEur(decl.revenue)}</span></div>
+      <div class="doc-preview-row"><span>Maladie/maternité (6,5%)</span><span>${fmtEur(bd.maladie)}</span></div>
+      <div class="doc-preview-row"><span>Retraite base (14,5%)</span><span>${fmtEur(bd.retraite)}</span></div>
+      <div class="doc-preview-row"><span>Formation prof. + CFP (0,2%)</span><span>${fmtEur(bd.formation+bd.cfp)}</span></div>
+      <div class="doc-preview-row doc-preview-total"><span>Total à déclarer</span><span>${fmtEur(bd.total)}</span></div>
+      <div class="doc-preview-row"><span>Échéance</span><span>${fmtDate(decl.dueDate||decl.paidDate)}</span></div>
+    </div>
+  `);
+}
+function printContractPdf(contractId){
+  const c = contracts.find(x=>x.id===contractId); const t = talentById(c.talentId);
+  openPrintWindow('Contrat — '+c.brand, `
+    <h1 class="serif" style="font-size:24px;margin-bottom:4px">Contrat de partenariat</h1>
+    <div style="font-size:12.5px;color:var(--color-warm-gray);margin-bottom:16px">${c.brand} × ${t?.name}</div>
+    <div class="doc-preview">
+      <div class="doc-preview-row"><span>Talent</span><span>${t?.name} · SIRET ${t?.siret||'—'}</span></div>
+      <div class="doc-preview-row"><span>Marque</span><span>${c.brand}</span></div>
+      <div class="doc-preview-row"><span>Période</span><span>${fmtDate(c.startDate)} → ${fmtDate(c.endDate)}</span></div>
+      <div class="doc-preview-row"><span>Livrables</span><span style="text-align:right;max-width:360px">${c.deliverables}</span></div>
+      <div class="doc-preview-row"><span>Commission agence</span><span>${fmtEur(c.commissionAgency)}</span></div>
+      <div class="doc-preview-row doc-preview-total"><span>Montant total</span><span>${fmtEur(c.amount)}</span></div>
+    </div>
+    <div style="margin-top:20px;font-size:11px;color:var(--color-warm-gray)">Mentions légales : contrat d'agent d'influenceur conforme à la loi n°2023-451 du 9 juin 2023 encadrant l'influence commerciale. Clause d'exclusivité et conditions de paiement définies entre les parties.</div>
+  `);
+}
+function previewBrief(campaignId){
+  const c = campaigns.find(x=>x.id===campaignId); const t = talentById(c.talentId);
+  openPrintWindow('Brief — '+c.brand, `
+    <h1 class="serif" style="font-size:24px;margin-bottom:4px">${c.title||c.brand}</h1>
+    <div style="font-size:12.5px;color:var(--color-warm-gray);margin-bottom:16px">${c.brand} × ${t?.name} — Budget ${fmtEur(c.budget)}</div>
+    <div class="doc-preview">
+      <div class="doc-preview-row"><span>Deadline preview</span><span>${fmtDate(c.deadlinePreview)}</span></div>
+      <div class="doc-preview-row"><span>Deadline rendu final</span><span>${fmtDate(c.deadlineDelivery)}</span></div>
+      <div class="doc-preview-row"><span>Statut</span><span>${CAMPAIGN_STEP_LABELS[campaignStepLabelKey(c)]||c.status}</span></div>
+    </div>
+    <h2 style="margin-top:20px">Fichier brief</h2>
+    <div style="font-size:12.5px;color:var(--color-warm-gray)">${c.briefUrl} (document fourni par la marque — aperçu non disponible dans cette démo)</div>
+  `);
+}
+function campaignStepLabelKey(c){ return c.versions.length ? (c.versions[c.versions.length-1].status==='feedback'?'feedback':'preview_pending') : 'brief_received'; }
+function printReportPdf(){
+  const c = campaigns.find(x=>x.id===document.getElementById('rp-select').value);
+  openPrintWindow('Rapport — '+c.brand, document.getElementById('report-view').innerHTML);
+}
+function exportPaymentsCsv(){
+  const rows = [['Talent','Marque','Type','Montant','Date','Statut']];
+  payments.forEach(p=>{ const t=talentById(p.talentId); rows.push([t?.name||'',p.brand,p.type,p.amount,p.date,p.status]); });
+  downloadCsv('paiements.csv', rows);
+  showToast('paiements.csv téléchargé ✓');
+}
+function downloadDocument(d){
+  if (d.type==='Facture') printInvoicePdf(d.refId);
+  else if (d.type==='TrustPass') printTrustPassPdf(d.refId);
+  else if (d.type==='Contrat') printContractPdf(d.refId);
+  else if (d.type==='Brief') previewBrief(d.refId);
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -1172,7 +1426,7 @@ RENDERERS.dashboard = function(){
     <div class="card">
       <div class="card-header"><span class="card-title">Paiements à venir</span><button class="btn btn-ghost btn-sm" onclick="navigate('payments')">Voir tout →</button></div>
       <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
-      ${pendingPay.slice(0,4).map(p=>`<div style="display:flex;justify-content:space-between;padding:10px 12px;background:#F8F6F2;border-radius:8px">
+      ${pendingPay.slice(0,4).map(p=>`<div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--color-surface-soft);border-radius:8px">
         <div><div style="font-weight:600;font-size:13px">${p.brand}</div><div style="font-size:11px;color:var(--color-warm-gray)">${talentById(p.talentId)?.name} · ${p.type}</div></div>
         <div style="text-align:right"><div style="font-weight:700;color:var(--color-accent)">${fmtEur(p.amount)}</div><div style="font-size:11px;color:var(--color-warm-gray)">${fmtDate(p.date)}</div></div>
       </div>`).join('')}
@@ -1275,7 +1529,7 @@ function openLeadDetail(id){
       <div class="kpi-card" style="padding:12px"><div class="kpi-label">Secteur</div><div class="kpi-value" style="font-size:18px">${l.sector}</div></div>
     </div>
     <div style="font-size:13px;margin-bottom:16px"><strong>Notes :</strong> ${l.notes}</div>
-    <div style="background:#F2EFE9;border-radius:8px;padding:10px 14px;font-size:12.5px;margin-bottom:16px">
+    <div style="background:var(--color-surface-soft);border-radius:8px;padding:10px 14px;font-size:12.5px;margin-bottom:16px">
       ${['Instagram consulté','Collabs précédentes vérifiées','Budget confirmé','Brief reçu'].map(c=>`<div>${ic('check',12)} ${c}</div>`).join('')}
     </div>
     <div class="tp-section-title" style="color:var(--color-purple)">✦ Recommandation IA</div>
@@ -1298,7 +1552,7 @@ function assignTalentToLead(leadId, talentId){ const l=leads.find(x=>x.id===lead
    MODULE 3 — ROSTER TALENTS
 ═══════════════════════════════════════════════════════════════════ */
 RENDERERS.roster = function(){
-  document.getElementById('topbar-actions').innerHTML = `<button class="btn btn-accent" onclick="showToast('Formulaire d ajout de talent (démo)','info')">${ic('plus',14)} Ajouter talent</button>`;
+  document.getElementById('topbar-actions').innerHTML = `<button class="btn btn-accent" onclick="openNewTalentModal()">${ic('plus',14)} Ajouter talent</button>`;
   document.getElementById('page-content').innerHTML = `
   <div class="toolbar">
     <div class="search-box">${ic('search',15)}<input placeholder="Rechercher un talent..." oninput="filterRoster(this.value)"></div>
@@ -1332,6 +1586,42 @@ function filterRoster(q){
   q = q.toLowerCase();
   document.getElementById('roster-grid').innerHTML = talents.filter(t=>t.name.toLowerCase().includes(q)||t.niche.toLowerCase().includes(q)).map(rosterCardHtml).join('');
 }
+function openNewTalentModal(){
+  openModal('Ajouter un talent', `
+    <div class="form-row">
+      <div class="form-group"><label>Nom complet *</label><input id="nt-name" placeholder="ex: Camille Rousseau"></div>
+      <div class="form-group"><label>Handle</label><input id="nt-handle" placeholder="@camille.rss"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Niche</label><input id="nt-niche" placeholder="Lifestyle & Aesthetic"></div>
+      <div class="form-group"><label>SIRET</label><input id="nt-siret" placeholder="12345678900012"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Followers</label><input id="nt-followers" type="number" placeholder="50000"></div>
+      <div class="form-group"><label>Engagement (%)</label><input id="nt-engagement" type="number" step="0.1" placeholder="6.5"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Email</label><input id="nt-email" type="email"></div>
+      <div class="form-group"><label>Tarif / post (€)</label><input id="nt-rate" type="number" placeholder="1500"></div>
+    </div>
+  `, [
+    {label:'Annuler', cls:'btn-ghost', fn:'closeModal()'},
+    {label:'Ajouter', cls:'btn-accent', fn:'saveNewTalent()'},
+  ]);
+}
+function saveNewTalent(){
+  const name = document.getElementById('nt-name').value.trim();
+  if (!name) { showToast('Le nom est obligatoire', 'error'); return; }
+  talents.push({
+    id: 't-'+uid(), name, handle: document.getElementById('nt-handle').value||'@'+name.toLowerCase().replace(/\s+/g,'.'),
+    niche: document.getElementById('nt-niche').value||'Lifestyle & Aesthetic', platforms:['Instagram'],
+    followers: parseInt(document.getElementById('nt-followers').value)||0, engagement: parseFloat(document.getElementById('nt-engagement').value)||0,
+    caYtd:0, ca2025:0, ratePerPost: parseInt(document.getElementById('nt-rate').value)||0, status:'active',
+    siret: document.getElementById('nt-siret').value||'—', email: document.getElementById('nt-email').value||'—', phone:'—', address:'—',
+    tiktokShopActive:false, promoCode:'', bio:'Nouveau talent ajouté au roster.', audienceAge:'—', audienceGender:'—', audienceTop:'—',
+  });
+  closeModal(); showToast('Talent ajouté ✓'); navigate('roster');
+}
 function openTalentProfile(id){
   const t = talentById(id);
   const hist = contracts.filter(c=>c.talentId===id);
@@ -1343,21 +1633,21 @@ function openTalentProfile(id){
     </div>
     <div style="font-size:13px;margin-bottom:16px;color:var(--color-warm-gray)">${t.bio}</div>
     <div class="tp-metric-grid" style="grid-template-columns:repeat(3,1fr)">
-      <div style="background:#F8F6F2;border-radius:8px;padding:12px;text-align:center"><div class="tp-metric-val">${(t.followers/1000).toFixed(0)}K</div><div class="tp-metric-lab">Followers</div></div>
-      <div style="background:#F8F6F2;border-radius:8px;padding:12px;text-align:center"><div class="tp-metric-val" style="color:var(--color-green)">${t.engagement}%</div><div class="tp-metric-lab">Engagement</div></div>
-      <div style="background:#F8F6F2;border-radius:8px;padding:12px;text-align:center"><div class="tp-metric-val">${fmtEur(t.ratePerPost)}</div><div class="tp-metric-lab">Tarif/post</div></div>
-      <div style="background:#F8F6F2;border-radius:8px;padding:12px;text-align:center;margin-top:8px"><div class="tp-metric-val">${fmtEur(t.ca2025)}</div><div class="tp-metric-lab">CA 2025</div></div>
-      <div style="background:#F8F6F2;border-radius:8px;padding:12px;text-align:center;margin-top:8px"><div class="tp-metric-val">${fmtEur(t.caYtd)}</div><div class="tp-metric-lab">CA 2026</div></div>
-      <div style="background:#F8F6F2;border-radius:8px;padding:12px;text-align:center;margin-top:8px"><div class="tp-metric-val">${hist.length}</div><div class="tp-metric-lab">Contrats</div></div>
+      <div style="background:var(--color-surface-soft);border-radius:8px;padding:12px;text-align:center"><div class="tp-metric-val">${(t.followers/1000).toFixed(0)}K</div><div class="tp-metric-lab">Followers</div></div>
+      <div style="background:var(--color-surface-soft);border-radius:8px;padding:12px;text-align:center"><div class="tp-metric-val" style="color:var(--color-green)">${t.engagement}%</div><div class="tp-metric-lab">Engagement</div></div>
+      <div style="background:var(--color-surface-soft);border-radius:8px;padding:12px;text-align:center"><div class="tp-metric-val">${fmtEur(t.ratePerPost)}</div><div class="tp-metric-lab">Tarif/post</div></div>
+      <div style="background:var(--color-surface-soft);border-radius:8px;padding:12px;text-align:center;margin-top:8px"><div class="tp-metric-val">${fmtEur(t.ca2025)}</div><div class="tp-metric-lab">CA 2025</div></div>
+      <div style="background:var(--color-surface-soft);border-radius:8px;padding:12px;text-align:center;margin-top:8px"><div class="tp-metric-val">${fmtEur(t.caYtd)}</div><div class="tp-metric-lab">CA 2026</div></div>
+      <div style="background:var(--color-surface-soft);border-radius:8px;padding:12px;text-align:center;margin-top:8px"><div class="tp-metric-val">${hist.length}</div><div class="tp-metric-lab">Contrats</div></div>
     </div>
     <div class="form-row section-gap" style="margin-top:16px">
-      <div style="background:#F8F6F2;border-radius:8px;padding:12px 14px"><div class="kpi-label" style="margin-bottom:4px">SIRET</div><div style="font-size:13px;font-weight:600">${t.siret}</div></div>
-      <div style="background:#F8F6F2;border-radius:8px;padding:12px 14px"><div class="kpi-label" style="margin-bottom:4px">Contact</div><div style="font-size:13px">${t.email}</div><div style="font-size:12px;color:var(--color-warm-gray)">${t.phone}</div></div>
+      <div style="background:var(--color-surface-soft);border-radius:8px;padding:12px 14px"><div class="kpi-label" style="margin-bottom:4px">SIRET</div><div style="font-size:13px;font-weight:600">${t.siret}</div></div>
+      <div style="background:var(--color-surface-soft);border-radius:8px;padding:12px 14px"><div class="kpi-label" style="margin-bottom:4px">Contact</div><div style="font-size:13px">${t.email}</div><div style="font-size:12px;color:var(--color-warm-gray)">${t.phone}</div></div>
     </div>
     <div class="tp-section-title">Audience</div>
     <div style="font-size:12.5px;margin-bottom:16px">Âge : <strong>${t.audienceAge}</strong> · Genre : <strong>${t.audienceGender}</strong> · Top zones : <strong>${t.audienceTop}</strong></div>
     <div style="font-size:13px;font-weight:700;margin-bottom:10px">Derniers contrats</div>
-    ${hist.length ? hist.map(c=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#F8F6F2;border-radius:8px;margin-bottom:6px">
+    ${hist.length ? hist.map(c=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--color-surface-soft);border-radius:8px;margin-bottom:6px">
       <div><div style="font-size:13px;font-weight:600">${c.brand}</div><div style="font-size:11.5px;color:var(--color-warm-gray)">${(c.deliverables||'').split(',')[0]}</div></div>
       <div style="text-align:right"><div style="font-weight:700">${fmtEur(c.amount)}</div>${badge(c.status)}</div>
     </div>`).join('') : '<div style="font-size:12.5px;color:var(--color-warm-gray);padding:8px 0">Aucun contrat</div>'}
@@ -1424,9 +1714,9 @@ function openCampaignDetail(id){
         <div class="kpi-card" style="padding:12px"><div class="kpi-label">Deadline rendu final</div><div class="kpi-value" style="font-size:16px">${fmtDate(c.deadlineDelivery)}</div></div>
       </div>
       <div class="tp-section-title">Brief</div>
-      <div style="display:flex;align-items:center;gap:10px;background:#F2EFE9;padding:12px 16px;border-radius:8px;margin-bottom:20px">
+      <div style="display:flex;align-items:center;gap:10px;background:var(--color-surface-soft);padding:12px 16px;border-radius:8px;margin-bottom:20px">
         ${ic('filetext',18)}<span style="font-size:13px">${c.briefUrl}</span>
-        <button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="showToast('Aperçu PDF (démo)','info')">Voir</button>
+        <button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="previewBrief('${c.id}')">Voir</button>
       </div>
       <div class="tp-section-title">Versions soumises</div>
       ${c.versions.map(v=>`<div class="card" style="margin-bottom:10px"><div class="card-body">
@@ -1488,7 +1778,7 @@ RENDERERS.contracts = function(){
       </div>
       <div style="font-size:12.5px;color:var(--color-warm-gray);margin-bottom:10px">${c.deliverables}</div>
       <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:6px"><span>Paiement</span><span>${fmtEur(c.paidAmount)} / ${fmtEur(c.amount)} (commission ${fmtEur(c.commissionAgency)})</span></div>
-      <div style="height:6px;background:#F2EFE9;border-radius:3px;overflow:hidden"><div style="height:100%;width:${pct}%;background:var(--color-accent)"></div></div>
+      <div style="height:6px;background:var(--color-surface-soft);border-radius:3px;overflow:hidden"><div style="height:100%;width:${pct}%;background:var(--color-accent)"></div></div>
     </div></div>`;
   }).join('')}`;
 };
@@ -1532,26 +1822,96 @@ function saveContract(leadId){
 RENDERERS.payments = function(){
   const totalPaid = payments.filter(p=>p.status==='paid').reduce((s,p)=>s+p.amount,0);
   const totalPending = payments.filter(p=>p.status==='pending').reduce((s,p)=>s+p.amount,0);
-  document.getElementById('topbar-actions').innerHTML = `<button class="btn btn-ghost" onclick="showToast('Export CSV généré (démo)','info')">${ic('download',14)} Exporter CSV</button>`;
+  const toValidate = invoices.filter(i=>i.status==='sent');
+  const toPay = invoices.filter(i=>i.status==='validated');
+  const processed = invoices.filter(i=>['validated','paid'].includes(i.status));
+  const totalCommissions = processed.reduce((s,i)=>s+invoiceNet(i).commission,0);
+  document.getElementById('topbar-actions').innerHTML = `<button class="btn btn-ghost" onclick="exportPaymentsCsv()">${ic('download',14)} Exporter CSV</button>`;
   document.getElementById('page-content').innerHTML = `
-  <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr)">
+  <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
     <div class="kpi-card"><div class="kpi-label">Total encaissé</div><div class="kpi-value" style="color:var(--color-green)">${fmtEur(totalPaid)}</div></div>
     <div class="kpi-card"><div class="kpi-label">En attente</div><div class="kpi-value" style="color:var(--color-amber)">${fmtEur(totalPending)}</div></div>
-    <div class="kpi-card"><div class="kpi-label">Transactions</div><div class="kpi-value">${payments.length}</div></div>
+    <div class="kpi-card"><div class="kpi-label">Commissions perçues</div><div class="kpi-value">${fmtEur(totalCommissions)}</div><div class="kpi-sub">15% des factures traitées</div></div>
+    <div class="kpi-card"><div class="kpi-label">Factures à valider</div><div class="kpi-value" style="color:${toValidate.length?'var(--color-red)':'var(--color-black)'}">${toValidate.length}</div></div>
   </div>
-  <div class="card"><div class="table-wrap"><table>
-    <thead><tr><th>Talent</th><th>Marque</th><th>Type</th><th>Montant</th><th>Commission TikTok</th><th>Date</th><th>Statut</th><th>Action</th></tr></thead>
-    <tbody>${payments.map(p=>{
-      const t = talentById(p.talentId);
-      const tiktokComm = t?.tiktokShopActive && p.type==='Solde' ? Math.round(p.amount*0.05) : 0;
-      return `<tr><td>${t?.name||'—'}</td><td>${p.brand}</td><td>${p.type}</td><td style="font-weight:700">${fmtEur(p.amount)}</td>
-        <td style="color:var(--color-purple)">${tiktokComm?fmtEur(tiktokComm):'—'}</td><td>${fmtDate(p.date)}</td><td>${badge(p.status)}</td>
-        <td style="display:flex;gap:6px">${p.status==='pending'?`<button class="btn btn-green btn-sm" onclick="markPaid('${p.id}')">Marquer payé</button>`:''}
-        <button class="btn btn-ghost btn-sm" onclick="generateInvoiceModal('${p.id}')">Facture</button></td></tr>`;
-    }).join('')}</tbody>
-  </table></div></div>`;
+  ${toValidate.length ? `
+  <div class="card section-gap" style="border-color:var(--color-amber)">
+    <div class="card-header" style="background:rgba(181,114,10,.08)">
+      <span class="card-title" style="display:flex;align-items:center;gap:8px">${ic('filetext',16)} Factures à valider (${toValidate.length})</span>
+      <span style="font-size:11.5px;color:var(--color-warm-gray)">Vérifiez et validez avant virement</span>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Talent</th><th>Marque</th><th>Montant HT</th><th>Commission 15%</th><th>Net Talent</th><th>Date</th><th>Actions</th></tr></thead>
+      <tbody>${toValidate.map(inv=>{
+        const t = talentById(inv.talentId); const { commission, net } = invoiceNet(inv);
+        return `<tr><td style="display:flex;align-items:center;gap:8px">${avatarHtml(t,28,11)}${t?.name||'—'}</td><td>${inv.brand}</td>
+          <td style="font-weight:700">${fmtEur(inv.amount)}</td><td style="color:var(--color-accent)">${fmtEur(commission)}</td>
+          <td style="color:var(--color-green);font-weight:700">${fmtEur(net)}</td><td>${fmtDate(inv.date)}</td>
+          <td style="display:flex;gap:6px"><button class="btn btn-dark btn-sm" onclick="agencyValidateInvoice('${inv.id}')">Valider</button>
+          <button class="btn btn-ghost btn-sm" onclick="openAgencyInvoiceDetail('${inv.id}')">Détails</button></td></tr>`;
+      }).join('')}</tbody>
+    </table></div>
+  </div>` : ''}
+  ${toPay.length ? `
+  <div class="card section-gap" style="border-color:#6C63FF">
+    <div class="card-header" style="background:#6C63FF14">
+      <span class="card-title" style="display:flex;align-items:center;gap:8px">${ic('card',16)} Virements à effectuer</span>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Talent</th><th>Marque</th><th>Net à virer</th><th>Actions</th></tr></thead>
+      <tbody>${toPay.map(inv=>{
+        const t = talentById(inv.talentId); const { net } = invoiceNet(inv);
+        return `<tr><td style="display:flex;align-items:center;gap:8px">${avatarHtml(t,28,11)}${t?.name||'—'}</td><td>${inv.brand}</td>
+          <td style="font-weight:800;color:var(--color-green)">${fmtEur(net)}</td>
+          <td><button class="btn btn-green btn-sm" onclick="agencyPayInvoice('${inv.id}')">Virer ${fmtEur(net)}</button></td></tr>`;
+      }).join('')}</tbody>
+    </table></div>
+  </div>` : ''}
+  <div class="card">
+    <div class="card-header"><span class="card-title">Toutes les transactions</span></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Talent</th><th>Marque</th><th>Type</th><th>Montant</th><th>Date</th><th>Statut</th><th>Action</th></tr></thead>
+      <tbody>${payments.map(p=>{
+        const t = talentById(p.talentId);
+        return `<tr><td style="display:flex;align-items:center;gap:8px">${avatarHtml(t,28,11)}${t?.name||'—'}</td><td>${p.brand}</td><td>${p.type}</td><td style="font-weight:700">${fmtEur(p.amount)}</td>
+          <td>${fmtDate(p.date)}</td><td>${badge(p.status)}</td>
+          <td>${p.status==='pending'?`<button class="btn btn-green btn-sm" onclick="markPaid('${p.id}')">Marquer payé</button>`:''}</td></tr>`;
+      }).join('')}</tbody>
+    </table></div>
+  </div>`;
 };
 function markPaid(id){ payments.find(p=>p.id===id).status='paid'; showToast('Paiement marqué comme payé ✓'); navigate('payments'); }
+function agencyValidateInvoice(id){
+  const inv = invoices.find(i=>i.id===id); if (!inv) return;
+  inv.status = 'validated';
+  showToast(`Facture ${inv.brand} validée · net talent ${fmtEur(invoiceNet(inv).net)}`);
+  navigate('payments');
+}
+function agencyPayInvoice(id){
+  const inv = invoices.find(i=>i.id===id); if (!inv) return;
+  const { net } = invoiceNet(inv);
+  inv.status = 'paid';
+  payments.push({ id:'p-'+uid(), contractId:inv.contractId||null, talentId:inv.talentId, brand:inv.brand, type:'Virement net', amount:net, date:'2026-07-06', status:'paid' });
+  showToast(`Virement de ${fmtEur(net)} effectué ✓`);
+  navigate('payments');
+}
+function openAgencyInvoiceDetail(id){
+  const inv = invoices.find(i=>i.id===id); const t = talentById(inv.talentId);
+  const { commission, net } = invoiceNet(inv);
+  openModal(`Facture · ${inv.brand}`, `
+    <div class="doc-preview">
+      <div class="doc-preview-head"><span>${t?.name} → ${inv.brand}</span>${badge(inv.status)}</div>
+      ${inv.lines.map(l=>`<div class="doc-preview-row"><span>${l.label} × ${l.qty}</span><span>${fmtEur(l.qty*l.unitPrice)}</span></div>`).join('')}
+      <div class="doc-preview-row"><span>Montant HT</span><span style="font-weight:700">${fmtEur(inv.amount)}</span></div>
+      <div class="doc-preview-row"><span style="color:var(--color-red)">Commission agence (${Math.round(inv.commissionRate*100)}%)</span><span style="color:var(--color-red)">− ${fmtEur(commission)}</span></div>
+      <div class="doc-preview-row doc-preview-total"><span style="color:var(--color-green)">Net talent</span><span style="color:var(--color-green)">${fmtEur(net)}</span></div>
+      ${inv.notes?`<div class="doc-preview-row"><span>Notes</span><span>${inv.notes}</span></div>`:''}
+    </div>
+  `, [
+    {label:'Fermer', cls:'btn-ghost', fn:'closeModal()'},
+    ...(inv.status==='sent' ? [{label:'Valider', cls:'btn-dark', fn:`closeModal();agencyValidateInvoice('${inv.id}')`}] : []),
+  ]);
+}
 let invoiceCounter = 18;
 function generateInvoiceModal(paymentId){
   const p = payments.find(x=>x.id===paymentId);
@@ -1571,8 +1931,8 @@ function generateInvoiceModal(paymentId){
     </div>
   `, [
     {label:'Fermer', cls:'btn-ghost', fn:'closeModal()'},
-    {label:'Envoyer par email', cls:'btn-ghost', fn:`showToast('Facture envoyée par email','success')`},
-    {label:'Télécharger PDF', cls:'btn-accent', fn:`showToast('PDF téléchargé (démo)','success')`},
+    {label:'Envoyer par email', cls:'btn-ghost', fn:`emailInvoice('${paymentId}')`},
+    {label:'Télécharger PDF', cls:'btn-accent', fn:`printInvoicePdf('${paymentId}')`},
   ]);
 }
 
@@ -1667,11 +2027,11 @@ function renderTpPreview(){
   document.getElementById('tp-preview').innerHTML = tp ? trustPassCardHtml(t, tp) : `<div class="empty">${ic('shield',36)}<div>Aucun TrustPass généré pour ${t.name} — cliquez sur « Générer »</div></div>`;
   document.getElementById('tp-history').innerHTML = Object.entries(trustpasses).map(([tid,v])=>`<tr><td>${talentById(tid).name}</td><td>${v.id}</td><td>${fmtDate(v.generatedAt)}</td></tr>`).join('') || '<tr><td colspan="3" style="color:var(--color-warm-gray)">Aucun passeport généré</td></tr>';
 }
-function trustPassCardHtml(t, tp){
+function trustPassCardHtml(t, tp, canCertify=true){
   return `<div class="tp-card section-gap">
     <div class="tp-head">
       <div><div class="tp-head-title">✦ MUST-HAVE TRUSTPASS™</div><div class="tp-head-sub">Passeport de Performance Certifié</div></div>
-      <div style="text-align:right"><span class="pill" style="background:#fff;color:var(--color-purple)">CERTIFIÉ</span><div class="tp-head-sub">${fmtDate(tp.generatedAt)}</div></div>
+      <div style="text-align:right"><span class="pill" style="background:var(--color-card);color:var(--color-purple)">CERTIFIÉ</span><div class="tp-head-sub">${fmtDate(tp.generatedAt)}</div></div>
     </div>
     <div class="tp-section" style="display:flex;justify-content:space-between;align-items:center">
       <div style="display:flex;gap:12px;align-items:center">${avatarHtml(t,44)}
@@ -1708,10 +2068,10 @@ function trustPassCardHtml(t, tp){
     </div>
   </div>
   <div style="display:flex;gap:10px">
-    <button class="btn btn-ghost btn-sm" onclick="showToast('PDF téléchargé (démo)')">${ic('download',13)} Télécharger PDF</button>
-    <button class="btn btn-ghost btn-sm" onclick="showToast('Lien de vérification copié')">${ic('link',13)} Copier lien</button>
-    <button class="btn btn-ghost btn-sm" onclick="showToast('TrustPass envoyé par email')">${ic('send',13)} Envoyer par email</button>
-    <button class="btn btn-ghost btn-sm" onclick="generateTrustPass('${t.id}');renderTpPreview();showToast('TrustPass régénéré')">Régénérer</button>
+    <button class="btn btn-ghost btn-sm" onclick="printTrustPassPdf('${t.id}')">${ic('download',13)} Télécharger PDF</button>
+    <button class="btn btn-ghost btn-sm" onclick="navigator.clipboard.writeText(location.origin+location.pathname+'#verify/${t.id}');showToast('Lien de vérification copié')">${ic('link',13)} Copier lien</button>
+    <button class="btn btn-ghost btn-sm" onclick="emailTrustPass('${t.id}')">${ic('send',13)} Envoyer par email</button>
+    ${canCertify?`<button class="btn btn-ghost btn-sm" onclick="generateTrustPass('${t.id}');renderTpPreview();showToast('TrustPass régénéré')">Régénérer</button>`:''}
     <button class="btn btn-dark btn-sm" onclick="openVerifyModal('${t.id}')">${ic('eye',13)} Vérifier (page publique)</button>
   </div>`;
 }
@@ -1732,7 +2092,7 @@ RENDERERS.reporting = function(){
     <div class="form-group" style="flex:1;margin:0"><label>Sélectionner une campagne</label>
       <select id="rp-select" onchange="renderReport()">${campaigns.map(c=>`<option value="${c.id}">${c.brand} — ${c.title}</option>`).join('')}</select>
     </div>
-    <button class="btn btn-accent" onclick="showToast('Rapport exporté en PDF (démo)')">${ic('download',14)} Exporter PDF</button>
+    <button class="btn btn-accent" onclick="printReportPdf()">${ic('download',14)} Exporter PDF</button>
   </div></div>
   <div id="report-view"></div>`;
   renderReport();
@@ -1770,10 +2130,10 @@ function renderReport(){
 ═══════════════════════════════════════════════════════════════════ */
 RENDERERS.documents = function(){
   const docs = [
-    ...campaigns.map(c=>({name:c.briefUrl, type:'Brief', date:c.deadlinePreview, who:c.brand})),
-    ...contracts.map(c=>({name:'Contrat_'+c.brand.replace(/\s/g,'')+'.pdf', type:'Contrat', date:c.startDate, who:talentById(c.talentId)?.name})),
-    ...payments.filter(p=>p.status==='paid').map(p=>({name:'Facture_'+p.brand.replace(/\s/g,'')+'.pdf', type:'Facture', date:p.date, who:talentById(p.talentId)?.name})),
-    ...Object.entries(trustpasses).map(([tid,v])=>({name:v.id+'.pdf', type:'TrustPass', date:v.generatedAt, who:talentById(tid).name})),
+    ...campaigns.map(c=>({name:c.briefUrl, type:'Brief', date:c.deadlinePreview, who:c.brand, refId:c.id})),
+    ...contracts.map(c=>({name:'Contrat_'+c.brand.replace(/\s/g,'')+'.pdf', type:'Contrat', date:c.startDate, who:talentById(c.talentId)?.name, refId:c.id})),
+    ...payments.filter(p=>p.status==='paid').map(p=>({name:'Facture_'+p.brand.replace(/\s/g,'')+'.pdf', type:'Facture', date:p.date, who:talentById(p.talentId)?.name, refId:p.id})),
+    ...Object.entries(trustpasses).map(([tid,v])=>({name:v.id+'.pdf', type:'TrustPass', date:v.generatedAt, who:talentById(tid).name, refId:tid})),
   ];
   document.getElementById('page-content').innerHTML = `
   <div class="toolbar">
@@ -1789,8 +2149,8 @@ function docCardHtml(d){
   return `<div class="doc-card"><div class="doc-icon">${ic(d.type==='TrustPass'?'shield':'filetext',18)}</div>
     <div style="font-weight:600;font-size:13px;margin-bottom:4px">${d.name}</div>
     <div style="font-size:11px;color:var(--color-warm-gray);margin-bottom:10px">${d.type} · ${d.who} · ${fmtDate(d.date)}</div>
-    <div style="display:flex;gap:6px"><button class="btn btn-ghost btn-sm" style="flex:1" onclick="showToast('Téléchargé (démo)')">${ic('download',12)}</button>
-    <button class="btn btn-ghost btn-sm" style="flex:1" onclick="showToast('Lien de partage copié')">${ic('link',12)}</button></div></div>`;
+    <div style="display:flex;gap:6px"><button class="icon-btn" style="flex:1" onclick='downloadDocument(${JSON.stringify(d)})'>${ic('download',12)}</button>
+    <button class="icon-btn" style="flex:1" onclick="showToast('Lien de partage copié')">${ic('link',12)}</button></div></div>`;
 }
 function filterDocs(q){
   q=(q||'').toLowerCase();
@@ -1803,31 +2163,79 @@ function filterDocs(q){
 ═══════════════════════════════════════════════════════════════════ */
 let activeMsgTalent = 't1';
 RENDERERS.messaging = function(){ renderMessaging('agency'); };
+function timeAgo(dateStr){
+  const now = new Date('2026-06-23T12:00:00');
+  const diffMin = Math.round((now - new Date(dateStr)) / 60000);
+  if (diffMin < 60) return `il y a ${Math.max(diffMin,1)} min`;
+  if (diffMin < 1440) return `il y a ${Math.round(diffMin/60)} h`;
+  return `il y a ${Math.round(diffMin/1440)} j`;
+}
+function msgDateLabel(dateStr){
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('fr-FR', {weekday:'long', day:'2-digit', month:'long'});
+}
 function renderMessaging(side){
   const threadTalentId = side==='agency' ? activeMsgTalent : currentUser.talentId;
+  const myRole = side==='agency' ? 'agence' : 'talent';
+  const t = talentById(threadTalentId);
+  // opening a thread marks the other party's messages as read
+  messages.filter(m=>m.to===threadTalentId && m.from!==myRole).forEach(m=>m.read=true);
+
   document.getElementById('page-content').innerHTML = `<div class="msg-shell">
-    ${side==='agency' ? `<div class="msg-list">${talents.map(t=>{
-      const unread = messages.filter(m=>m.to===t.id&&!m.read&&m.from==='talent').length;
-      return `<div class="msg-list-item ${t.id===threadTalentId?'active':''}" onclick="activeMsgTalent='${t.id}';renderMessaging('agency')">
-        <div style="display:flex;justify-content:space-between"><strong style="font-size:13px">${t.name}</strong>${unread?`<span class="nav-badge">${unread}</span>`:''}</div>
-        <div style="font-size:11.5px;color:var(--color-warm-gray)">${t.niche}</div></div>`;
+    ${side==='agency' ? `<div class="msg-list">${talents.map(tl=>{
+      const unread = messages.filter(m=>m.to===tl.id&&!m.read&&m.from==='talent').length;
+      const thread = messages.filter(m=>m.to===tl.id).sort((a,b)=>a.sentAt.localeCompare(b.sentAt));
+      const last = thread[thread.length-1];
+      return `<div class="msg-list-item ${tl.id===threadTalentId?'active':''}" onclick="activeMsgTalent='${tl.id}';renderMessaging('agency')">
+        ${avatarHtml(tl,36,13)}
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;justify-content:space-between;gap:6px">
+            <span class="msg-list-item-name">${tl.name}</span>
+            ${last?`<span class="msg-list-item-time">${timeAgo(last.sentAt)}</span>`:''}
+          </div>
+          <div style="display:flex;justify-content:space-between;gap:6px;align-items:center">
+            <span class="msg-list-item-preview">${last?last.content:'Aucun message'}</span>
+            ${unread?`<span class="nav-badge">${unread}</span>`:''}
+          </div>
+        </div>
+      </div>`;
     }).join('')}</div>` : ''}
     <div class="msg-thread">
+      <div class="msg-thread-head">${avatarHtml(t,32,12)}<div><div style="font-weight:700;font-size:13.5px">${t.name}</div><div style="font-size:11px;color:var(--color-warm-gray)">${t.niche}</div></div></div>
       <div class="msg-thread-body" id="msg-thread-body">
-      ${messages.filter(m=>m.to===threadTalentId).map(m=>`<div class="msg-bubble ${m.from==='agence'?'out':'in'}">
-        ${m.content}<div class="msg-meta">${m.fromName} · ${new Date(m.sentAt).toLocaleString('fr-FR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}</div></div>`).join('') || '<div class="empty">Aucun message</div>'}
+      ${(() => {
+        const thread = messages.filter(m=>m.to===threadTalentId).sort((a,b)=>a.sentAt.localeCompare(b.sentAt));
+        if (!thread.length) return `<div class="empty">${ic('message',32)}<div>Aucun message avec ${t.name}</div><div style="font-size:11.5px;margin-top:4px">Envoyez le premier message pour démarrer la conversation.</div></div>`;
+        let html = ''; let lastDay = null; let lastFrom = null;
+        thread.forEach((m,i)=>{
+          const day = m.sentAt.slice(0,10);
+          if (day !== lastDay) { html += `<div class="msg-date-sep">${msgDateLabel(m.sentAt)}</div>`; lastFrom = null; }
+          const dir = m.from===myRole ? 'out' : 'in';
+          const grouped = m.from===lastFrom;
+          const isLastOfGroup = !thread[i+1] || thread[i+1].from!==m.from || thread[i+1].sentAt.slice(0,10)!==day;
+          const avatar = dir==='in' ? (grouped ? '<div class="msg-row-spacer"></div>' : avatarHtml(m.from==='talent'?talentById(threadTalentId):{name:'MustHave'},26,9)) : '';
+          html += `<div class="msg-row ${dir} ${grouped?'grouped':''}">${dir==='in'?avatar:''}<div class="msg-bubble">${m.content}</div></div>`;
+          if (isLastOfGroup) html += `<div class="msg-meta ${dir}" style="margin-left:${dir==='in'?'34px':'0'}">${m.fromName} · ${new Date(m.sentAt).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</div>`;
+          lastDay = day; lastFrom = m.from;
+        });
+        return html;
+      })()}
       </div>
       <div class="msg-input-row">
-        <input id="msg-input" placeholder="Écrire un message..." onkeydown="if(event.key==='Enter')sendMessage('${side}','${threadTalentId}')">
+        <textarea id="msg-input" rows="1" placeholder="Écrire un message..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage('${side}','${threadTalentId}')}"></textarea>
         <button class="icon-btn" onclick="sendMessage('${side}','${threadTalentId}')">${ic('send',15)}</button>
       </div>
     </div>
   </div>`;
+  const body = document.getElementById('msg-thread-body');
+  body.scrollTop = body.scrollHeight;
+  refreshNotifBell();
 }
 function sendMessage(side, talentId){
-  const val = document.getElementById('msg-input').value.trim();
+  const input = document.getElementById('msg-input');
+  const val = input.value.trim();
   if (!val) return;
-  messages.push({ id:'m'+(messages.length+1), from: side==='agency'?'agence':'talent', fromName: side==='agency'?'Sophie (TM)':talentById(talentId).name,
+  messages.push({ id:'m-'+uid(), from: side==='agency'?'agence':'talent', fromName: side==='agency'?'Sophie (TM)':talentById(talentId).name,
     to: talentId, campaignId:null, content: val, sentAt: new Date().toISOString(), read: side==='agency' });
   renderMessaging(side);
 }
@@ -1867,7 +2275,7 @@ RENDERERS.outreach = function(){
         <div class="card-header"><span class="card-title">Actualité influence</span></div>
         <div class="card-body" style="display:flex;flex-direction:column;gap:10px">
           ${industryNews.map(n=>`<div>
-            <div style="display:flex;justify-content:space-between;gap:8px"><span class="pill" style="background:var(--color-accent-soft);color:#8C6A3C">${n.tag}</span><span style="font-size:10.5px;color:var(--color-warm-gray)">${fmtDate(n.date)}</span></div>
+            <div style="display:flex;justify-content:space-between;gap:8px"><span class="pill" style="background:var(--color-accent-soft);color:var(--color-accent2)">${n.tag}</span><span style="font-size:10.5px;color:var(--color-warm-gray)">${fmtDate(n.date)}</span></div>
             <div style="font-size:12.5px;font-weight:600;margin:4px 0 2px">${n.title}</div>
             <div style="font-size:11px;color:var(--color-warm-gray)">${n.source}</div>
           </div>`).join('')}
@@ -1936,21 +2344,39 @@ L'équipe Must-Have</textarea></div>
 /* ═══════════════════════════════════════════════════════════════════
    ADMIN / SETTINGS
 ═══════════════════════════════════════════════════════════════════ */
+let staffMembers = [
+  {name:'Sophie Martin', email:'sophie@musthave.com', role:'Talent Manager', status:'active'},
+  {name:'Admin MustHave', email:'agence@musthave.com', role:'Administrateur', status:'active'},
+];
 RENDERERS.admin = function(){
-  const staff = [
-    {name:'Sophie Martin', email:'sophie@musthave.com', role:'Talent Manager', status:'active'},
-    {name:'Admin MustHave', email:'agence@musthave.com', role:'Administrateur', status:'active'},
-  ];
-  document.getElementById('topbar-actions').innerHTML = `<button class="btn btn-accent" onclick="showToast('Invitation envoyée (démo)')">${ic('plus',14)} Inviter</button>`;
+  document.getElementById('topbar-actions').innerHTML = `<button class="btn btn-accent" onclick="openInviteModal()">${ic('plus',14)} Inviter</button>`;
   document.getElementById('page-content').innerHTML = `
   <div class="card"><div class="card-header"><span class="card-title">Utilisateurs</span></div>
   <div class="table-wrap"><table><thead><tr><th>Nom</th><th>Email</th><th>Rôle</th><th>Statut</th></tr></thead><tbody>
-  ${staff.map(s=>`<tr><td>${s.name}</td><td>${s.email}</td><td>${s.role}</td><td>${badge('active')}</td></tr>`).join('')}
+  ${staffMembers.map(s=>`<tr><td>${s.name}</td><td>${s.email}</td><td>${s.role}</td><td>${badge(s.status)}</td></tr>`).join('')}
   </tbody></table></div></div>
   <div class="card section-gap"><div class="card-header"><span class="card-title">Rôles & permissions</span></div>
     <div class="card-body" style="font-size:13px;color:var(--color-warm-gray)">Administrateur : accès complet · Talent Manager : leads, talents, campagnes, contrats, paiements · Talent : son propre espace uniquement.</div>
   </div>`;
 };
+function openInviteModal(){
+  openModal('Inviter un utilisateur', `
+    <div class="form-group"><label>Nom complet</label><input id="inv-user-name" placeholder="ex: Julien Roux"></div>
+    <div class="form-group"><label>Email</label><input id="inv-user-email" type="email" placeholder="julien@musthave.com"></div>
+    <div class="form-group"><label>Rôle</label><select id="inv-user-role"><option>Talent Manager</option><option>Administrateur</option></select></div>
+  `, [
+    {label:'Annuler', cls:'btn-ghost', fn:'closeModal()'},
+    {label:"Envoyer l'invitation", cls:'btn-accent', fn:'sendInvite()'},
+  ]);
+}
+function sendInvite(){
+  const name = document.getElementById('inv-user-name').value.trim();
+  const email = document.getElementById('inv-user-email').value.trim();
+  if (!name || !email) { showToast('Nom et email obligatoires', 'error'); return; }
+  staffMembers.push({ name, email, role: document.getElementById('inv-user-role').value, status:'pending' });
+  mailtoOpen(`Invitation — plateforme must-have`, `Bonjour ${name},\n\nVous êtes invité(e) à rejoindre l'espace must-have InfluenceOS.\n\nÀ bientôt,\nL'équipe must-have`);
+  closeModal(); showToast('Invitation envoyée ✓'); navigate('admin');
+}
 RENDERERS.settings = function(){
   document.getElementById('page-content').innerHTML = `
   <div class="card" style="max-width:600px"><div class="card-header"><span class="card-title">Informations de l'agence</span></div>
@@ -1992,11 +2418,11 @@ RENDERERS['talent-dashboard'] = function(){
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px" class="section-gap">
     <div class="card"><div class="card-header"><span class="card-title">Mes campagnes en cours</span><button class="btn btn-ghost btn-sm" onclick="navigate('talent-campaigns')">Voir tout →</button></div>
       <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
-      ${myCampaigns().map(c=>`<div style="display:flex;justify-content:space-between;padding:10px;background:#F8F6F2;border-radius:8px"><span style="font-weight:600;font-size:13px">${c.brand}</span>${badge(c.status)}</div>`).join('') || '<div class="empty">Aucune campagne</div>'}
+      ${myCampaigns().map(c=>`<div style="display:flex;justify-content:space-between;padding:10px;background:var(--color-surface-soft);border-radius:8px"><span style="font-weight:600;font-size:13px">${c.brand}</span>${badge(c.status)}</div>`).join('') || '<div class="empty">Aucune campagne</div>'}
       </div></div>
     <div class="card"><div class="card-header"><span class="card-title">Derniers messages</span><button class="btn btn-ghost btn-sm" onclick="navigate('talent-messaging')">Voir tout →</button></div>
       <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
-      ${messages.filter(m=>m.to===t.id).slice(-3).reverse().map(m=>`<div style="padding:10px;background:#F8F6F2;border-radius:8px;font-size:12.5px">${m.content.slice(0,80)}${m.content.length>80?'…':''}</div>`).join('')}
+      ${messages.filter(m=>m.to===t.id).slice(-3).reverse().map(m=>`<div style="padding:10px;background:var(--color-surface-soft);border-radius:8px;font-size:12.5px">${m.content.slice(0,80)}${m.content.length>80?'…':''}</div>`).join('')}
       </div></div>
   </div>
   ${t.tiktokShopActive?`<div class="kpi-card"><div class="kpi-label">TikTok Shop</div><div style="display:flex;gap:24px;margin-top:6px">
@@ -2038,11 +2464,12 @@ RENDERERS['talent-contracts'] = function(){
     <div style="font-size:12px;color:var(--color-warm-gray);margin:6px 0">${c.deliverables}</div>
     <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:10px"><span>${fmtDate(c.startDate)} → ${fmtDate(c.endDate)}</span><strong>${fmtEur(c.amount)}</strong></div>
     <div style="display:flex;gap:8px">
-      <button class="btn btn-ghost btn-sm" onclick="showToast('PDF du contrat téléchargé (démo)')">${ic('download',12)} PDF</button>
-      ${c.status==='pending'?`<button class="btn btn-accent btn-sm" onclick="c.status='active';showToast('Contrat signé ✓');navigate('talent-contracts')">Signer</button>`:''}
+      <button class="btn btn-ghost btn-sm" onclick="printContractPdf('${c.id}')">${ic('download',12)} PDF</button>
+      ${c.status==='pending'?`<button class="btn btn-accent btn-sm" onclick="signContract('${c.id}')">Signer</button>`:''}
     </div>
   </div></div>`).join('') || '<div class="empty">Aucun contrat</div>';
 };
+function signContract(id){ contracts.find(c=>c.id===id).status='active'; showToast('Contrat signé ✓'); navigate('talent-contracts'); }
 
 RENDERERS['talent-payments'] = function(){
   const total = myPayments().filter(p=>p.status==='paid').reduce((s,p)=>s+p.amount,0);
@@ -2077,7 +2504,7 @@ RENDERERS['talent-urssaf'] = function(){
       <div style="font-size:12.5px;color:var(--color-warm-gray);margin:14px 0">Échéance : <strong>${fmtDate(current.dueDate||'2026-07-31')}</strong></div>
       <div style="display:flex;gap:10px">
         <button class="btn btn-dark" onclick="window.open('https://www.net-entreprises.fr','_blank')">Déclarer sur net-entreprises.fr ${ic('external',13)}</button>
-        <button class="btn btn-ghost" onclick="showToast('Récapitulatif PDF téléchargé (démo)')">Télécharger récapitulatif PDF</button>
+        <button class="btn btn-ghost" onclick="printUrssafRecap('${t.id}','${current.id}')">Télécharger récapitulatif PDF</button>
       </div>
     </div>
   </div>
@@ -2168,7 +2595,7 @@ function invoiceCardHtml(inv){
       <div style="text-align:right"><div style="font-size:18px;font-weight:800">${fmtEur(inv.amount)}</div>${badge(inv.status)}</div>
     </div>
     ${!inv.indySource && commission>0 ? `<div class="form-row" style="grid-template-columns:repeat(3,1fr);margin:12px 0">
-      <div style="background:#F8F6F2;border-radius:8px;padding:8px;text-align:center"><div class="kpi-label">Montant HT</div><div style="font-weight:700;font-size:13px">${fmtEur(inv.amount)}</div></div>
+      <div style="background:var(--color-surface-soft);border-radius:8px;padding:8px;text-align:center"><div class="kpi-label">Montant HT</div><div style="font-weight:700;font-size:13px">${fmtEur(inv.amount)}</div></div>
       <div style="background:#FCEBEB;border-radius:8px;padding:8px;text-align:center"><div class="kpi-label" style="color:var(--color-red)">Commission ${Math.round(inv.commissionRate*100)}%</div><div style="font-weight:700;font-size:13px;color:var(--color-red)">− ${fmtEur(commission)}</div></div>
       <div style="background:#E1F5EE;border-radius:8px;padding:8px;text-align:center"><div class="kpi-label" style="color:var(--color-green)">Net perçu</div><div style="font-weight:700;font-size:13px;color:var(--color-green)">${fmtEur(net)}</div></div>
     </div>` : ''}
@@ -2178,7 +2605,7 @@ function invoiceCardHtml(inv){
       ${inv.status==='sent'?`<span style="font-size:12px;color:var(--color-amber);font-weight:600">En attente de validation agence</span>`:''}
       ${inv.status==='validated'?`<span style="font-size:12px;color:#6C63FF;font-weight:600">Validée — virement en cours</span>`:''}
       ${inv.status==='paid'?`<span style="font-size:12px;color:var(--color-green);font-weight:600">Payée${!inv.indySource?' · '+fmtEur(net)+' nets reçus':''}</span>`:''}
-      <button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="showToast('PDF téléchargé (démo)')">${ic('download',12)}</button>
+      <button class="icon-btn btn-sm" style="margin-left:auto" onclick="printTalentInvoicePdf('${inv.id}')">${ic('download',12)}</button>
     </div>
   </div>`;
 }
@@ -2260,12 +2687,18 @@ function uid(){ return Date.now().toString(36) + Math.random().toString(36).slic
 RENDERERS['talent-trustpass'] = function(){
   const t = myTalent();
   const tp = trustpasses[t.id];
-  document.getElementById('page-content').innerHTML = tp ? trustPassCardHtml(t, tp) + `
+  document.getElementById('page-content').innerHTML = tp ? trustPassCardHtml(t, tp, false) + `
     <div style="display:flex;gap:10px;margin-top:14px">
-      <button class="btn btn-ghost btn-sm" onclick="showToast('Lien copié — à partager avec la marque')">${ic('link',13)} Partager avec une marque</button>
-      <button class="btn btn-ghost btn-sm" onclick="showToast('Demande de mise à jour envoyée à votre Talent Manager')">Demander une mise à jour</button>
+      <button class="btn btn-ghost btn-sm" onclick="navigator.clipboard.writeText(location.origin+location.pathname+'#verify/${t.id}');showToast('Lien copié — à partager avec la marque')">${ic('link',13)} Partager avec une marque</button>
+      <button class="btn btn-ghost btn-sm" onclick="requestTrustPassUpdate('${t.id}')">Demander une mise à jour</button>
     </div>` : `<div class="empty">${ic('shield',36)}<div>Aucun TrustPass généré pour l'instant — votre Talent Manager peut en générer un depuis votre fiche.</div></div>`;
 };
+function requestTrustPassUpdate(talentId){
+  const t = talentById(talentId);
+  messages.push({ id:'m-'+uid(), from:'talent', fromName:t.name, to:talentId, campaignId:null,
+    content:'Bonjour, pourriez-vous mettre à jour mon TrustPass avec mes dernières statistiques ? Merci !', sentAt:new Date().toISOString(), read:false });
+  showToast('Demande envoyée à votre Talent Manager ✓');
+}
 
 RENDERERS['talent-messaging'] = function(){ renderMessaging('talent'); };
 </script>
