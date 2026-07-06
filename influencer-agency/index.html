@@ -33,7 +33,12 @@ input,select,textarea{font-family:inherit}
 .login-card2{background:#fff;border-radius:20px;box-shadow:0 8px 32px rgba(10,10,10,.08);padding:40px 36px;width:100%;max-width:380px;text-align:center}
 .login-brand2{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;margin-bottom:6px}
 .login-brand2 .dot{color:var(--color-accent)}
-.login-tagline{font-size:10.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--color-warm-gray);margin-bottom:24px}
+.login-tagline{font-size:10.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--color-warm-gray);margin-bottom:14px}
+.login-heading{font-size:23px;font-weight:800;margin-bottom:4px;text-align:left}
+.login-sub2{font-size:13px;color:var(--color-warm-gray);margin-bottom:22px;text-align:left}
+.field-label{display:block;font-size:12.5px;font-weight:600;color:var(--color-black);margin-bottom:6px}
+.sso-error-panel{display:none;align-items:center;gap:8px;padding:9px 13px;background:rgba(184,50,50,.06);border:1px solid var(--color-red);border-radius:10px;margin-bottom:14px;text-align:left;font-size:12px;color:var(--color-red);font-weight:600}
+.sso-error-panel.show{display:flex;animation:fadeIn .2s ease}
 .login-tabs{display:flex;background:#F2EFE9;border-radius:99px;padding:4px;margin-bottom:20px}
 .login-tab{flex:1;border:none;background:transparent;padding:9px 0;border-radius:99px;font-size:12.5px;font-weight:600;color:var(--color-warm-gray)}
 .login-tab.active{background:var(--color-black);color:#fff}
@@ -73,7 +78,7 @@ input,select,textarea{font-family:inherit}
 /* ── App shell ── */
 #app{display:none}
 #app.visible{display:flex}
-.sidebar{width:240px;background:var(--color-black);color:#fff;min-height:100vh;position:fixed;top:0;left:0;display:flex;flex-direction:column;flex-shrink:0;z-index:100}
+.sidebar{width:240px;background:var(--color-black);color:#fff;height:100vh;position:fixed;top:0;left:0;display:flex;flex-direction:column;flex-shrink:0;z-index:100}
 .sidebar-logo{padding:22px 20px;font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;border-bottom:1px solid rgba(255,255,255,.1)}
 .sidebar-logo span{color:var(--color-accent)}
 .sidebar-space{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:rgba(255,255,255,.4);padding:14px 20px 4px;font-weight:600}
@@ -86,7 +91,35 @@ input,select,textarea{font-family:inherit}
 .nav-item .nav-icon svg{width:16px;height:16px}
 .nav-badge{margin-left:auto;background:var(--color-red);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px}
 .ai-star{color:var(--color-accent);margin-left:4px;font-size:11px}
-.sidebar-footer{padding:14px 16px;border-top:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:10px}
+.sidebar-footer{padding:14px 16px;border-top:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:10px;cursor:pointer}
+.sso-chip-side{display:flex;align-items:center;gap:6px;justify-content:center;margin:0 14px 10px;padding:5px 10px;border:1px solid var(--color-green);border-radius:99px;font-size:10.5px;font-weight:700;color:var(--color-green);background:rgba(26,107,74,.08)}
+.footer-chevron{margin-left:auto;transition:transform .2s;color:rgba(255,255,255,.4);flex-shrink:0}
+.footer-chevron.open{transform:rotate(180deg)}
+.profile-panel{display:none;flex-direction:column;background:#17171a;border-top:1px solid rgba(255,255,255,.08);max-height:0;overflow:hidden;transition:max-height .2s ease}
+.profile-panel.open{display:flex;max-height:420px}
+.profile-panel-header{padding:16px;display:flex;gap:10px;align-items:flex-start;border-bottom:1px solid rgba(255,255,255,.08)}
+.profile-panel-header .pname{font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
+.profile-panel-header .pemail{font-size:10.5px;color:rgba(255,255,255,.45);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
+.profile-panel-header .prole{font-size:10px;font-weight:700;color:var(--color-red);margin-top:4px;text-transform:uppercase;letter-spacing:.3px}
+.profile-menu{padding:6px}
+.profile-menu-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;color:rgba(255,255,255,.75);font-size:12.5px;font-weight:500;cursor:pointer}
+.profile-menu-item:hover{background:rgba(255,255,255,.07);color:#fff}
+.profile-menu-item .badge-admin{margin-left:auto;font-size:9px;font-weight:800;color:var(--color-red);background:rgba(184,50,50,.18);padding:2px 6px;border-radius:99px}
+.profile-menu-item.danger{color:#ff9a9a}
+.profile-menu-divider{height:1px;background:rgba(255,255,255,.08);margin:4px 10px}
+
+/* ── Notification bell ── */
+.notif-bell{position:relative;width:34px;height:34px;border-radius:99px;border:1px solid var(--color-border);background:#fff;display:flex;align-items:center;justify-content:center;color:var(--color-black)}
+.notif-bell:hover{border-color:var(--color-accent)}
+.notif-badge{position:absolute;top:-4px;right:-4px;background:var(--color-red);color:#fff;font-size:9.5px;font-weight:800;min-width:16px;height:16px;border-radius:99px;display:flex;align-items:center;justify-content:center;padding:0 3px;border:2px solid var(--color-cream)}
+.notif-panel{position:absolute;top:56px;right:32px;width:340px;background:#fff;border:1px solid var(--color-border);border-radius:14px;box-shadow:0 8px 32px rgba(10,10,10,.12);z-index:300;display:none;overflow:hidden}
+.notif-panel.open{display:block}
+.notif-panel-head{padding:14px 16px;border-bottom:1px solid var(--color-border);font-weight:700;font-size:13px}
+.notif-item{display:flex;gap:10px;padding:12px 16px;border-bottom:1px solid var(--color-border)}
+.notif-item:last-child{border-bottom:none}
+.notif-item-icon{width:30px;height:30px;border-radius:8px;background:var(--color-accent-soft);color:var(--color-accent2,#8C6A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.notif-item-title{font-size:12.5px;font-weight:700}
+.notif-item-text{font-size:11.5px;color:var(--color-warm-gray)}
 .avatar-sm{width:32px;height:32px;border-radius:50%;background:var(--color-accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#fff;flex-shrink:0}
 .sidebar-user-name{font-size:12.5px;font-weight:600;color:#fff}
 .sidebar-user-role{font-size:11px;color:rgba(255,255,255,.5)}
@@ -306,12 +339,14 @@ tr:hover td{background:rgba(200,168,130,.05)}
 
 <div id="login-screen">
   <div class="login-card2">
-    <div class="login-brand2">must-have<span class="dot">.</span></div>
-    <div class="login-tagline">InfluenceOS — plateforme de gestion</div>
+    <div class="login-tagline">must-have<span class="dot">.</span></div>
+    <div class="login-heading">Connexion</div>
+    <div class="login-sub2">Espace réservé à l'équipe must-have</div>
     <div class="login-tabs">
       <button class="login-tab active" id="login-tab-agency" onclick="switchLoginTab('agency')">Espace Agence</button>
       <button class="login-tab" id="login-tab-talent" onclick="switchLoginTab('talent')">Espace Talent</button>
     </div>
+    <label class="field-label">Adresse email professionnelle</label>
     <div class="form-group email-wrap">
       <input id="login-email" value="agence@musthave.com" oninput="checkSsoDomain()">
       <span class="email-check" id="email-check">✓</span>
@@ -322,12 +357,8 @@ tr:hover td{background:rgba(200,168,130,.05)}
       <span class="label">SSO activé · Google Workspace</span>
       <span class="proto">OAuth 2.0</span>
     </div>
+    <div class="sso-error-panel" id="sso-error-panel">✕ <span id="sso-error-text">Domaine non compatible SSO</span></div>
     <button class="pill-btn" onclick="doLogin()" id="login-submit-btn">Continuer →</button>
-    <div class="login-divider">ou</div>
-    <button class="google-btn" onclick="doLogin()">
-      <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.52 12.27c0-.85-.08-1.67-.22-2.45H12v4.64h6.46a5.53 5.53 0 0 1-2.4 3.63v3h3.87c2.27-2.09 3.58-5.17 3.58-8.82z"/><path fill="#34A853" d="M12 24c3.24 0 5.96-1.07 7.94-2.91l-3.87-3c-1.08.72-2.46 1.15-4.07 1.15-3.13 0-5.78-2.11-6.73-4.96H1.27v3.1A12 12 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.27 14.28A7.2 7.2 0 0 1 4.89 12c0-.79.14-1.56.38-2.28v-3.1H1.27A12 12 0 0 0 0 12c0 1.94.46 3.77 1.27 5.38z"/><path fill="#EA4335" d="M12 4.75c1.76 0 3.34.6 4.58 1.79l3.43-3.43C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.69 1.27 6.62l4 3.1C6.22 6.86 8.87 4.75 12 4.75z"/></svg>
-      Continuer avec Google Workspace
-    </button>
     <div class="login-demo">Démo : agence@musthave.com ou talent@musthave.com — n'importe quel mot de passe</div>
   </div>
 </div>
@@ -352,13 +383,15 @@ tr:hover td{background:rgba(200,168,130,.05)}
   <div class="sidebar">
     <div class="sidebar-logo">must<span>-have</span></div>
     <div class="sidebar-nav" id="sidebar-nav"></div>
-    <div class="sidebar-footer">
+    <div class="sso-chip-side"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> SSO · Google Workspace</div>
+    <div class="profile-panel" id="profile-panel"></div>
+    <div class="sidebar-footer" onclick="toggleProfilePanel()">
       <div class="avatar-sm" id="user-avatar">A</div>
       <div>
         <div class="sidebar-user-name" id="user-name">—</div>
         <div class="sidebar-user-role" id="user-role">—</div>
       </div>
-      <button class="logout-btn" onclick="logout()" title="Déconnexion"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
+      <span class="footer-chevron" id="footer-chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
     </div>
   </div>
   <div class="main">
@@ -367,7 +400,15 @@ tr:hover td{background:rgba(200,168,130,.05)}
         <div class="breadcrumb" id="breadcrumb">InfluenceOS</div>
         <div class="page-title" id="page-title">Dashboard</div>
       </div>
-      <div class="topbar-actions" id="topbar-actions"></div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="topbar-actions" id="topbar-actions"></div>
+        <div style="position:relative">
+          <button class="notif-bell" onclick="toggleNotifPanel()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="notif-badge" id="notif-badge" style="display:none">0</span>
+          </button>
+          <div class="notif-panel" id="notif-panel"></div>
+        </div>
+      </div>
     </div>
     <div class="page-content" id="page-content"></div>
   </div>
@@ -426,6 +467,7 @@ const ICONS = {
   link:'<path d="M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7.5-.5l-2 2a5 5 0 0 0 7 7l1-1"/>',
   trash:'<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',
   star:'<polygon points="12 2 15 9 22 9 16.5 13.5 18.5 21 12 16.5 5.5 21 7.5 13.5 2 9 9 9"/>',
+  user:'<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
 };
 function ic(name,size=16){ const s=ICONS[name]||''; return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${s}</svg>`; }
 
@@ -682,9 +724,9 @@ const offers = [
 let indyConnected = { t1:true };
 let indyActiveTab = 'all';
 let invoices = [
-  { id:'inv1', talentId:'t1', brand:'Aesop', amount:11000, commissionRate:0.10, date:'2026-06-01', dueDate:'2026-07-01', status:'paid',
+  { id:'inv1', talentId:'t1', brand:'Aesop', amount:11000, commissionRate:0.15, date:'2026-06-01', dueDate:'2026-07-01', status:'paid',
     lines:[{label:'3 posts Instagram',qty:3,unitPrice:1000},{label:'2 Reels TikTok',qty:2,unitPrice:4000}], indySource:false, indyId:null },
-  { id:'inv2', talentId:'t1', brand:'Mugler', amount:12500, commissionRate:0.10, date:'2026-06-18', dueDate:'2026-07-18', status:'sent',
+  { id:'inv2', talentId:'t1', brand:'Mugler', amount:12500, commissionRate:0.15, date:'2026-06-18', dueDate:'2026-07-18', status:'sent',
     lines:[{label:'Vidéo court format',qty:1,unitPrice:8000},{label:'4 posts IG',qty:4,unitPrice:1125}], indySource:false, indyId:null },
   { id:'inv-indy-1', talentId:'t1', brand:'Dior Beauty', amount:8000, commissionRate:0, date:'2025-10-12', dueDate:'2025-11-12', status:'paid',
     lines:[{label:'Campagne rouge à lèvres automne',qty:1,unitPrice:5000},{label:'3 stories IG',qty:3,unitPrice:1000}], indySource:true, indyId:'IND-2025-0012' },
@@ -833,15 +875,24 @@ function switchLoginTab(space){
 function checkSsoDomain(){
   const email = document.getElementById('login-email').value.trim().toLowerCase();
   const detected = email.endsWith('@musthave.com');
+  const looksComplete = /^\S+@\S+\.\S+$/.test(email);
+  const invalid = looksComplete && !detected;
   document.getElementById('login-email').classList.toggle('detected', detected);
   document.getElementById('email-check').classList.toggle('show', detected);
   document.getElementById('sso-detect-panel').classList.toggle('show', detected);
-  document.getElementById('login-pass-group').style.display = detected ? 'none' : 'block';
-  document.getElementById('login-submit-btn').textContent = detected ? 'Continuer →' : 'Se connecter →';
+  document.getElementById('login-pass-group').style.display = (detected || invalid) ? 'none' : 'block';
+  document.getElementById('login-submit-btn').textContent = 'Continuer →';
+  if (invalid) {
+    const domain = email.split('@')[1] || '';
+    document.getElementById('sso-error-text').textContent = `Domaine @${domain} non compatible SSO`;
+  }
+  document.getElementById('sso-error-panel').classList.toggle('show', invalid);
 }
 function doLogin(){
   const email = document.getElementById('login-email').value.trim().toLowerCase();
+  const looksComplete = /^\S+@\S+\.\S+$/.test(email);
   if (email.endsWith('@musthave.com')) runSsoAnimation(loginSpace, email);
+  else if (looksComplete) showToast('Domaine non reconnu — utilisez une adresse @musthave.com', 'error');
   else loginAs(loginSpace);
 }
 function runSsoAnimation(role, email){
@@ -858,7 +909,9 @@ function runSsoAnimation(role, email){
   setTimeout(()=>{ document.getElementById('sso-redirect').classList.remove('open'); loginAs(role); }, 2500);
 }
 function loginAs(role){
-  currentUser = role==='agency' ? {role:'agency', name:'Sophie Martin', roleLabel:'Talent Manager'} : {role:'talent', talentId:'t1', name:'Mahaut Ctrr', roleLabel:'Créatrice de contenu'};
+  currentUser = role==='agency'
+    ? {role:'agency', name:'Sophie Martin', email:'admin@musthave.com', roleLabel:'Talent Manager', isAdmin:true}
+    : {role:'talent', talentId:'t1', name:'Mahaut Ctrr', email:talentById('t1').email, roleLabel:'Créatrice de contenu', isAdmin:false};
   document.getElementById('login-screen').style.display='none';
   document.getElementById('app').classList.add('visible');
   setupSidebar();
@@ -888,9 +941,6 @@ const AGENCY_NAV = [
   {id:'documents', label:'Documents', icon:'folder'},
   {id:'messaging', label:'Messagerie', icon:'message'},
   {id:'outreach', label:'Démarchage', icon:'megaphone'},
-  {section:'Admin'},
-  {id:'admin', label:'Administration', icon:'admin'},
-  {id:'settings', label:'Paramètres', icon:'settings'},
 ];
 const TALENT_NAV = [
   {section:'Mon espace'},
@@ -901,7 +951,7 @@ const TALENT_NAV = [
   {id:'talent-contracts', label:'Mes Contrats', icon:'filetext'},
   {id:'talent-payments', label:'Mes Paiements', icon:'card'},
   {id:'talent-urssaf', label:'URSSAF & Déclarat.', icon:'building'},
-  {id:'talent-invoices', label:'Mes Factures', icon:'euro'},
+  {id:'talent-invoices', label:'Facturation', icon:'euro'},
   {section:'Identité'},
   {id:'talent-trustpass', label:'Mon TrustPass', icon:'shield', ai:true},
   {section:'Communic.'},
@@ -924,6 +974,72 @@ function setupSidebar(){
   document.getElementById('user-role').textContent = currentUser.roleLabel;
   document.getElementById('user-avatar').textContent = initials(currentUser.name);
   document.getElementById('user-avatar').style.background = colorFor(currentUser.name);
+  renderProfilePanel();
+  refreshNotifBell();
+}
+
+/* ── Profile panel ── */
+function renderProfilePanel(){
+  const u = currentUser;
+  document.getElementById('profile-panel').innerHTML = `
+    <div class="profile-panel-header">
+      ${avatarHtml(u.role==='talent' ? talentById(u.talentId) : {name:u.name}, 40, 14)}
+      <div>
+        <div class="pname">${u.name}</div>
+        <div class="pemail">${u.email}</div>
+        <div class="prole">${u.isAdmin ? 'Administrateur' : u.roleLabel}</div>
+      </div>
+    </div>
+    <div class="profile-menu">
+      <div class="profile-menu-item" onclick="toggleProfilePanel();showToast('Édition du profil (démo)','info')">${ic('user',15)} Modifier le profil</div>
+      <div class="profile-menu-item" onclick="toggleProfilePanel();showToast('Sécurité du compte (démo)','info')">${ic('shield',15)} Sécurité du compte</div>
+      ${u.role==='agency' ? `<div class="profile-menu-item" onclick="toggleProfilePanel();navigate('settings')">${ic('settings',15)} Paramètres</div>
+      <div class="profile-menu-item" onclick="toggleProfilePanel();navigate('admin')">${ic('admin',15)} Administration <span class="badge-admin">ADMIN</span></div>` : ''}
+      <div class="profile-menu-divider"></div>
+      <div class="profile-menu-item danger" onclick="logout()">${ic('logout',15)} Se déconnecter</div>
+    </div>
+  `;
+}
+function toggleProfilePanel(){
+  document.getElementById('profile-panel').classList.toggle('open');
+  document.getElementById('footer-chevron').classList.toggle('open');
+}
+
+/* ── Notifications ── */
+function myNotifications(){
+  if (!currentUser) return [];
+  if (currentUser.role==='agency') {
+    return [
+      ...leads.filter(l=>l.status==='new').map(l=>({icon:'pipeline', title:'Nouveau lead', text:`${l.brand} · ${fmtEur(l.budget)}`})),
+      ...payments.filter(p=>p.status==='pending').slice(0,2).map(p=>({icon:'card', title:'Paiement à venir', text:`${p.brand} · ${fmtEur(p.amount)}`})),
+      ...invoices.filter(i=>i.status==='sent').map(i=>({icon:'euro', title:'Facture à valider', text:`${i.brand} · ${fmtEur(i.amount)}`})),
+    ];
+  }
+  const tid = currentUser.talentId;
+  return [
+    ...offers.filter(o=>o.talentId===tid && o.status==='pending').map(o=>({icon:'message', title:'Nouvelle proposition', text:`${o.brand} · ${fmtEur(o.amount)}`})),
+    ...campaigns.filter(c=>c.talentId===tid && c.status==='feedback').map(c=>({icon:'film', title:'Retours sur votre contenu', text:c.brand})),
+  ];
+}
+function refreshNotifBell(){
+  const n = myNotifications();
+  const badge = document.getElementById('notif-badge');
+  if (n.length>0) { badge.style.display='flex'; badge.textContent = n.length>9?'9+':n.length; }
+  else badge.style.display='none';
+}
+function toggleNotifPanel(){
+  const panel = document.getElementById('notif-panel');
+  const opening = !panel.classList.contains('open');
+  panel.classList.toggle('open');
+  if (opening) renderNotifPanel();
+}
+function renderNotifPanel(){
+  const n = myNotifications();
+  document.getElementById('notif-panel').innerHTML = `
+    <div class="notif-panel-head">Notifications ${n.length?`(${n.length})`:''}</div>
+    ${n.length===0 ? `<div style="padding:24px;text-align:center;color:var(--color-warm-gray);font-size:12.5px">Aucune notification</div>` :
+      n.map(item=>`<div class="notif-item"><div class="notif-item-icon">${ic(item.icon,14)}</div><div><div class="notif-item-title">${item.title}</div><div class="notif-item-text">${item.text}</div></div></div>`).join('')}
+  `;
 }
 
 const PAGE_META = {
@@ -935,7 +1051,7 @@ const PAGE_META = {
   'talent-dashboard':['Mon espace','Dashboard'], 'talent-campaigns':['Mon espace','Mes Campagnes'],
   'talent-offers':['Mon espace','Propositions'], 'talent-contracts':['Administratif','Mes Contrats'],
   'talent-payments':['Administratif','Mes Paiements'], 'talent-urssaf':['Administratif','URSSAF & Déclarations'],
-  'talent-invoices':['Administratif','Mes Factures'], 'talent-trustpass':['Identité','Mon TrustPass'],
+  'talent-invoices':['Administratif','Facturation'], 'talent-trustpass':['Identité','Mon TrustPass'],
   'talent-messaging':['Communication','Messagerie'],
 };
 const RENDERERS = {}; // filled below
@@ -2070,21 +2186,34 @@ function submitInvoice(id){ const inv = invoices.find(i=>i.id===id); inv.status=
 let invLineCount = 1;
 function openIndyCreateModal(){
   invLineCount = 1;
-  openModal('Nouvelle facture Indy', `
-    <div class="form-row"><div class="form-group"><label>Marque cliente</label><input id="inv-brand" placeholder="Nom de la marque"></div>
-    <div class="form-group"><label>Date d'échéance</label><input id="inv-due" type="date" value="2026-07-31"></div></div>
+  const myContracts = contracts.filter(c=>c.talentId===currentUser.talentId);
+  openModal('Nouvelle facture — via Indy', `
+    <div style="display:flex;align-items:center;gap:8px;background:var(--color-purple-soft);border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:12.5px">
+      <span style="font-weight:900;color:#6C63FF">indy</span>
+      <span>La facture sera créée dans Indy <strong>et envoyée automatiquement à MustHave</strong></span>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Marque / Client</label><input id="inv-brand" placeholder="ex: Jacquemus"></div>
+      <div class="form-group"><label>Date</label><input id="inv-date" type="date" value="2026-07-06"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Contrat MustHave associé</label><select id="inv-contract"><option value="">— Aucun —</option>${myContracts.map(c=>`<option value="${c.id}">${c.brand} · ${fmtEur(c.amount)}</option>`).join('')}</select></div>
+      <div class="form-group"><label>Échéance (jours)</label><input id="inv-due-days" type="number" value="30"></div>
+    </div>
+    <div class="form-group"><label>Lignes de facturation</label></div>
     <div id="inv-lines">
-      <div class="inv-line-row"><input placeholder="Description" id="il-label-0"><input type="number" placeholder="Qté" id="il-qty-0" value="1" oninput="calcInvTotal()"><input type="number" placeholder="Prix unit." id="il-price-0" value="0" oninput="calcInvTotal()"><button class="icon-btn" onclick="this.closest('.inv-line-row').remove();calcInvTotal()">${ic('x',12)}</button></div>
+      <div class="inv-line-row"><input placeholder="ex: 3 posts Instagram" id="il-label-0"><input type="number" placeholder="Qté" id="il-qty-0" value="1" oninput="calcInvTotal()"><input type="number" placeholder="Prix unit." id="il-price-0" value="0" oninput="calcInvTotal()"><button class="icon-btn" onclick="this.closest('.inv-line-row').remove();calcInvTotal()">${ic('x',12)}</button></div>
     </div>
     <button class="btn btn-ghost btn-sm" onclick="addInvLine()" style="margin-bottom:16px">${ic('plus',12)} Ajouter une ligne</button>
-    <div class="doc-preview">
-      <div class="doc-preview-row"><span>Total HT</span><span id="inv-total-ht" style="font-weight:700">0 €</span></div>
-      <div class="doc-preview-row"><span>Commission agence (10%)</span><span id="inv-comm">− 0 €</span></div>
-      <div class="doc-preview-row doc-preview-total"><span>Net à percevoir</span><span id="inv-net">0 €</span></div>
+    <div class="doc-preview section-gap">
+      <div class="doc-preview-row"><span>Montant HT</span><span id="inv-total-ht" style="font-weight:700">0 €</span></div>
+      <div class="doc-preview-row"><span style="color:var(--color-red)">Commission MustHave (15%)</span><span id="inv-comm" style="color:var(--color-red)">− 0 €</span></div>
+      <div class="doc-preview-row doc-preview-total"><span style="color:var(--color-green)">Net perçu</span><span id="inv-net" style="color:var(--color-green)">0 €</span></div>
     </div>
+    <div class="form-group" style="margin-top:16px"><label>Notes internes</label><textarea id="inv-notes" placeholder="Référence contrat, informations complémentaires…"></textarea></div>
   `, [
     {label:'Annuler', cls:'btn-ghost', fn:'closeModal()'},
-    {label:'Créer et envoyer', cls:'btn-accent', fn:'indyCreateAndSend()'},
+    {label:'Créer et envoyer à l’agence', cls:'btn-dark', fn:'indyCreateAndSend()'},
   ], true);
 }
 function addInvLine(){
@@ -2102,7 +2231,7 @@ function calcInvTotal(){
     const price = parseFloat(row.querySelector('[id^="il-price"]')?.value||0);
     total += qty*price;
   });
-  const comm = Math.round(total*0.10);
+  const comm = Math.round(total*0.15);
   document.getElementById('inv-total-ht').textContent = fmtEur(total);
   document.getElementById('inv-comm').textContent = '− '+fmtEur(comm);
   document.getElementById('inv-net').textContent = fmtEur(total-comm);
@@ -2118,9 +2247,13 @@ function indyCreateAndSend(){
     total += qty*unitPrice;
     lines.push({label, qty, unitPrice});
   });
-  invoices.push({ id:'inv-'+uid(), talentId:currentUser.talentId, brand, amount:total, commissionRate:0.10,
-    date:'2026-06-23', dueDate:document.getElementById('inv-due').value||'2026-07-31', status:'sent', lines, indySource:false, indyId:null });
-  closeModal(); showToast('Facture créée et envoyée à MustHave ✓'); navigate('talent-invoices');
+  const date = document.getElementById('inv-date').value || '2026-07-06';
+  const days = parseInt(document.getElementById('inv-due-days').value)||30;
+  const due = new Date(date); due.setDate(due.getDate()+days);
+  const contractId = document.getElementById('inv-contract').value || null;
+  invoices.push({ id:'inv-'+uid(), talentId:currentUser.talentId, contractId, brand, amount:total, commissionRate:0.15,
+    date, dueDate:due.toISOString().split('T')[0], notes:document.getElementById('inv-notes').value||'', status:'sent', lines, indySource:false, indyId:null });
+  closeModal(); showToast('Facture créée dans Indy et envoyée à MustHave ✓'); navigate('talent-invoices');
 }
 function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
 
