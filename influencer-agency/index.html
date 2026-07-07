@@ -385,6 +385,29 @@ html.dark .pill-red{background:rgba(224,117,117,.13)}
 .mh-badge-src{font-size:9.5px;font-weight:700;color:var(--color-accent);background:var(--color-accent-soft);padding:2px 7px;border-radius:4px}
 .inv-line-row{display:grid;grid-template-columns:1fr 60px 100px 32px;gap:8px;margin-bottom:8px;align-items:center}
 
+/* ── Dashboard v2 : toolbar, recherche globale, graphes, IA Studio ── */
+.dash-toolbar{display:flex;gap:12px;align-items:center;margin-bottom:20px;flex-wrap:wrap}
+.dash-search{position:relative;flex:1;min-width:260px}
+.dash-search input{width:100%;padding:9px 12px 9px 34px;border:1px solid var(--color-border);border-radius:99px;outline:none;font-size:13px;background:var(--color-card);color:var(--color-black)}
+.dash-search input:focus{border-color:var(--color-accent)}
+.dash-search>svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--color-warm-gray)}
+.dash-search-results{position:absolute;top:42px;left:0;right:0;background:var(--color-card);border:1px solid var(--color-border);border-radius:12px;box-shadow:0 8px 32px rgba(10,10,10,.12);z-index:250;max-height:340px;overflow-y:auto;display:none}
+.dash-search-results.open{display:block}
+.dash-search-group{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--color-warm-gray);font-weight:700;padding:10px 14px 4px}
+.dash-search-item{display:flex;align-items:center;gap:10px;padding:8px 14px;cursor:pointer;font-size:13px}
+.dash-search-item:hover{background:var(--color-accent-soft)}
+.dash-search-item .sub{font-size:11px;color:var(--color-warm-gray)}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.bar-label{width:150px;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0}
+.bar-track{flex:1;height:22px;background:var(--color-surface-soft);border-radius:6px;overflow:hidden}
+.bar-fill{height:100%;border-radius:6px;background:var(--color-accent);display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:10.5px;font-weight:700;color:#17140F;min-width:fit-content;transition:width .4s ease}
+.bar-value{width:80px;font-size:12px;font-weight:700;text-align:right;flex-shrink:0;font-variant-numeric:tabular-nums}
+.ai-studio-input-wrap{display:flex;gap:10px;margin-bottom:14px}
+.ai-studio-input-wrap input{flex:1;padding:12px 16px;border:1.5px solid var(--color-purple);border-radius:12px;outline:none;font-size:13.5px;background:var(--color-card);color:var(--color-black)}
+.ai-chip{display:inline-flex;padding:5px 12px;border-radius:99px;background:var(--color-purple-soft);color:var(--color-purple);font-size:11.5px;font-weight:600;cursor:pointer;border:1px solid transparent}
+.ai-chip:hover{border-color:var(--color-purple)}
+.ai-interpretation{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--color-purple);background:var(--color-purple-soft);padding:8px 14px;border-radius:10px;margin-bottom:16px}
+
 @media(max-width:1280px){body{min-width:1280px;overflow-x:auto}}
 </style>
 </head>
@@ -1389,18 +1412,96 @@ function renderDeadlineBlock(items){
 /* ═══════════════════════════════════════════════════════════════════
    MODULE 1 — DASHBOARD AGENCE
 ═══════════════════════════════════════════════════════════════════ */
+let dashView = 'overview';
+let dashPeriod = 'all';
+const DASH_TODAY = new Date('2026-06-23');
+function periodStart(){
+  if (dashPeriod==='7j') return new Date(DASH_TODAY - 7*86400000);
+  if (dashPeriod==='30j') return new Date(DASH_TODAY - 30*86400000);
+  if (dashPeriod==='trim') return new Date(DASH_TODAY - 92*86400000);
+  return new Date(0);
+}
+function inPeriod(dateStr){ return new Date(dateStr) >= periodStart(); }
+
+function barChartHtml(items, color){
+  const max = Math.max(...items.map(i=>i.value), 1);
+  return items.map(i=>`<div class="bar-row">
+    <div class="bar-label">${i.label}</div>
+    <div class="bar-track"><div class="bar-fill" style="width:${Math.round(i.value/max*100)}%;background:${i.color||color||'var(--color-accent)'}">${fmtEur(i.value)}</div></div>
+  </div>`).join('');
+}
+
+/* ── Recherche globale ── */
+function globalSearch(q){
+  const box = document.getElementById('dash-search-results');
+  q = q.trim().toLowerCase();
+  if (q.length < 2) { box.classList.remove('open'); return; }
+  const isAgency = currentUser.role==='agency';
+  const groups = [];
+  if (isAgency) {
+    const tMatch = talents.filter(t=>(t.name+t.niche+t.handle).toLowerCase().includes(q)).slice(0,4);
+    if (tMatch.length) groups.push(['Talents', tMatch.map(t=>`<div class="dash-search-item" onclick="closeDashSearch();openTalentProfile('${t.id}')">${avatarHtml(t,24,9)}<div>${t.name}<div class="sub">${t.niche}</div></div></div>`)]);
+    const lMatch = leads.filter(l=>(l.brand+l.contact+l.sector).toLowerCase().includes(q)).slice(0,4);
+    if (lMatch.length) groups.push(['Leads', lMatch.map(l=>`<div class="dash-search-item" onclick="closeDashSearch();openLeadDetail('${l.id}')">${ic('pipeline',14)}<div>${l.brand}<div class="sub">${fmtEur(l.budget)} · ${l.sector}</div></div></div>`)]);
+    const cMatch = contracts.filter(c=>(c.brand+(talentById(c.talentId)?.name||'')).toLowerCase().includes(q)).slice(0,4);
+    if (cMatch.length) groups.push(['Contrats', cMatch.map(c=>`<div class="dash-search-item" onclick="closeDashSearch();navigate('contracts')">${ic('filetext',14)}<div>${c.brand} × ${talentById(c.talentId)?.name}<div class="sub">${fmtEur(c.amount)}</div></div></div>`)]);
+    const campMatch = campaigns.filter(c=>(c.brand+(c.title||'')).toLowerCase().includes(q)).slice(0,4);
+    if (campMatch.length) groups.push(['Campagnes', campMatch.map(c=>`<div class="dash-search-item" onclick="closeDashSearch();openCampaignDetail('${c.id}')">${ic('film',14)}<div>${c.title||c.brand}<div class="sub">${c.brand}</div></div></div>`)]);
+  } else {
+    const tid = currentUser.talentId;
+    const campMatch = campaigns.filter(c=>c.talentId===tid&&(c.brand+(c.title||'')).toLowerCase().includes(q)).slice(0,4);
+    if (campMatch.length) groups.push(['Mes campagnes', campMatch.map(c=>`<div class="dash-search-item" onclick="closeDashSearch();openCampaignDetail('${c.id}')">${ic('film',14)}<div>${c.title||c.brand}</div></div>`)]);
+    const pMatch = payments.filter(p=>p.talentId===tid&&p.brand.toLowerCase().includes(q)).slice(0,4);
+    if (pMatch.length) groups.push(['Mes paiements', pMatch.map(p=>`<div class="dash-search-item" onclick="closeDashSearch();navigate('talent-payments')">${ic('card',14)}<div>${p.brand}<div class="sub">${fmtEur(p.amount)} · ${p.type}</div></div></div>`)]);
+    const oMatch = offers.filter(o=>o.talentId===tid&&o.brand.toLowerCase().includes(q)).slice(0,4);
+    if (oMatch.length) groups.push(['Propositions', oMatch.map(o=>`<div class="dash-search-item" onclick="closeDashSearch();navigate('talent-offers')">${ic('message',14)}<div>${o.brand}<div class="sub">${fmtEur(o.amount)}</div></div></div>`)]);
+  }
+  box.innerHTML = groups.length
+    ? groups.map(([label,items])=>`<div class="dash-search-group">${label}</div>${items.join('')}`).join('')
+    : `<div style="padding:16px;text-align:center;color:var(--color-warm-gray);font-size:12.5px">Aucun résultat pour « ${q} »</div>`;
+  box.classList.add('open');
+}
+function closeDashSearch(){ const b=document.getElementById('dash-search-results'); if(b) b.classList.remove('open'); }
+
+function dashToolbarHtml(tabs, activeTab, onTabFn, searchPlaceholder){
+  return `<div class="dash-toolbar">
+    <div class="dash-search">${ic('search',15)}
+      <input placeholder="${searchPlaceholder}" oninput="globalSearch(this.value)" onblur="setTimeout(closeDashSearch,200)">
+      <div class="dash-search-results" id="dash-search-results"></div>
+    </div>
+    <div class="tabs" style="margin:0">${tabs.map(([id,label])=>`<button class="tab ${activeTab===id?'active':''}" onclick="${onTabFn}('${id}')">${label}</button>`).join('')}</div>
+    <select class="filter-select" onchange="dashPeriod=this.value;navigate(currentPage)" title="Période">
+      ${[['all','Toute période'],['7j','7 derniers jours'],['30j','30 derniers jours'],['trim','Ce trimestre']].map(([v,l])=>`<option value="${v}" ${dashPeriod===v?'selected':''}>${l}</option>`).join('')}
+    </select>
+  </div>`;
+}
+
 RENDERERS.dashboard = function(){
+  document.getElementById('page-content').innerHTML =
+    dashToolbarHtml([['overview','Vue d’ensemble'],['finance','Finance'],['talents','Talents'],['ai','IA Studio ✦']], dashView, 'setDashView', 'Rechercher talent, lead, contrat, campagne...')
+    + `<div id="dash-view-body"></div>`;
+  renderDashViewBody();
+};
+function setDashView(v){ dashView = v; navigate('dashboard'); }
+function renderDashViewBody(){
+  const el = document.getElementById('dash-view-body');
+  if (dashView==='finance') el.innerHTML = agencyFinanceHtml();
+  else if (dashView==='talents') el.innerHTML = agencyTalentsViewHtml();
+  else if (dashView==='ai') { el.innerHTML = aiStudioHtml('agency'); }
+  else el.innerHTML = agencyOverviewHtml();
+}
+
+function agencyOverviewHtml(){
   const totalCA = contracts.reduce((s,c)=>s+c.amount,0);
   const totalComm = contracts.reduce((s,c)=>s+c.commissionAgency,0);
   const activeDeals = contracts.filter(c=>c.status==='active').length;
   const pendingPay = payments.filter(p=>p.status==='pending');
   const pendingTotal = pendingPay.reduce((s,p)=>s+p.amount,0);
-  const newLeads = leads.filter(l=>l.status==='new').length;
+  const newLeads = leads.filter(l=>l.status==='new'&&inPeriod(l.date)).length;
   const dls = upcomingDeadlines();
   const urgentCount = dls.filter(d=>daysUntil(d.date)<=7).length;
-  const recentLeads = [...leads].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
-
-  document.getElementById('page-content').innerHTML = `
+  const recentLeads = [...leads].filter(l=>inPeriod(l.date)).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
+  return `
   <div class="kpi-grid">
     <div class="kpi-card"><div class="kpi-label">CA Total Contrats</div><div class="kpi-value">${fmtEur(totalCA)}</div><div class="kpi-sub up">↑ +23% vs 2025</div></div>
     <div class="kpi-card"><div class="kpi-label">Commissions Agence</div><div class="kpi-value">${fmtEur(totalComm)}</div><div class="kpi-sub">10% moyen</div></div>
@@ -1409,7 +1510,7 @@ RENDERERS.dashboard = function(){
   </div>
   <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr)">
     <div class="kpi-card"><div class="kpi-label">Talents Actifs</div><div class="kpi-value">${talents.length}</div><div class="kpi-sub">Roster complet</div></div>
-    <div class="kpi-card"><div class="kpi-label">Nouveaux Leads</div><div class="kpi-value">${newLeads}</div><div class="kpi-sub">À traiter</div></div>
+    <div class="kpi-card"><div class="kpi-label">Nouveaux Leads</div><div class="kpi-value">${newLeads}</div><div class="kpi-sub">À traiter${dashPeriod!=='all'?' (période filtrée)':''}</div></div>
     <div class="kpi-card"><div class="kpi-label">Deadlines 7j</div><div class="kpi-value">${urgentCount}</div><div class="kpi-sub ${urgentCount?'urgent':''}">${urgentCount?'1 urgente':'Aucune urgence'}</div></div>
   </div>
   <div class="card section-gap">
@@ -1420,13 +1521,13 @@ RENDERERS.dashboard = function(){
     <div class="card">
       <div class="card-header"><span class="card-title">Derniers leads</span><button class="btn btn-ghost btn-sm" onclick="navigate('pipeline')">Voir tout →</button></div>
       <div class="table-wrap"><table><thead><tr><th>Marque</th><th>Budget</th><th>Statut</th></tr></thead><tbody>
-      ${recentLeads.map(l=>`<tr><td><div style="font-weight:600">${l.brand}</div><div style="font-size:11px;color:var(--color-warm-gray)">${l.contact}</div></td><td style="font-weight:700">${fmtEur(l.budget)}</td><td>${badge(l.status)}</td></tr>`).join('')}
+      ${recentLeads.map(l=>`<tr><td><div style="font-weight:600">${l.brand}</div><div style="font-size:11px;color:var(--color-warm-gray)">${l.contact}</div></td><td style="font-weight:700">${fmtEur(l.budget)}</td><td>${badge(l.status)}</td></tr>`).join('') || '<tr><td colspan="3" style="color:var(--color-warm-gray)">Aucun lead sur la période</td></tr>'}
       </tbody></table></div>
     </div>
     <div class="card">
       <div class="card-header"><span class="card-title">Paiements à venir</span><button class="btn btn-ghost btn-sm" onclick="navigate('payments')">Voir tout →</button></div>
       <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
-      ${pendingPay.slice(0,4).map(p=>`<div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--color-surface-soft);border-radius:8px">
+      ${payments.filter(p=>p.status==='pending').slice(0,4).map(p=>`<div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--color-surface-soft);border-radius:8px">
         <div><div style="font-weight:600;font-size:13px">${p.brand}</div><div style="font-size:11px;color:var(--color-warm-gray)">${talentById(p.talentId)?.name} · ${p.type}</div></div>
         <div style="text-align:right"><div style="font-weight:700;color:var(--color-accent)">${fmtEur(p.amount)}</div><div style="font-size:11px;color:var(--color-warm-gray)">${fmtDate(p.date)}</div></div>
       </div>`).join('')}
@@ -1446,7 +1547,349 @@ RENDERERS.dashboard = function(){
     }).join('')}
     </tbody></table></div>
   </div>`;
+}
+
+function agencyFinanceHtml(){
+  const byBrand = {};
+  contracts.forEach(c=>{ byBrand[c.brand]=(byBrand[c.brand]||0)+c.amount; });
+  const brandItems = Object.entries(byBrand).map(([label,value])=>({label,value})).sort((a,b)=>b.value-a.value);
+  const byTalent = {};
+  contracts.forEach(c=>{ const n=talentById(c.talentId)?.name||'—'; byTalent[n]=(byTalent[n]||0)+c.amount; });
+  const talentItems = Object.entries(byTalent).map(([label,value])=>({label,value})).sort((a,b)=>b.value-a.value);
+  const paid = payments.filter(p=>p.status==='paid').reduce((s,p)=>s+p.amount,0);
+  const pending = payments.filter(p=>p.status==='pending').reduce((s,p)=>s+p.amount,0);
+  const totalComm = contracts.reduce((s,c)=>s+c.commissionAgency,0);
+  const avgDeal = Math.round(contracts.reduce((s,c)=>s+c.amount,0)/Math.max(contracts.length,1));
+  return `
+  <div class="kpi-grid">
+    <div class="kpi-card"><div class="kpi-label">Encaissé</div><div class="kpi-value" style="color:var(--color-green)">${fmtEur(paid)}</div></div>
+    <div class="kpi-card"><div class="kpi-label">En attente</div><div class="kpi-value" style="color:var(--color-amber)">${fmtEur(pending)}</div></div>
+    <div class="kpi-card"><div class="kpi-label">Commissions totales</div><div class="kpi-value" style="color:var(--color-accent)">${fmtEur(totalComm)}</div></div>
+    <div class="kpi-card"><div class="kpi-label">Panier moyen / deal</div><div class="kpi-value">${fmtEur(avgDeal)}</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px" class="section-gap">
+    <div class="card"><div class="card-header"><span class="card-title">CA par marque</span></div><div class="card-body">${barChartHtml(brandItems)}</div></div>
+    <div class="card"><div class="card-header"><span class="card-title">CA par talent</span></div><div class="card-body">${barChartHtml(talentItems,'var(--color-purple)')}</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="card-title">Répartition encaissé / en attente</span></div>
+    <div class="card-body">${barChartHtml([{label:'Encaissé',value:paid,color:'var(--color-green)'},{label:'En attente',value:pending,color:'var(--color-amber)'}])}</div>
+  </div>`;
+}
+
+let talentsViewNiche = '';
+let talentsViewSort = 'caYtd';
+function agencyTalentsViewHtml(){
+  const niches = [...new Set(talents.map(t=>t.niche))];
+  let list = talentsViewNiche ? talents.filter(t=>t.niche===talentsViewNiche) : [...talents];
+  list.sort((a,b)=>b[talentsViewSort]-a[talentsViewSort]);
+  const top3 = [...talents].sort((a,b)=>b.engagement-a.engagement).slice(0,3);
+  return `
+  <div class="toolbar">
+    <select class="filter-select" onchange="talentsViewNiche=this.value;renderDashViewBody()">
+      <option value="">Toutes les niches</option>
+      ${niches.map(n=>`<option ${talentsViewNiche===n?'selected':''}>${n}</option>`).join('')}
+    </select>
+    <select class="filter-select" onchange="talentsViewSort=this.value;renderDashViewBody()">
+      ${[['caYtd','Trier par CA'],['engagement','Trier par engagement'],['followers','Trier par followers'],['ratePerPost','Trier par tarif']].map(([v,l])=>`<option value="${v}" ${talentsViewSort===v?'selected':''}>${l}</option>`).join('')}
+    </select>
+  </div>
+  <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr)">
+    ${top3.map((t,i)=>`<div class="kpi-card" style="display:flex;gap:12px;align-items:center;cursor:pointer" onclick="openTalentProfile('${t.id}')">
+      ${avatarHtml(t,44)}
+      <div><div class="kpi-label">Top engagement #${i+1}</div><div style="font-weight:700">${t.name}</div><div class="kpi-sub" style="color:var(--color-green)">${t.engagement}% · ${(t.followers/1000).toFixed(0)}K</div></div>
+    </div>`).join('')}
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="card-title">Roster ${talentsViewNiche?'· '+talentsViewNiche:''} (${list.length})</span></div>
+    <div class="table-wrap"><table><thead><tr><th>Talent</th><th>Niche</th><th>Followers</th><th>Engagement</th><th>CA YTD</th><th>Tarif/post</th></tr></thead><tbody>
+    ${list.map(t=>`<tr style="cursor:pointer" onclick="openTalentProfile('${t.id}')"><td style="display:flex;align-items:center;gap:8px">${avatarHtml(t,28,11)}${t.name}</td>
+      <td>${t.niche}</td><td>${(t.followers/1000).toFixed(0)}K</td><td style="color:var(--color-green);font-weight:600">${t.engagement}%</td>
+      <td style="font-weight:700">${fmtEur(t.caYtd)}</td><td>${fmtEur(t.ratePerPost)}</td></tr>`).join('')}
+    </tbody></table></div>
+  </div>`;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   IA STUDIO — l'agent construit le dashboard demandé en langage naturel
+═══════════════════════════════════════════════════════════════════ */
+const AI_SUGGESTIONS = {
+  agency: ['Paiements en attente de Mahaut','CA par marque','Top 5 talents par engagement','Deadlines urgentes','Leads en négociation','Commissions par talent'],
+  talent: ['Mes paiements en attente','Mes revenus par marque','Mes deadlines','Où en est ma déclaration URSSAF ?','Mes campagnes en cours'],
 };
+function aiStudioHtml(scope){
+  const connected = !!getClaudeKey();
+  return `
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+    <div class="ai-interpretation" style="flex:1;margin-bottom:0">${ic('sparkles',14)} Décrivez le dashboard que vous voulez — l'agent le construit à partir de vos données. Propulsé par InfluenceOS Intelligence.</div>
+    <span class="pill ${connected?'pill-green':'pill-gray'}" style="cursor:pointer;flex-shrink:0" onclick="openClaudeKeyModal()" title="${connected?'Moteur Claude actif — cliquer pour gérer la clé':'Cliquer pour connecter une clé API Claude'}">
+      ${connected?'✦ Claude connecté':'Moteur local · connecter Claude'}
+    </span>
+  </div>
+  <div class="ai-studio-input-wrap">
+    <input id="ai-dash-query" placeholder="ex : ${scope==='agency'?'paiements en attente de Mahaut, top talents par engagement, CA par marque…':'mes revenus par marque, mes deadlines…'}" onkeydown="if(event.key==='Enter')runAiDashboard('${scope}')">
+    <button class="btn btn-purple" onclick="runAiDashboard('${scope}')">✦ Générer</button>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px">
+    ${AI_SUGGESTIONS[scope].map(s=>`<span class="ai-chip" onclick="document.getElementById('ai-dash-query').value='${s.replace(/'/g,"\\'")}';runAiDashboard('${scope}')">${s}</span>`).join('')}
+  </div>
+  <div id="ai-dash-output"></div>`;
+}
+/* ── Moteur IA réel : appel direct à l'API Claude depuis le navigateur ──
+   La clé API reste dans le localStorage du poste (jamais envoyée ailleurs
+   qu'à api.anthropic.com). Fallback : moteur local à mots-clés. */
+const AI_MODEL = 'claude-opus-4-8';
+function getClaudeKey(){ try { return localStorage.getItem('mh-claude-key') || ''; } catch(e){ return ''; } }
+function openClaudeKeyModal(){
+  openModal('Connecter le moteur IA (Claude)', `
+    <div style="font-size:12.5px;color:var(--color-warm-gray);margin-bottom:14px">
+      Collez votre clé API Anthropic (<code>sk-ant-…</code>). Elle est stockée uniquement dans ce navigateur
+      (localStorage) et envoyée exclusivement à <strong>api.anthropic.com</strong>.
+    </div>
+    <div class="form-group"><label>Clé API Anthropic</label><input id="claude-key-input" type="password" placeholder="sk-ant-api03-…" value="${getClaudeKey()}"></div>
+  `, [
+    {label:'Déconnecter', cls:'btn-ghost', fn:"localStorage.removeItem('mh-claude-key');closeModal();navigate(currentPage)"},
+    {label:'Annuler', cls:'btn-ghost', fn:'closeModal()'},
+    {label:'Enregistrer', cls:'btn-purple', fn:'saveClaudeKey()'},
+  ]);
+}
+function saveClaudeKey(){
+  const k = document.getElementById('claude-key-input').value.trim();
+  if (!k.startsWith('sk-ant-')) { showToast('Clé invalide — elle doit commencer par sk-ant-', 'error'); return; }
+  localStorage.setItem('mh-claude-key', k);
+  closeModal(); showToast('Moteur IA Claude connecté ✓'); navigate(currentPage);
+}
+function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function aiDataSnapshot(scope){
+  const tid = scope==='talent' ? currentUser.talentId : null;
+  const pick = arr => tid ? arr.filter(x=>x.talentId===tid) : arr;
+  return JSON.stringify({
+    date_du_jour: '2026-06-23',
+    talents: (tid ? talents.filter(t=>t.id===tid) : talents).map(t=>({id:t.id,nom:t.name,niche:t.niche,followers:t.followers,engagement_pct:t.engagement,ca_2026_eur:t.caYtd,ca_2025_eur:t.ca2025,tarif_post_eur:t.ratePerPost,tiktok_shop:t.tiktokShopActive})),
+    leads: scope==='agency' ? leads.map(l=>({marque:l.brand,secteur:l.sector,budget_eur:l.budget,statut:l.status,date:l.date,talentId:l.talentId})) : undefined,
+    contrats: pick(contracts).map(c=>({marque:c.brand,talentId:c.talentId,montant_eur:c.amount,commission_agence_eur:c.commissionAgency,debut:c.startDate,fin:c.endDate,statut:c.status,paye_eur:c.paidAmount})),
+    paiements: pick(payments).map(p=>({marque:p.brand,talentId:p.talentId,type:p.type,montant_eur:p.amount,date:p.date,statut:p.status})),
+    campagnes: pick(campaigns).map(c=>({marque:c.brand,titre:c.title,talentId:c.talentId,budget_eur:c.budget,deadline_preview:c.deadlinePreview,deadline_rendu:c.deadlineDelivery,statut:c.status})),
+    factures: pick(invoices).map(i=>({marque:i.brand,talentId:i.talentId,montant_eur:i.amount,taux_commission:i.commissionRate,date:i.date,echeance:i.dueDate,statut:i.status,source_indy:i.indySource})),
+    urssaf: scope==='talent' ? urssafDeclarations.filter(u=>u.talentId===tid).map(u=>({trimestre:'T'+u.quarter+' '+u.year,ca_eur:u.revenue,cotisations_eur:u.cotisations,statut:u.status,echeance:u.dueDate||u.paidDate})) : undefined,
+  });
+}
+
+const AI_DASH_SCHEMA = {
+  type:'object', additionalProperties:false,
+  properties:{
+    interpretation:{type:'string', description:'Une phrase en français résumant ce qui a été compris et construit'},
+    widgets:{type:'array', items:{
+      type:'object', additionalProperties:false,
+      properties:{
+        type:{type:'string', enum:['kpi_row','bar_chart','table']},
+        title:{type:'string'},
+        kpis:{type:'array', items:{type:'object', additionalProperties:false, properties:{
+          label:{type:'string'}, value:{type:'string'}, sub:{type:'string'},
+          color:{type:'string', enum:['default','green','amber','red','accent','purple']}
+        }, required:['label','value']}},
+        bars:{type:'array', items:{type:'object', additionalProperties:false, properties:{
+          label:{type:'string'}, value:{type:'number'}
+        }, required:['label','value']}},
+        columns:{type:'array', items:{type:'string'}},
+        rows:{type:'array', items:{type:'array', items:{type:'string'}}}
+      },
+      required:['type','title']
+    }}
+  },
+  required:['interpretation','widgets']
+};
+
+async function callClaudeDashboard(query, scope){
+  const system = `Tu es InfluenceOS Intelligence, l'agent de dashboards de l'agence d'influence must-have.
+On te fournit un instantané JSON des données réelles de la plateforme et une requête utilisateur en français.
+Construis le dashboard qui répond le mieux à la requête, uniquement à partir des données fournies — n'invente jamais de chiffres.
+Règles :
+- widgets de type kpi_row (indicateurs clés), bar_chart (comparaisons de montants en euros — "value" est le nombre brut en euros), table (listes détaillées).
+- 1 à 4 widgets maximum, du plus synthétique au plus détaillé.
+- Les valeurs de KPI et de cellules sont des chaînes formatées à la française (ex : "12 500 €", "7,2 %", "15 juil. 2026").
+- Utilise color:"green" pour le positif/encaissé, "amber" pour l'en-attente, "red" pour l'urgent/retard, "purple" pour les scores IA.
+- Si la requête ne correspond à aucune donnée disponible, retourne widgets:[] et explique-le dans interpretation.`;
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'x-api-key': getClaudeKey(),
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true',
+    },
+    body: JSON.stringify({
+      model: AI_MODEL,
+      max_tokens: 4096,
+      thinking: { type: 'adaptive' },
+      output_config: { effort: 'low', format: { type: 'json_schema', schema: AI_DASH_SCHEMA } },
+      system,
+      messages: [{ role: 'user', content: 'DONNÉES (instantané JSON) :\n' + aiDataSnapshot(scope) + '\n\nREQUÊTE :\n' + query }],
+    }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(()=>null);
+    throw new Error(err?.error?.message || ('HTTP ' + res.status));
+  }
+  const data = await res.json();
+  if (data.stop_reason === 'refusal') throw new Error('Requête refusée par le modèle');
+  const text = (data.content || []).find(b => b.type === 'text');
+  if (!text) throw new Error('Réponse vide');
+  return JSON.parse(text.text);
+}
+
+function renderAiWidgets(spec, out){
+  const KPI_COLORS = { green:'var(--color-green)', amber:'var(--color-amber)', red:'var(--color-red)', accent:'var(--color-accent)', purple:'var(--color-purple)', default:'var(--color-black)' };
+  const widgetsHtml = (spec.widgets || []).map(w => {
+    if (w.type === 'kpi_row' && w.kpis?.length) {
+      return `<div class="kpi-grid section-gap" style="grid-template-columns:repeat(${Math.min(w.kpis.length,4)},1fr)">
+        ${w.kpis.map(k=>`<div class="kpi-card"><div class="kpi-label">${escHtml(k.label)}</div><div class="kpi-value" style="color:${KPI_COLORS[k.color||'default']};font-size:20px">${escHtml(k.value)}</div>${k.sub?`<div class="kpi-sub">${escHtml(k.sub)}</div>`:''}</div>`).join('')}
+      </div>`;
+    }
+    if (w.type === 'bar_chart' && w.bars?.length) {
+      return `<div class="card section-gap"><div class="card-header"><span class="card-title">${escHtml(w.title)}</span></div>
+        <div class="card-body">${barChartHtml(w.bars.map(b=>({label:escHtml(b.label), value:b.value})))}</div></div>`;
+    }
+    if (w.type === 'table' && w.rows?.length) {
+      return `<div class="card section-gap"><div class="card-header"><span class="card-title">${escHtml(w.title)}</span></div>
+        <div class="table-wrap"><table><thead><tr>${(w.columns||[]).map(c=>`<th>${escHtml(c)}</th>`).join('')}</tr></thead>
+        <tbody>${w.rows.map(r=>`<tr>${r.map(c=>`<td>${escHtml(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div></div>`;
+    }
+    return '';
+  }).join('');
+  out.innerHTML = `<div class="ai-interpretation">${ic('check',13)} <strong>Claude ·</strong>&nbsp;${escHtml(spec.interpretation||'Dashboard généré')}</div>`
+    + (widgetsHtml || `<div class="empty">${ic('sparkles',30)}<div>Aucune donnée ne correspond à cette requête</div></div>`);
+}
+
+async function runAiDashboard(scope){
+  const rawQuery = (document.getElementById('ai-dash-query').value||'').trim();
+  const out = document.getElementById('ai-dash-output');
+  if (!rawQuery) { out.innerHTML = `<div class="empty">${ic('sparkles',30)}<div>Saisissez une requête ou choisissez une suggestion</div></div>`; return; }
+  if (!getClaudeKey()) {
+    runLocalAiDashboard(scope);
+    out.insertAdjacentHTML('afterbegin', `<div class="ai-interpretation" style="color:var(--color-warm-gray);background:var(--color-surface-soft)">${ic('sparkles',13)} Moteur local (mots-clés). <span style="text-decoration:underline;cursor:pointer" onclick="openClaudeKeyModal()">Connectez une clé Claude</span> pour un vrai moteur IA.</div>`);
+    return;
+  }
+  out.innerHTML = `<div class="ai-interpretation">${ic('sparkles',14)} <strong>Claude réfléchit…</strong>&nbsp;analyse de vos données en cours</div>`;
+  try {
+    const spec = await callClaudeDashboard(rawQuery, scope);
+    renderAiWidgets(spec, out);
+  } catch(e) {
+    runLocalAiDashboard(scope);
+    out.insertAdjacentHTML('afterbegin', `<div class="ai-interpretation" style="color:var(--color-red);background:rgba(184,50,50,.07)">${ic('x',13)} Moteur Claude indisponible (${escHtml(e.message)}) — résultat du moteur local ci-dessous.</div>`);
+  }
+}
+
+function runLocalAiDashboard(scope){
+  const q = (document.getElementById('ai-dash-query').value||'').toLowerCase();
+  const out = document.getElementById('ai-dash-output');
+  if (!q.trim()) { out.innerHTML = `<div class="empty">${ic('sparkles',30)}<div>Saisissez une requête ou choisissez une suggestion</div></div>`; return; }
+  const tid = scope==='talent' ? currentUser.talentId : null;
+  const widgets = [];
+  const understood = [];
+
+  // Entité talent citée (agence uniquement)
+  let targetTalent = null;
+  if (scope==='agency') {
+    targetTalent = talents.find(t=>q.includes(t.name.split(' ')[0].toLowerCase()));
+    if (targetTalent) understood.push('talent : '+targetTalent.name);
+  }
+  const topN = (q.match(/top\s*(\d+)/)||[])[1] ? parseInt(q.match(/top\s*(\d+)/)[1]) : 5;
+  const wantsPending = /attente|retard|impayé/.test(q);
+  const wantsPaid = /payé|encaissé/.test(q);
+
+  if (/paiement|virement/.test(q)) {
+    understood.push('paiements'+(wantsPending?' en attente':wantsPaid?' payés':''));
+    let list = payments.filter(p=>!tid||p.talentId===tid);
+    if (targetTalent) list = list.filter(p=>p.talentId===targetTalent.id);
+    if (wantsPending) list = list.filter(p=>p.status==='pending');
+    if (wantsPaid) list = list.filter(p=>p.status==='paid');
+    const total = list.reduce((s,p)=>s+p.amount,0);
+    widgets.push(`<div class="card section-gap"><div class="card-header"><span class="card-title">Paiements ${targetTalent?'· '+targetTalent.name:''} (${list.length})</span><span style="font-weight:700;color:var(--color-accent)">${fmtEur(total)}</span></div>
+      <div class="table-wrap"><table><thead><tr>${scope==='agency'?'<th>Talent</th>':''}<th>Marque</th><th>Type</th><th>Montant</th><th>Date</th><th>Statut</th></tr></thead><tbody>
+      ${list.map(p=>`<tr>${scope==='agency'?`<td>${talentById(p.talentId)?.name}</td>`:''}<td>${p.brand}</td><td>${p.type}</td><td style="font-weight:700">${fmtEur(p.amount)}</td><td>${fmtDate(p.date)}</td><td>${badge(p.status)}</td></tr>`).join('') || '<tr><td colspan="6" style="color:var(--color-warm-gray)">Aucun paiement</td></tr>'}
+      </tbody></table></div></div>`);
+  }
+  if (/revenu|chiffre|\bca\b|marque/.test(q) && !/paiement/.test(q)) {
+    understood.push('revenus par marque');
+    const source = contracts.filter(c=>(!tid||c.talentId===tid)&&(!targetTalent||c.talentId===targetTalent.id));
+    const byBrand = {};
+    source.forEach(c=>{ byBrand[c.brand]=(byBrand[c.brand]||0)+c.amount; });
+    const items = Object.entries(byBrand).map(([label,value])=>({label,value})).sort((a,b)=>b.value-a.value);
+    widgets.push(`<div class="card section-gap"><div class="card-header"><span class="card-title">CA par marque ${targetTalent?'· '+targetTalent.name:''}</span></div><div class="card-body">${items.length?barChartHtml(items):'<div style="color:var(--color-warm-gray);font-size:12.5px">Aucun contrat</div>'}</div></div>`);
+  }
+  if (/commission/.test(q)) {
+    understood.push('commissions');
+    if (scope==='agency') {
+      const byTalent = {};
+      contracts.forEach(c=>{ const n=talentById(c.talentId)?.name||'—'; byTalent[n]=(byTalent[n]||0)+c.commissionAgency; });
+      const items = Object.entries(byTalent).map(([label,value])=>({label,value})).sort((a,b)=>b.value-a.value);
+      widgets.push(`<div class="card section-gap"><div class="card-header"><span class="card-title">Commissions par talent</span></div><div class="card-body">${barChartHtml(items,'var(--color-purple)')}</div></div>`);
+    } else {
+      const mine = invoices.filter(i=>i.talentId===tid&&!i.indySource);
+      const totalComm = mine.reduce((s,i)=>s+invoiceNet(i).commission,0);
+      widgets.push(`<div class="kpi-card section-gap"><div class="kpi-label">Commissions agence prélevées</div><div class="kpi-value" style="color:var(--color-red)">${fmtEur(totalComm)}</div><div class="kpi-sub">${mine.length} factures</div></div>`);
+    }
+  }
+  if (/engagement|followers|top/.test(q) && scope==='agency') {
+    const sortKey = /followers/.test(q) ? 'followers' : 'engagement';
+    understood.push(`top ${topN} talents par ${sortKey}`);
+    const list = [...talents].sort((a,b)=>b[sortKey]-a[sortKey]).slice(0,topN);
+    widgets.push(`<div class="card section-gap"><div class="card-header"><span class="card-title">Top ${topN} — ${sortKey==='followers'?'Followers':'Engagement'}</span></div>
+      <div class="table-wrap"><table><thead><tr><th>#</th><th>Talent</th><th>Niche</th><th>Followers</th><th>Engagement</th></tr></thead><tbody>
+      ${list.map((t,i)=>`<tr style="cursor:pointer" onclick="openTalentProfile('${t.id}')"><td style="font-weight:800">${i+1}</td><td style="display:flex;align-items:center;gap:8px">${avatarHtml(t,28,11)}${t.name}</td><td>${t.niche}</td><td>${(t.followers/1000).toFixed(0)}K</td><td style="color:var(--color-green);font-weight:600">${t.engagement}%</td></tr>`).join('')}
+      </tbody></table></div></div>`);
+  }
+  if (/deadline|échéance|urgent/.test(q)) {
+    understood.push('deadlines');
+    let dls = upcomingDeadlines();
+    if (tid) dls = dls.filter(d=>d.campaign.talentId===tid);
+    if (targetTalent) dls = dls.filter(d=>d.campaign.talentId===targetTalent.id);
+    if (/urgent/.test(q)) dls = dls.filter(d=>daysUntil(d.date)<=7);
+    widgets.push(`<div class="card section-gap"><div class="card-header"><span class="card-title">Deadlines ${targetTalent?'· '+targetTalent.name:''}</span></div><div class="card-body">${renderDeadlineBlock(dls)}</div></div>`);
+  }
+  if (/lead/.test(q) && scope==='agency') {
+    understood.push('leads');
+    let list = [...leads];
+    if (/négo/.test(q)) list = list.filter(l=>l.status==='negotiation');
+    if (/nouveau/.test(q)) list = list.filter(l=>l.status==='new');
+    if (/signé/.test(q)) list = list.filter(l=>l.status==='signed');
+    widgets.push(`<div class="card section-gap"><div class="card-header"><span class="card-title">Leads (${list.length})</span><span style="font-weight:700;color:var(--color-accent)">${fmtEur(list.reduce((s,l)=>s+l.budget,0))}</span></div>
+      <div class="table-wrap"><table><thead><tr><th>Marque</th><th>Secteur</th><th>Budget</th><th>Statut</th></tr></thead><tbody>
+      ${list.map(l=>`<tr style="cursor:pointer" onclick="openLeadDetail('${l.id}')"><td style="font-weight:600">${l.brand}</td><td>${l.sector}</td><td style="font-weight:700">${fmtEur(l.budget)}</td><td>${badge(l.status)}</td></tr>`).join('')}
+      </tbody></table></div></div>`);
+  }
+  if (/campagne/.test(q)) {
+    understood.push('campagnes');
+    let list = campaigns.filter(c=>(!tid||c.talentId===tid)&&(!targetTalent||c.talentId===targetTalent.id));
+    widgets.push(`<div class="card section-gap"><div class="card-header"><span class="card-title">Campagnes (${list.length})</span></div>${list.map(campaignRowHtml).join('') || '<div class="card-body" style="color:var(--color-warm-gray)">Aucune campagne</div>'}</div>`);
+  }
+  if (/contrat/.test(q)) {
+    understood.push('contrats');
+    let list = contracts.filter(c=>(!tid||c.talentId===tid)&&(!targetTalent||c.talentId===targetTalent.id));
+    widgets.push(`<div class="card section-gap"><div class="card-header"><span class="card-title">Contrats (${list.length})</span></div>
+      <div class="table-wrap"><table><thead><tr>${scope==='agency'?'<th>Talent</th>':''}<th>Marque</th><th>Montant</th><th>Période</th><th>Statut</th></tr></thead><tbody>
+      ${list.map(c=>`<tr>${scope==='agency'?`<td>${talentById(c.talentId)?.name}</td>`:''}<td>${c.brand}</td><td style="font-weight:700">${fmtEur(c.amount)}</td><td>${fmtDate(c.startDate)} → ${fmtDate(c.endDate)}</td><td>${badge(c.status)}</td></tr>`).join('')}
+      </tbody></table></div></div>`);
+  }
+  if (/urssaf|déclaration|cotisation/.test(q) && scope==='talent') {
+    understood.push('URSSAF');
+    const decl = urssafDeclarations.find(d=>d.talentId===tid&&d.status==='pending');
+    if (decl) {
+      const bd = urssafBreakdown(decl.revenue);
+      widgets.push(`<div class="kpi-grid section-gap" style="grid-template-columns:repeat(3,1fr)">
+        <div class="kpi-card"><div class="kpi-label">CA T${decl.quarter} ${decl.year}</div><div class="kpi-value">${fmtEur(decl.revenue)}</div></div>
+        <div class="kpi-card"><div class="kpi-label">À déclarer</div><div class="kpi-value" style="color:var(--color-amber)">${fmtEur(bd.total)}</div></div>
+        <div class="kpi-card"><div class="kpi-label">Échéance</div><div class="kpi-value" style="font-size:16px">${fmtDate(decl.dueDate)}</div><div class="kpi-sub"><button class="btn btn-ghost btn-sm" onclick="navigate('talent-urssaf')" style="margin-top:4px">Voir le détail →</button></div></div>
+      </div>`);
+    } else widgets.push(`<div class="kpi-card section-gap"><div class="kpi-label">URSSAF</div><div class="kpi-value" style="color:var(--color-green);font-size:16px">À jour ✓</div></div>`);
+  }
+
+  out.innerHTML = widgets.length
+    ? `<div class="ai-interpretation">${ic('check',13)} Dashboard généré — j'ai compris : <strong>${understood.join(' · ')}</strong></div>` + widgets.join('')
+    : `<div class="empty">${ic('sparkles',30)}<div>Je n'ai pas compris « ${q} »</div><div style="font-size:11.5px;margin-top:4px">Essayez avec : paiements, revenus, CA, commissions, top talents, deadlines, leads, campagnes, contrats${scope==='talent'?', URSSAF':''}</div></div>`;
+}
 
 /* ═══════════════════════════════════════════════════════════════════
    MODULE 2 — PIPELINE LEADS (KANBAN)
@@ -2397,7 +2840,43 @@ function myPayments(){ return payments.filter(p=>p.talentId===currentUser.talent
 function myCampaigns(){ return campaigns.filter(c=>c.talentId===currentUser.talentId); }
 function myOffers(){ return offers.filter(o=>o.talentId===currentUser.talentId); }
 
+let talentDashView = 'overview';
 RENDERERS['talent-dashboard'] = function(){
+  document.getElementById('page-content').innerHTML =
+    dashToolbarHtml([['overview','Vue d’ensemble'],['revenus','Revenus'],['ai','IA Studio ✦']], talentDashView, 'setTalentDashView', 'Rechercher campagne, paiement, proposition...')
+    + `<div id="dash-view-body"></div>`;
+  const el = document.getElementById('dash-view-body');
+  if (talentDashView==='revenus') el.innerHTML = talentRevenusHtml();
+  else if (talentDashView==='ai') el.innerHTML = aiStudioHtml('talent');
+  else el.innerHTML = talentOverviewHtml();
+};
+function setTalentDashView(v){ talentDashView = v; navigate('talent-dashboard'); }
+
+function talentRevenusHtml(){
+  const t = myTalent();
+  const byBrand = {};
+  myPayments().filter(p=>p.status==='paid').forEach(p=>{ byBrand[p.brand]=(byBrand[p.brand]||0)+p.amount; });
+  const items = Object.entries(byBrand).map(([label,value])=>({label,value})).sort((a,b)=>b.value-a.value);
+  const paid = myPayments().filter(p=>p.status==='paid').reduce((s,p)=>s+p.amount,0);
+  const pending = myPayments().filter(p=>p.status==='pending').reduce((s,p)=>s+p.amount,0);
+  const mineInv = invoices.filter(i=>i.talentId===t.id&&!i.indySource);
+  const commTotal = mineInv.reduce((s,i)=>s+invoiceNet(i).commission,0);
+  return `
+  <div class="kpi-grid">
+    <div class="kpi-card"><div class="kpi-label">Encaissé 2026</div><div class="kpi-value" style="color:var(--color-green)">${fmtEur(paid)}</div></div>
+    <div class="kpi-card"><div class="kpi-label">À venir</div><div class="kpi-value" style="color:var(--color-amber)">${fmtEur(pending)}</div></div>
+    <div class="kpi-card"><div class="kpi-label">Commissions agence</div><div class="kpi-value" style="color:var(--color-red)">${fmtEur(commTotal)}</div><div class="kpi-sub">15% sur factures MustHave</div></div>
+    <div class="kpi-card"><div class="kpi-label">CA annuel (YTD)</div><div class="kpi-value">${fmtEur(t.caYtd)}</div><div class="kpi-sub">vs ${fmtEur(t.ca2025)} en 2025</div></div>
+  </div>
+  <div class="card section-gap"><div class="card-header"><span class="card-title">Revenus encaissés par marque</span></div>
+    <div class="card-body">${items.length?barChartHtml(items,'var(--color-green)'):'<div style="color:var(--color-warm-gray);font-size:12.5px">Aucun encaissement</div>'}</div></div>
+  <div class="card"><div class="card-header"><span class="card-title">Historique des paiements</span></div>
+    <div class="table-wrap"><table><thead><tr><th>Marque</th><th>Type</th><th>Montant</th><th>Date</th><th>Statut</th></tr></thead><tbody>
+    ${myPayments().map(p=>`<tr><td>${p.brand}</td><td>${p.type}</td><td style="font-weight:700">${fmtEur(p.amount)}</td><td>${fmtDate(p.date)}</td><td>${badge(p.status)}</td></tr>`).join('')}
+    </tbody></table></div></div>`;
+}
+
+function talentOverviewHtml(){
   const t = myTalent();
   const paidThisMonth = myPayments().filter(p=>p.status==='paid').reduce((s,p)=>s+p.amount,0);
   const tiktokComm = t.tiktokShopActive ? Math.round(paidThisMonth*0.08) : 0;
@@ -2407,7 +2886,7 @@ RENDERERS['talent-dashboard'] = function(){
   }).sort((a,b)=>daysUntil(a.date)-daysUntil(b.date));
   const nextDl = dls[0];
   const pendingUrssaf = urssafDeclarations.filter(u=>u.talentId===t.id&&u.status==='pending')[0];
-  document.getElementById('page-content').innerHTML = `
+  return `
   <div class="kpi-grid">
     <div class="kpi-card"><div class="kpi-label">Revenus du mois</div><div class="kpi-value">${fmtEur(paidThisMonth)}</div><div class="kpi-sub">${tiktokComm?`dont ${fmtEur(tiktokComm)} commissions TikTok`:''}</div></div>
     <div class="kpi-card"><div class="kpi-label">Prochaine deadline</div><div class="kpi-value ${nextDl&&daysUntil(nextDl.date)<=1?'urgent':''}" style="font-size:16px;${nextDl&&daysUntil(nextDl.date)<=1?'color:var(--color-red)':''}">${nextDl?(daysUntil(nextDl.date)<=0?"AUJOURD'HUI":daysUntil(nextDl.date)===1?'DEMAIN':fmtDate(nextDl.date)):'Aucune'}</div><div class="kpi-sub">${nextDl?nextDl.campaign.brand+' — '+nextDl.label:''}</div></div>
