@@ -1146,13 +1146,14 @@ const AGENCY_NAV = [
   {id:'contracts', label:'Contrats', icon:'filetext'},
   {id:'payments', label:'Paiements', icon:'card'},
   {section:'Intelligence'},
+  {id:'ai-studio', label:'IA Studio', icon:'sparkles', ai:true},
   {id:'ai-suggest', label:'IA Suggest', icon:'sparkles', ai:true},
-  {id:'trustpass', label:'TrustPass', icon:'shield', ai:true},
+  {id:'outreach', label:'Agent news', icon:'megaphone', ai:true},
   {id:'reporting', label:'Reporting', icon:'chart'},
   {section:'Outils'},
+  {id:'trustpass', label:'TrustPass', icon:'shield'},
   {id:'documents', label:'Documents', icon:'folder'},
   {id:'messaging', label:'Messagerie', icon:'message'},
-  {id:'outreach', label:'Démarchage', icon:'megaphone'},
 ];
 const TALENT_NAV = [
   {section:'Mon espace'},
@@ -1298,8 +1299,9 @@ function renderNotifPanel(){
 const PAGE_META = {
   dashboard:['Principal','Dashboard'], pipeline:['Talents','Pipeline Leads'], roster:['Talents','Roster Talents'],
   campaigns:['Talents','Campagnes'], contracts:['Talents','Contrats'], payments:['Talents','Paiements'],
-  'ai-suggest':['Intelligence','IA Suggest'], trustpass:['Intelligence','TrustPass'], reporting:['Intelligence','Reporting'],
-  documents:['Outils','Documents'], messaging:['Outils','Messagerie'], outreach:['Outils','Démarchage'],
+  'ai-studio':['Intelligence','IA Studio'], 'ai-suggest':['Intelligence','IA Suggest'],
+  outreach:['Intelligence','Agent news'], reporting:['Intelligence','Reporting'],
+  trustpass:['Outils','TrustPass'], documents:['Outils','Documents'], messaging:['Outils','Messagerie'],
   admin:['Admin','Administration'], settings:['Admin','Paramètres'],
   'talent-dashboard':['Mon espace','Dashboard'], 'talent-campaigns':['Mon espace','Mes Campagnes'],
   'talent-offers':['Mon espace','Propositions'], 'talent-contracts':['Administratif','Mes Contrats'],
@@ -1706,8 +1708,9 @@ function dashToolbarHtml(tabs, activeTab, onTabFn, searchPlaceholder){
 }
 
 RENDERERS.dashboard = function(){
+  if (dashView==='ai') dashView='overview';
   document.getElementById('page-content').innerHTML =
-    dashToolbarHtml([['overview','Vue d’ensemble'],['finance','Finance'],['talents','Talents'],['ai','IA Studio ✦']], dashView, 'setDashView', 'Rechercher talent, lead, contrat, campagne...')
+    dashToolbarHtml([['overview','Vue d’ensemble'],['finance','Finance'],['talents','Talents']], dashView, 'setDashView', 'Rechercher talent, lead, contrat, campagne...')
     + `<div id="dash-view-body"></div>`;
   renderDashViewBody();
 };
@@ -1716,9 +1719,12 @@ function renderDashViewBody(){
   const el = document.getElementById('dash-view-body');
   if (dashView==='finance') el.innerHTML = agencyFinanceHtml();
   else if (dashView==='talents') el.innerHTML = agencyTalentsViewHtml();
-  else if (dashView==='ai') { el.innerHTML = aiStudioHtml('agency'); }
   else el.innerHTML = agencyOverviewHtml();
 }
+RENDERERS['ai-studio'] = function(){
+  document.getElementById('topbar-actions').innerHTML = '';
+  document.getElementById('page-content').innerHTML = aiStudioHtml('agency');
+};
 
 function agencyOverviewHtml(){
   const totalCA = contracts.reduce((s,c)=>s+c.amount,0);
@@ -2961,11 +2967,67 @@ function sendMessage(side, talentId){
    MODULE 12 — DÉMARCHAGE IA
 ═══════════════════════════════════════════════════════════════════ */
 let outreachProposalsCount = 3;
+function outreachSectorOptions(){
+  const set = new Set();
+  brandSignals.forEach(s=>set.add(s.niche));
+  leads.forEach(l=>set.add(l.sector));
+  talents.forEach(t=>set.add(t.niche));
+  return [...set].sort();
+}
+function outreachSignalCardHtml(s){
+  return `<div style="border:1px solid var(--color-border);border-radius:10px;padding:14px 16px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+      <div><div style="font-weight:700;font-size:13.5px">${s.brand}</div><div style="font-size:11px;color:var(--color-warm-gray)">${s.niche}</div></div>
+      <span class="pill" style="background:${s.score>=85?'var(--color-accent-soft)':'#F2EFE9'};color:${s.score>=85?'var(--color-accent2)':'var(--color-warm-gray)'}">Score ${s.score}</span>
+    </div>
+    <div style="font-size:12.5px;color:var(--color-black);margin-bottom:10px">${s.signal}</div>
+    <button class="btn btn-purple btn-sm" onclick="openSignalProposal('${s.brand}','${s.niche}')">✦ Générer une proposition</button>
+  </div>`;
+}
+function applyOutreachFilters(){
+  const q = (document.getElementById('outreach-search')?.value||'').toLowerCase().trim();
+  const sector = document.getElementById('outreach-sector')?.value||'all';
+  const prio = document.getElementById('outreach-priority')?.value||'all';
+  const scoreOk = sc => prio==='all' || (prio==='high'&&sc>=85) || (prio==='med'&&sc>=75&&sc<85) || (prio==='low'&&sc<75);
+  const sigs = brandSignals.filter(s=>
+    (!q || (s.brand+s.niche+s.signal).toLowerCase().includes(q)) &&
+    (sector==='all' || s.niche===sector) && scoreOk(s.score));
+  const lds = leads.filter(l=>
+    (!q || (l.brand+l.sector+l.contact).toLowerCase().includes(q)) &&
+    (sector==='all' || l.sector===sector));
+  const tls = talents.filter(t=>
+    (!q || (t.name+t.niche+t.handle).toLowerCase().includes(q)) &&
+    (sector==='all' || t.niche===sector));
+  const sigBox = document.getElementById('outreach-signals');
+  if (sigBox) sigBox.innerHTML = sigs.length ? sigs.map(outreachSignalCardHtml).join('') : `<div class="empty" style="padding:24px">Aucun signal ne correspond</div>`;
+  const cBox = document.getElementById('outreach-contacts');
+  if (cBox) cBox.innerHTML = lds.length ? lds.map(l=>`<tr><td>${l.brand}</td><td>${l.sector}</td><td>${l.contact}</td><td>${fmtEur(l.budget)}</td><td>${fmtDate(l.date)}</td><td>${badge(l.status)}</td></tr>`).join('') : `<tr><td colspan="6" style="text-align:center;color:var(--color-warm-gray);padding:20px">Aucune marque ne correspond</td></tr>`;
+  const tBox = document.getElementById('outreach-talents');
+  if (tBox) tBox.innerHTML = tls.length ? tls.map(outreachTalentCardHtml).join('') : `<div class="empty" style="padding:24px">Aucun talent ne correspond</div>`;
+  const cnt = document.getElementById('outreach-count');
+  if (cnt) cnt.textContent = `${sigs.length} signal${sigs.length>1?'s':''} · ${lds.length} marque${lds.length>1?'s':''} · ${tls.length} talent${tls.length>1?'s':''}`;
+}
 RENDERERS.outreach = function(){
   const soonEvents = industryEvents.filter(e=>daysUntil(e.date)>=0).sort((a,b)=>daysUntil(a.date)-daysUntil(b.date));
   document.getElementById('page-content').innerHTML = `
   <div style="display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--color-purple);background:var(--color-purple-soft);padding:8px 14px;border-radius:99px;width:fit-content;margin-bottom:18px">
     ${ic('sparkles',13)} Agent de veille — scraper API multi-sources + automatisation n8n (marché, marques, actus, événements)
+  </div>
+  <div class="dash-toolbar section-gap">
+    <div class="dash-search">${ic('search',15)}
+      <input id="outreach-search" placeholder="Rechercher une marque, un talent, un secteur, un contact…" oninput="applyOutreachFilters()">
+    </div>
+    <select class="filter-select" id="outreach-sector" onchange="applyOutreachFilters()" title="Secteur">
+      <option value="all">Tous les secteurs</option>
+      ${outreachSectorOptions().map(s=>`<option value="${s}">${s}</option>`).join('')}
+    </select>
+    <select class="filter-select" id="outreach-priority" onchange="applyOutreachFilters()" title="Priorité">
+      <option value="all">Toutes priorités</option>
+      <option value="high">Haute (score ≥ 85)</option>
+      <option value="med">Moyenne (75–84)</option>
+      <option value="low">Basse (&lt; 75)</option>
+    </select>
+    <span id="outreach-count" style="font-size:11.5px;color:var(--color-warm-gray);white-space:nowrap"></span>
   </div>
   <div class="kpi-grid">
     <div class="kpi-card"><div class="kpi-label">Signaux détectés</div><div class="kpi-value">${brandSignals.length}</div><div class="kpi-sub up">Cette semaine</div></div>
@@ -2976,15 +3038,8 @@ RENDERERS.outreach = function(){
   <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:20px" class="section-gap">
     <div class="card">
       <div class="card-header"><span class="card-title">Marques détectées — signaux d'opportunité</span></div>
-      <div class="card-body" style="display:flex;flex-direction:column;gap:10px">
-        ${brandSignals.map(s=>`<div style="border:1px solid var(--color-border);border-radius:10px;padding:14px 16px">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
-            <div><div style="font-weight:700;font-size:13.5px">${s.brand}</div><div style="font-size:11px;color:var(--color-warm-gray)">${s.niche}</div></div>
-            <span class="pill" style="background:${s.score>=85?'var(--color-accent-soft)':'#F2EFE9'};color:${s.score>=85?'var(--color-accent2)':'var(--color-warm-gray)'}">Score ${s.score}</span>
-          </div>
-          <div style="font-size:12.5px;color:var(--color-black);margin-bottom:10px">${s.signal}</div>
-          <button class="btn btn-purple btn-sm" onclick="openSignalProposal('${s.brand}','${s.niche}')">✦ Générer une proposition</button>
-        </div>`).join('')}
+      <div class="card-body" style="display:flex;flex-direction:column;gap:10px" id="outreach-signals">
+        ${brandSignals.map(outreachSignalCardHtml).join('')}
       </div>
     </div>
     <div style="display:flex;flex-direction:column;gap:20px">
@@ -3011,22 +3066,24 @@ RENDERERS.outreach = function(){
     </div>
   </div>
   <div class="card section-gap"><div class="card-header"><span class="card-title">Base de contacts marques</span></div>
-    <div class="table-wrap"><table><thead><tr><th>Marque</th><th>Secteur</th><th>Contact RP</th><th>Budget estimé</th><th>Dernier contact</th><th>Statut</th></tr></thead><tbody>
+    <div class="table-wrap"><table><thead><tr><th>Marque</th><th>Secteur</th><th>Contact RP</th><th>Budget estimé</th><th>Dernier contact</th><th>Statut</th></tr></thead><tbody id="outreach-contacts">
     ${leads.map(l=>`<tr><td>${l.brand}</td><td>${l.sector}</td><td>${l.contact}</td><td>${fmtEur(l.budget)}</td><td>${fmtDate(l.date)}</td><td>${badge(l.status)}</td></tr>`).join('')}
     </tbody></table></div>
   </div>
   <div class="tp-section-title">Suggestions IA par talent</div>
-  ${talents.map(t=>{
-    const brandsList = NICHE_BRANDS[t.niche] || [];
-    return `<div class="card section-gap"><div class="card-header">
-      <span class="card-title" style="display:flex;align-items:center;gap:10px">${avatarHtml(t,28,11)}${t.name}</span>
-      <span style="font-size:11.5px;color:var(--color-warm-gray)">${t.niche}</span></div>
-      <div class="card-body" style="display:flex;flex-wrap:wrap;gap:8px">
-        ${brandsList.map(b=>`<span class="pill" style="background:var(--color-purple-soft);color:var(--color-purple);cursor:pointer" onclick="openOutreachEmail('${t.id}','${b}')">✦ ${b}</span>`).join('') || `<span style="font-size:11.5px;color:var(--color-warm-gray)">Aucune marque suggérée pour l'instant</span>`}
-      </div>
-    </div>`;
-  }).join('')}`;
+  <div id="outreach-talents">${talents.map(outreachTalentCardHtml).join('')}</div>`;
+  applyOutreachFilters();
 };
+function outreachTalentCardHtml(t){
+  const brandsList = NICHE_BRANDS[t.niche] || [];
+  return `<div class="card section-gap"><div class="card-header">
+    <span class="card-title" style="display:flex;align-items:center;gap:10px">${avatarHtml(t,28,11)}${t.name}</span>
+    <span style="font-size:11.5px;color:var(--color-warm-gray)">${t.niche}</span></div>
+    <div class="card-body" style="display:flex;flex-wrap:wrap;gap:8px">
+      ${brandsList.map(b=>`<span class="pill" style="background:var(--color-purple-soft);color:var(--color-purple);cursor:pointer" onclick="openOutreachEmail('${t.id}','${b}')">✦ ${b}</span>`).join('') || `<span style="font-size:11.5px;color:var(--color-warm-gray)">Aucune marque suggérée pour l'instant</span>`}
+    </div>
+  </div>`;
+}
 function openSignalProposal(brand, niche){
   const picks = bestTalentsForSignal(niche, 2);
   openModal('Proposition — '+brand, `
