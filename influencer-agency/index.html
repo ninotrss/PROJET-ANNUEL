@@ -235,7 +235,10 @@ html.dark .pill-red{background:rgba(224,117,117,.13)}
 .kanban-col-head{padding:12px 14px;font-size:12px;font-weight:700;display:flex;justify-content:space-between;align-items:center;color:var(--color-black)}
 .kanban-count{font-size:10px;color:var(--color-warm-gray);font-weight:500}
 .kanban-cards{padding:0 8px 8px;display:flex;flex-direction:column;gap:10px;min-height:60px}
-.lead-card{background:var(--color-card);border:0.5px solid var(--color-border);border-radius:var(--radius-sm);padding:14px;cursor:pointer}
+.lead-card{background:var(--color-card);border:0.5px solid var(--color-border);border-radius:var(--radius-sm);padding:14px;cursor:grab}
+.lead-card:active{cursor:grabbing}
+.lead-card.dragging{opacity:.4;transform:rotate(1.5deg) scale(.98)}
+.kanban-col.drag-over{outline:2px dashed var(--color-accent);outline-offset:-2px;background:var(--color-accent-soft)}
 .lead-card:hover{border-color:var(--color-accent)}
 .lead-brand{font-weight:700;font-size:13.5px}
 .lead-contact{font-size:11px;color:var(--color-warm-gray);margin-bottom:6px}
@@ -695,6 +698,76 @@ const talents = [
     tiktokShopActive:false, promoCode:'BASTIEN10',
     bio:'Militant éco-responsable, mode durable et zéro déchet.',
     audienceAge:'25-34 (58%)', audienceGender:'H 54%', audienceTop:'Bordeaux, Nantes, Rennes' },
+  { id:'t21', name:'Salomé Nguyen', handle:'@salome.ngy', niche:'Mode & Vintage',
+    platforms:['Instagram','TikTok','Vinted'], followers:118000, engagement:6.8,
+    caYtd:27000, ca2025:43000, ratePerPost:2200, status:'active', siret:'78123409500165',
+    photo:'https://randomuser.me/api/portraits/women/44.jpg', email:'salome.nguyen@agencemusthave.com', phone:'+33 6 71 22 48 93', address:'Paris 20e',
+    tiktokShopActive:true, promoCode:'SALOME15',
+    bio:'Chineuse de pépites vintage, friperies et mode circulaire.',
+    audienceAge:'18-24 (64%)', audienceGender:'F 84%', audienceTop:'Paris, Lille, Lyon' },
+  { id:'t22', name:'Rayan Belkacem', handle:'@rayan.blk', niche:'Football & Sport',
+    platforms:['TikTok','Instagram','YouTube'], followers:412000, engagement:5.6,
+    caYtd:72000, ca2025:115000, ratePerPost:5200, status:'active', siret:'66234518700172',
+    photo:'https://randomuser.me/api/portraits/men/52.jpg', email:'rayan.belkacem@agencemusthave.com', phone:'+33 6 82 33 59 04', address:'Saint-Denis',
+    tiktokShopActive:true, promoCode:'RAYAN10',
+    bio:'Freestyler foot, challenges et culture ballon rond.',
+    audienceAge:'13-24 (78%)', audienceGender:'H 75%', audienceTop:'Paris, Marseille, Lille' },
+  { id:'t23', name:'Apolline Faure', handle:'@apolline.fr', niche:'Lecture & Culture',
+    platforms:['Instagram','TikTok'], followers:54000, engagement:12.1,
+    caYtd:9500, ca2025:16000, ratePerPost:950, status:'active', siret:'55340627900189',
+    photo:'https://randomuser.me/api/portraits/women/47.jpg', email:'apolline.faure@agencemusthave.com', phone:'+33 6 93 44 60 15', address:'Rennes',
+    tiktokShopActive:false, promoCode:'APOLLINE20',
+    bio:'BookTokeuse passionnée, romans et coups de coeur littéraires.',
+    audienceAge:'18-24 (67%)', audienceGender:'F 92%', audienceTop:'Rennes, Paris, Nantes' },
+  { id:'t24', name:'Milo Vasseur', handle:'@milo.vsr', niche:'Humour & Sketchs',
+    platforms:['TikTok','Instagram','YouTube'], followers:530000, engagement:7.4,
+    caYtd:84000, ca2025:135000, ratePerPost:6000, status:'active', siret:'44451736100196',
+    photo:'https://randomuser.me/api/portraits/men/55.jpg', email:'milo.vasseur@agencemusthave.com', phone:'+33 6 04 55 71 26', address:'Paris 19e',
+    tiktokShopActive:false, promoCode:'MILO10',
+    bio:'Humoriste et créateur de sketchs, vannes du quotidien.',
+    audienceAge:'18-24 (72%)', audienceGender:'Mixte 51/49', audienceTop:'Paris, Lyon, Bruxelles' },
+  { id:'t25', name:'Victoire Lambert', handle:'@victoire.lbt', niche:'Équitation & Lifestyle',
+    platforms:['Instagram','YouTube'], followers:97000, engagement:8.2,
+    caYtd:19000, ca2025:31000, ratePerPost:1650, status:'active', siret:'33562845300203',
+    photo:'https://randomuser.me/api/portraits/women/50.jpg', email:'victoire.lambert@agencemusthave.com', phone:'+33 6 15 66 82 37', address:'Deauville',
+    tiktokShopActive:false, promoCode:'VICTOIRE15',
+    bio:'Cavalière de concours, vie au haras et matériel équestre.',
+    audienceAge:'13-24 (70%)', audienceGender:'F 88%', audienceTop:'Deauville, Paris, Angers' },
+  { id:'t26', name:'Adam El Fassi', handle:'@adam.elf', niche:'Crypto & Finance perso',
+    platforms:['YouTube','Instagram','LinkedIn'], followers:162000, engagement:4.4,
+    caYtd:47000, ca2025:76000, ratePerPost:3400, status:'active', siret:'22673954600210',
+    photo:'https://randomuser.me/api/portraits/men/58.jpg', email:'adam.elfassi@agencemusthave.com', phone:'+33 6 26 77 93 48', address:'Paris 15e',
+    tiktokShopActive:false, promoCode:'ADAM10',
+    bio:'Vulgarisateur finance personnelle, budget et investissement.',
+    audienceAge:'25-34 (66%)', audienceGender:'H 73%', audienceTop:'Paris, Lyon, Genève' },
+  { id:'t27', name:'Jade Okonkwo', handle:'@jade.okw', niche:'Coiffure & Hair care',
+    platforms:['Instagram','TikTok','YouTube'], followers:143000, engagement:9.6,
+    caYtd:32500, ca2025:52000, ratePerPost:2600, status:'active', siret:'11784063800227',
+    photo:'https://randomuser.me/api/portraits/women/57.jpg', email:'jade.okonkwo@agencemusthave.com', phone:'+33 6 37 88 04 59', address:'Paris 17e',
+    tiktokShopActive:true, promoCode:'JADE20',
+    bio:'Experte cheveux texturés, routines et tutos coiffure.',
+    audienceAge:'18-34 (75%)', audienceGender:'F 94%', audienceTop:'Paris, Marseille, Bruxelles' },
+  { id:'t28', name:'Gaspard Renault', handle:'@gaspard.rnl', niche:'Vin & Gastronomie',
+    platforms:['Instagram','YouTube'], followers:81000, engagement:6.1,
+    caYtd:18500, ca2025:30000, ratePerPost:1550, status:'active', siret:'00895172400234',
+    photo:'https://randomuser.me/api/portraits/men/61.jpg', email:'gaspard.renault@agencemusthave.com', phone:'+33 6 48 99 15 60', address:'Bordeaux',
+    tiktokShopActive:false, promoCode:'GASPARD10',
+    bio:'Sommelier créateur, accords mets-vins et visites de domaines.',
+    audienceAge:'25-44 (68%)', audienceGender:'Mixte 55/45', audienceTop:'Bordeaux, Paris, Lyon' },
+  { id:'t29', name:'Lison Marchal', handle:'@lison.mrl', niche:'DIY & Loisirs créatifs',
+    platforms:['Instagram','TikTok','Pinterest'], followers:106000, engagement:10.3,
+    caYtd:22000, ca2025:36000, ratePerPost:1800, status:'active', siret:'89906281500241',
+    photo:'https://randomuser.me/api/portraits/women/62.jpg', email:'lison.marchal@agencemusthave.com', phone:'+33 6 59 00 26 71', address:'Lille',
+    tiktokShopActive:true, promoCode:'LISON15',
+    bio:'Créatrice DIY, couture, céramique et tutos faits main.',
+    audienceAge:'25-34 (62%)', audienceGender:'F 90%', audienceTop:'Lille, Paris, Strasbourg' },
+  { id:'t30', name:'Oscar Delattre', handle:'@oscar.dlt', niche:'Cinéma & Pop culture',
+    platforms:['TikTok','YouTube','Instagram'], followers:229000, engagement:6.5,
+    caYtd:44000, ca2025:71000, ratePerPost:3300, status:'active', siret:'67017390600258',
+    photo:'https://randomuser.me/api/portraits/men/64.jpg', email:'oscar.delattre@agencemusthave.com', phone:'+33 6 60 11 37 82', address:'Paris 5e',
+    tiktokShopActive:false, promoCode:'OSCAR10',
+    bio:'Critique ciné et pop culture, analyses et recommandations.',
+    audienceAge:'18-34 (73%)', audienceGender:'Mixte 52/48', audienceTop:'Paris, Lyon, Montpellier' },
 ];
 
 const leads = [
@@ -1903,14 +1976,14 @@ RENDERERS.pipeline = function(){
     ${LEAD_STATUSES.map(st=>{
       const items = leads.filter(l=>l.status===st);
       const total = items.reduce((s,l)=>s+l.budget,0);
-      return `<div class="kanban-col">
+      return `<div class="kanban-col" ondragover="leadDragOver(event,this)" ondragleave="leadDragLeave(event,this)" ondrop="leadDrop(event,'${st}',this)">
         <div class="kanban-col-head"><span>${LEAD_STATUS_LABELS[st]}</span><span class="kanban-count">${items.length} · ${fmtEur(total)}</span></div>
         <div class="kanban-cards">
         ${items.map(l=>{
           const talentsList = l.talentId ? [talentById(l.talentId)] : [];
           const topAi = (l.aiScore||[])[0];
           const idx = LEAD_STATUSES.indexOf(st);
-          return `<div class="lead-card" onclick="openLeadDetail('${l.id}')">
+          return `<div class="lead-card" draggable="true" ondragstart="leadDragStart(event,'${l.id}')" ondragend="leadDragEnd(event)" onclick="openLeadDetail('${l.id}')">
             <div class="lead-brand">${l.brand}</div>
             <div class="lead-contact">${l.contact} · ${l.sector}</div>
             <div class="lead-notes">${l.notes}</div>
@@ -1931,6 +2004,39 @@ RENDERERS.pipeline = function(){
 function moveLead(id, idx){
   const l = leads.find(x=>x.id===id); l.status = LEAD_STATUSES[idx];
   showToast(`${l.brand} → ${LEAD_STATUS_LABELS[l.status]}`, 'success');
+  navigate('pipeline');
+}
+
+/* ── Kanban drag & drop ── */
+let draggedLeadId = null;
+function leadDragStart(e, id){
+  draggedLeadId = id;
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', id);
+  e.target.classList.add('dragging');
+}
+function leadDragEnd(e){
+  e.target.classList.remove('dragging');
+  document.querySelectorAll('.kanban-col.drag-over').forEach(c=>c.classList.remove('drag-over'));
+  draggedLeadId = null;
+}
+function leadDragOver(e, col){
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  col.classList.add('drag-over');
+}
+function leadDragLeave(e, col){
+  if (!col.contains(e.relatedTarget)) col.classList.remove('drag-over');
+}
+function leadDrop(e, status, col){
+  e.preventDefault();
+  col.classList.remove('drag-over');
+  const id = draggedLeadId || e.dataTransfer.getData('text/plain');
+  if (!id) return;
+  const l = leads.find(x=>x.id===id);
+  if (!l || l.status === status) return;
+  l.status = status;
+  showToast(`${l.brand} → ${LEAD_STATUS_LABELS[status]}`, 'success');
   navigate('pipeline');
 }
 function openNewLeadModal(){
