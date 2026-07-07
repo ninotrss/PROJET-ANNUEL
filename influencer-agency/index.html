@@ -373,6 +373,11 @@ html.dark .pill-red{background:rgba(224,117,117,.13)}
 .doc-icon{width:36px;height:36px;border-radius:8px;background:var(--color-accent-soft);display:flex;align-items:center;justify-content:center;margin-bottom:10px;color:var(--color-accent)}
 
 /* ── Invoice / contract preview ── */
+.export-menu{position:relative}
+.export-dropdown{position:absolute;top:calc(100% + 6px);right:0;background:var(--color-card);border:1px solid var(--color-border);border-radius:10px;box-shadow:0 8px 28px rgba(10,10,10,.14);z-index:200;min-width:190px;overflow:hidden;display:none}
+.export-dropdown.open{display:block}
+.export-item{display:flex;align-items:center;gap:9px;padding:10px 14px;font-size:13px;cursor:pointer;color:var(--color-black)}
+.export-item:hover{background:var(--color-accent-soft)}
 .doc-preview{border:1px solid var(--color-border);border-radius:12px;overflow:hidden;font-size:12.5px}
 .doc-preview-row{display:flex;justify-content:space-between;padding:10px 18px;border-bottom:1px solid var(--color-border)}
 .doc-preview-row:last-child{border-bottom:none}
@@ -1704,7 +1709,74 @@ function dashToolbarHtml(tabs, activeTab, onTabFn, searchPlaceholder){
     <select class="filter-select" onchange="dashPeriod=this.value;navigate(currentPage)" title="Période">
       ${[['all','Toute période'],['7j','7 derniers jours'],['30j','30 derniers jours'],['trim','Ce trimestre']].map(([v,l])=>`<option value="${v}" ${dashPeriod===v?'selected':''}>${l}</option>`).join('')}
     </select>
+    ${activeTab==='ai' ? '' : `<div class="export-menu">
+      <button class="btn btn-ghost btn-sm" onclick="toggleExportMenu(event)">${ic('download',13)} Exporter</button>
+      <div class="export-dropdown" id="export-dropdown">
+        <div class="export-item" onclick="exportDashboardCsv()">${ic('filetext',14)} Exporter en CSV</div>
+        <div class="export-item" onclick="exportDashboardPdf()">${ic('download',14)} Exporter en PDF</div>
+      </div>
+    </div>`}
   </div>`;
+}
+function toggleExportMenu(e){
+  e.stopPropagation();
+  const d = document.getElementById('export-dropdown');
+  const open = d.classList.toggle('open');
+  if (open) setTimeout(()=>document.addEventListener('click', closeExportMenu, {once:true}), 0);
+}
+function closeExportMenu(){ const d=document.getElementById('export-dropdown'); if(d) d.classList.remove('open'); }
+function exportDashboardCsv(){
+  closeExportMenu();
+  const isTalent = currentPage==='talent-dashboard';
+  const view = isTalent ? talentDashView : dashView;
+  let rows, fname;
+  if (!isTalent){
+    if (view==='finance'){
+      fname='dashboard-finance.csv';
+      rows=[['Talent','Marque','Type','Montant (€)','Date','Statut'],
+        ...payments.map(p=>[talentById(p.talentId)?.name||'',p.brand,p.type,p.amount,p.date,p.status])];
+    } else if (view==='talents'){
+      fname='dashboard-talents.csv';
+      rows=[['Talent','Niche','Followers','Engagement (%)','CA YTD (€)','Contrats actifs'],
+        ...talents.map(t=>[t.name,t.niche,t.followers,t.engagement,t.caYtd,contracts.filter(c=>c.talentId===t.id&&c.status==='active').length])];
+    } else {
+      fname='dashboard-synthese.csv';
+      const totalCA=contracts.reduce((s,c)=>s+c.amount,0);
+      const totalComm=contracts.reduce((s,c)=>s+c.commissionAgency,0);
+      const activeDeals=contracts.filter(c=>c.status==='active').length;
+      const pendingTotal=payments.filter(p=>p.status==='pending').reduce((s,p)=>s+p.amount,0);
+      rows=[['Indicateur','Valeur'],
+        ['CA total contrats (€)',totalCA],['Commissions agence (€)',totalComm],
+        ['Deals actifs',activeDeals],['Paiements en attente (€)',pendingTotal],['Talents actifs',talents.length],
+        [''],['Deadline — marque','Talent','Type','Date','Jours restants'],
+        ...upcomingDeadlines().map(d=>[d.campaign.brand,d.talent?.name||'',d.label,d.date,daysUntil(d.date)])];
+    }
+  } else {
+    const tid=currentUser.talentId;
+    if (view==='revenus'){
+      fname='mon-dashboard-revenus.csv';
+      rows=[['Marque','Type','Montant (€)','Date','Statut'],
+        ...payments.filter(p=>p.talentId===tid).map(p=>[p.brand,p.type,p.amount,p.date,p.status])];
+    } else {
+      fname='mon-dashboard.csv';
+      rows=[['Campagne','Marque','Statut'],
+        ...campaigns.filter(c=>c.talentId===tid).map(c=>[c.title||c.brand,c.brand,c.status])];
+    }
+  }
+  downloadCsv(fname, rows);
+  showToast('Export CSV téléchargé ✓','success');
+}
+function exportDashboardPdf(){
+  closeExportMenu();
+  const [crumb,title] = PAGE_META[currentPage] || ['',''];
+  const clone = document.getElementById('page-content').cloneNode(true);
+  const tb = clone.querySelector('.dash-toolbar'); if (tb) tb.remove();
+  const period = ({all:'Toute période','7j':'7 derniers jours','30j':'30 derniers jours',trim:'Ce trimestre'})[dashPeriod]||'';
+  openPrintWindow(title+' — Export', `
+    <h1 class="serif" style="font-size:24px;margin-bottom:4px">${title}</h1>
+    <div style="font-size:12px;color:var(--color-warm-gray);margin-bottom:20px">must-have · InfluenceOS · ${period}</div>
+    ${clone.innerHTML}`, true);
+  showToast('Export PDF prêt — Enregistrer','success');
 }
 
 RENDERERS.dashboard = function(){
@@ -1769,19 +1841,7 @@ function agencyOverviewHtml(){
       </div>
     </div>
   </div>
-  <div class="card">
-    <div class="card-header"><span class="card-title">Performance Roster</span></div>
-    <div class="table-wrap"><table><thead><tr><th>Talent</th><th>Niche</th><th>Followers</th><th>Engagement</th><th>CA YTD</th><th>Contrats actifs</th><th>Score moyen</th></tr></thead><tbody>
-    ${talents.map(t=>{
-      const activeC = contracts.filter(c=>c.talentId===t.id&&c.status==='active').length;
-      const scores = leads.flatMap(l=>l.aiScore||[]).filter(s=>s.talent===t.id).map(s=>s.score);
-      const avg = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : '—';
-      return `<tr><td style="display:flex;align-items:center;gap:8px">${avatarHtml(t,28,11)}${t.name}</td>
-        <td>${t.niche}</td><td>${(t.followers/1000).toFixed(0)}K</td><td style="color:var(--color-green);font-weight:600">${t.engagement}%</td>
-        <td>${fmtEur(t.caYtd)}</td><td>${activeC}</td><td>${avg!=='—'?avg+'%':'—'}</td></tr>`;
-    }).join('')}
-    </tbody></table></div>
-  </div>`;
+  `;
 }
 
 function agencyFinanceHtml(){
@@ -1814,10 +1874,15 @@ function agencyFinanceHtml(){
 
 let talentsViewNiche = '';
 let talentsViewSort = 'caYtd';
+function talentActiveContracts(t){ return contracts.filter(c=>c.talentId===t.id&&c.status==='active').length; }
+function talentAvgScore(t){ const s=leads.flatMap(l=>l.aiScore||[]).filter(x=>x.talent===t.id).map(x=>x.score); return s.length?Math.round(s.reduce((a,b)=>a+b,0)/s.length):0; }
 function agencyTalentsViewHtml(){
   const niches = [...new Set(talents.map(t=>t.niche))];
   let list = talentsViewNiche ? talents.filter(t=>t.niche===talentsViewNiche) : [...talents];
-  list.sort((a,b)=>b[talentsViewSort]-a[talentsViewSort]);
+  const sortVal = t => talentsViewSort==='activeContracts' ? talentActiveContracts(t)
+    : talentsViewSort==='aiScore' ? talentAvgScore(t)
+    : (t[talentsViewSort]||0);
+  list.sort((a,b)=>sortVal(b)-sortVal(a));
   const top3 = [...talents].sort((a,b)=>b.engagement-a.engagement).slice(0,3);
   return `
   <div class="toolbar">
@@ -1826,7 +1891,7 @@ function agencyTalentsViewHtml(){
       ${niches.map(n=>`<option ${talentsViewNiche===n?'selected':''}>${n}</option>`).join('')}
     </select>
     <select class="filter-select" onchange="talentsViewSort=this.value;renderDashViewBody()">
-      ${[['caYtd','Trier par CA'],['engagement','Trier par engagement'],['followers','Trier par followers'],['ratePerPost','Trier par tarif']].map(([v,l])=>`<option value="${v}" ${talentsViewSort===v?'selected':''}>${l}</option>`).join('')}
+      ${[['caYtd','Trier par CA'],['engagement','Trier par engagement'],['followers','Trier par followers'],['ratePerPost','Trier par tarif'],['activeContracts','Trier par contrats actifs'],['aiScore','Trier par score IA']].map(([v,l])=>`<option value="${v}" ${talentsViewSort===v?'selected':''}>${l}</option>`).join('')}
     </select>
   </div>
   <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr)">
@@ -1837,10 +1902,10 @@ function agencyTalentsViewHtml(){
   </div>
   <div class="card">
     <div class="card-header"><span class="card-title">Roster ${talentsViewNiche?'· '+talentsViewNiche:''} (${list.length})</span></div>
-    <div class="table-wrap"><table><thead><tr><th>Talent</th><th>Niche</th><th>Followers</th><th>Engagement</th><th>CA YTD</th><th>Tarif/post</th></tr></thead><tbody>
-    ${list.map(t=>`<tr style="cursor:pointer" onclick="openTalentProfile('${t.id}')"><td style="display:flex;align-items:center;gap:8px">${avatarHtml(t,28,11)}${t.name}</td>
+    <div class="table-wrap"><table><thead><tr><th>Talent</th><th>Niche</th><th>Followers</th><th>Engagement</th><th>CA YTD</th><th>Tarif/post</th><th>Contrats actifs</th><th>Score IA moyen</th></tr></thead><tbody>
+    ${list.map(t=>{const avg=talentAvgScore(t);return `<tr style="cursor:pointer" onclick="openTalentProfile('${t.id}')"><td style="display:flex;align-items:center;gap:8px">${avatarHtml(t,28,11)}${t.name}</td>
       <td>${t.niche}</td><td>${(t.followers/1000).toFixed(0)}K</td><td style="color:var(--color-green);font-weight:600">${t.engagement}%</td>
-      <td style="font-weight:700">${fmtEur(t.caYtd)}</td><td>${fmtEur(t.ratePerPost)}</td></tr>`).join('')}
+      <td style="font-weight:700">${fmtEur(t.caYtd)}</td><td>${fmtEur(t.ratePerPost)}</td><td>${talentActiveContracts(t)}</td><td>${avg?avg+'%':'—'}</td></tr>`;}).join('')}
     </tbody></table></div>
   </div>`;
 }
@@ -2706,7 +2771,7 @@ function renderAiSuggest(){
             <div><div class="tp-metric-val">${fmtEur(s.t.caYtd/Math.max(1,contracts.filter(c=>c.talentId===s.t.id).length))}</div><div class="tp-metric-lab">CA moy./campagne</div></div>
           </div>
           ${past.length?`<div style="font-size:11.5px;color:var(--color-warm-gray);margin-bottom:10px">Campagnes similaires : ${past.map(p=>p.brand).join(', ')}</div>`:''}
-          <button class="btn btn-purple btn-sm" onclick="showToast('${s.t.name} assigné au lead ✓')">Assigner ce talent au lead</button>
+          <button class="btn btn-purple btn-sm" onclick="assignSuggestedTalent('${s.t.id}',${s.score})">${ic('check',13)} Assigner ce talent au lead</button>
         </div>`;
       }).join('')}
       </div>
@@ -2720,6 +2785,27 @@ function renderAiSuggest(){
       }).join('')}
       </tbody></table></div>
     </div>`;
+}
+function assignSuggestedTalent(talentId, score){
+  const leadId = document.getElementById('ai-lead')?.value;
+  const t = talentById(talentId);
+  let lead = leadId ? leads.find(l=>l.id===leadId) : null;
+  // Contexte du brief (lead sélectionné ou saisie libre)
+  const sector = lead ? lead.sector : (document.getElementById('ai-sector')?.value || 'Mode');
+  const brand  = lead ? lead.brand  : (document.getElementById('ai-sector')?.value ? 'Brief '+sector : 'Nouveau brief');
+  const amount = lead ? lead.budget : (parseInt(document.getElementById('ai-budget')?.value) || 10000);
+  const notes  = lead ? lead.notes  : '';
+  if (lead){ lead.talentId = talentId; if (lead.status==='new') lead.status='contacted'; }
+  // Créer une proposition visible côté talent (rubrique Propositions)
+  offers.push({
+    id:'of-'+uid(), talentId, brand, logo:'✦', amount,
+    deadline: (lead && lead.date) ? lead.date : '2026-08-31',
+    type:'Deal proposé par l’agence',
+    description: notes || `Proposition ${sector} transmise par must-have suite au matching IA (score ${score}%).`,
+    status:'pending', niche:sector, aiScore:score
+  });
+  showToast(`${t.name} assigné · proposition envoyée à ${t.name.split(' ')[0]} ✓`, 'success');
+  renderAiSuggest();
 }
 
 /* ═══════════════════════════════════════════════════════════════════
