@@ -15,23 +15,24 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --color-cream:#FAF8F4; --color-black:#0A0A0A; --color-warm-gray:#8C8880;
-  --color-border:#E8E2D8; --color-card:#FFFFFF; --color-accent:#C8A882;
-  --color-accent-soft:#F2EDE4; --color-green:#1A6B4A; --color-amber:#B5720A;
+  /* Charte agencemusthave.com : beige hsl(34.8,36%,83%) #E4D7C5, rose hsl(323,60%,76%) #E79ECB, League Spartan + Open Sans */
+  --color-cream:#F6F1E8; --color-black:#0A0A0A; --color-warm-gray:#8C8880;
+  --color-border:#E2D8C6; --color-card:#FFFFFF; --color-accent:#E79ECB;
+  --color-accent-soft:#FBEBF4; --color-green:#1A6B4A; --color-amber:#B5720A;
   --color-red:#B83232; --color-purple:#5A4A8C; --color-purple-soft:#EEF0FA;
   --radius:12px; --radius-sm:8px;
   --shadow:0 1px 3px rgba(0,0,0,0.06);
-  --color-surface-soft:#F2EFE9; --color-white:#FFFFFF; --color-accent2:#8C6A3C;
+  --color-surface-soft:#EDE4D3; --color-white:#FFFFFF; --color-accent2:#B4478A;
 }
 html.dark{
-  --color-cream:#17140F; --color-black:#F3EEE4; --color-warm-gray:#A79E8E;
-  --color-border:#322C22; --color-card:#211D16; --color-accent:#D8B88C;
-  --color-accent-soft:#2C2518; --color-green:#4CAE82; --color-amber:#E0A23D;
+  --color-cream:#171310; --color-black:#F3EEE4; --color-warm-gray:#A79E8E;
+  --color-border:#332C24; --color-card:#211D18; --color-accent:#E79ECB;
+  --color-accent-soft:#33212B; --color-green:#4CAE82; --color-amber:#E0A23D;
   --color-red:#E07575; --color-purple:#9385C4; --color-purple-soft:#211D2E;
-  --color-surface-soft:#241F17; --color-white:#211D16; --color-accent2:#E3C9A0;
+  --color-surface-soft:#241F19; --color-white:#211D18; --color-accent2:#EFB3D8;
   --shadow:0 1px 3px rgba(0,0,0,0.35);
 }
 html.dark body{background:var(--color-cream);color:var(--color-black)}
@@ -42,8 +43,8 @@ html.dark .indy-wordmark{color:var(--color-black)}
 html.dark .avatar-sm{color:#17140F}
 html.dark .nav-badge{color:#fff}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',system-ui,sans-serif;background:var(--color-cream);color:var(--color-black);min-height:100vh;font-size:14px;line-height:1.6}
-h1,h2,.serif{font-family:'Cormorant Garamond',serif}
+body{font-family:'Open Sans',system-ui,sans-serif;background:var(--color-cream);color:var(--color-black);min-height:100vh;font-size:14px;line-height:1.6}
+h1,h2,.serif{font-family:'League Spartan',sans-serif}
 h1{font-size:32px;font-weight:600;letter-spacing:-0.5px}
 h2{font-size:22px;font-weight:500}
 ::-webkit-scrollbar{width:6px;height:6px}
@@ -56,7 +57,7 @@ input,select,textarea{font-family:inherit}
 /* ── Login ── */
 #login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--color-cream);padding:24px}
 .login-card2{background:var(--color-card);border-radius:20px;box-shadow:0 8px 32px rgba(10,10,10,.08);padding:40px 36px;width:100%;max-width:380px;text-align:center}
-.login-brand2{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;margin-bottom:6px}
+.login-brand2{font-family:'League Spartan',sans-serif;font-size:26px;font-weight:600;margin-bottom:6px}
 .login-brand2 .dot{color:var(--color-accent)}
 .login-tagline{font-size:10.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--color-warm-gray);margin-bottom:14px}
 .login-heading{font-size:23px;font-weight:800;margin-bottom:4px;text-align:left}
@@ -83,7 +84,7 @@ input,select,textarea{font-family:inherit}
 #sso-redirect{display:none;position:fixed;inset:0;z-index:600;background:var(--color-cream);align-items:center;justify-content:center;flex-direction:column;gap:28px}
 #sso-redirect.open{display:flex}
 .sso-redirect-logo{width:64px;height:64px;border-radius:16px;background:var(--color-card);border:1px solid var(--color-border);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
-.sso-redirect-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;text-align:center}
+.sso-redirect-title{font-family:'League Spartan',sans-serif;font-size:22px;font-weight:600;text-align:center}
 .sso-redirect-sub{font-size:13px;color:var(--color-warm-gray);text-align:center;margin-top:4px}
 .sso-steps{display:flex;flex-direction:column;gap:10px;min-width:340px}
 .sso-step{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--color-card);border:1px solid var(--color-border);border-radius:10px;font-size:13px;font-weight:500;color:var(--color-warm-gray);opacity:.55;transition:all .3s}
@@ -94,7 +95,7 @@ input,select,textarea{font-family:inherit}
 .sso-step.active .sso-step-icon{animation:spin .8s linear infinite;border-top-color:transparent}
 @keyframes spin{to{transform:rotate(360deg)}}
 .pill-btn{width:100%;padding:12px;border-radius:99px;border:none;background:var(--color-accent);color:#0A0A0A;font-weight:700;font-size:14px;margin-top:6px}
-.pill-btn:hover{background:#b8977a}
+.pill-btn:hover{background:#DB86BC}
 .login-divider{display:flex;align-items:center;gap:10px;color:var(--color-warm-gray);font-size:11px;margin:18px 0}
 .login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:var(--color-border)}
 .google-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:11px;border-radius:99px;border:1px solid var(--color-border);background:var(--color-card);font-size:13px;font-weight:600;color:var(--color-black)}
@@ -105,14 +106,14 @@ input,select,textarea{font-family:inherit}
 #app{display:none}
 #app.visible{display:flex}
 .sidebar{width:240px;background:#0A0A0A;color:#fff;height:100vh;position:fixed;top:0;left:0;display:flex;flex-direction:column;flex-shrink:0;z-index:100}
-.sidebar-logo{padding:22px 20px;font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;border-bottom:1px solid rgba(255,255,255,.1)}
+.sidebar-logo{padding:22px 20px;font-family:'League Spartan',sans-serif;font-size:22px;font-weight:700;letter-spacing:-0.5px;border-bottom:1px solid rgba(255,255,255,.1)}
 .sidebar-logo span{color:var(--color-accent)}
 .sidebar-space{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:rgba(255,255,255,.4);padding:14px 20px 4px;font-weight:600}
 .sidebar-nav{flex:1;overflow-y:auto;padding:4px 10px}
 .nav-section{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:rgba(255,255,255,.35);padding:14px 10px 6px;font-weight:600}
 .nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--radius-sm);color:rgba(255,255,255,.75);font-size:13px;font-weight:500;cursor:pointer;margin-bottom:1px}
 .nav-item:hover{background:rgba(255,255,255,.06);color:#fff}
-.nav-item.active{background:rgba(200,168,130,.18);color:var(--color-accent)}
+.nav-item.active{background:rgba(231,158,203,.18);color:var(--color-accent)}
 .nav-item .nav-icon{width:16px;height:16px;flex-shrink:0;display:flex}
 .nav-item .nav-icon svg{width:16px;height:16px}
 .nav-badge{margin-left:auto;background:var(--color-red);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px}
@@ -149,7 +150,7 @@ html.dark .theme-icon-sun{display:block}
 .notif-panel-head{padding:14px 16px;border-bottom:1px solid var(--color-border);font-weight:700;font-size:13px}
 .notif-item{display:flex;gap:10px;padding:12px 16px;border-bottom:1px solid var(--color-border)}
 .notif-item:last-child{border-bottom:none}
-.notif-item-icon{width:30px;height:30px;border-radius:8px;background:var(--color-accent-soft);color:var(--color-accent2,#8C6A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.notif-item-icon{width:30px;height:30px;border-radius:8px;background:var(--color-accent-soft);color:var(--color-accent2,#B4478A);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .notif-item-title{font-size:12.5px;font-weight:700}
 .notif-item-text{font-size:11.5px;color:var(--color-warm-gray)}
 .avatar-sm{width:32px;height:32px;border-radius:50%;background:var(--color-accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#fff;flex-shrink:0}
@@ -161,15 +162,15 @@ html.dark .theme-icon-sun{display:block}
 .main{margin-left:240px;flex:1;min-height:100vh;display:flex;flex-direction:column}
 .topbar{background:var(--color-cream);border-bottom:0.5px solid var(--color-border);padding:16px 32px;display:flex;align-items:center;justify-content:space-between}
 .breadcrumb{font-size:11px;color:var(--color-warm-gray);text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px}
-.page-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600}
+.page-title{font-family:'League Spartan',sans-serif;font-size:26px;font-weight:600}
 .topbar-actions{display:flex;gap:10px;align-items:center}
 .page-content{padding:28px 32px;flex:1;animation:fadeIn .15s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── Buttons ── */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:32px;padding:0 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;line-height:1;border:1px solid transparent;white-space:nowrap;box-sizing:border-box}
-.btn-accent{background:var(--color-accent);color:#fff}
-.btn-accent:hover{background:#b8977a}
+.btn-accent{background:var(--color-accent);color:#0A0A0A}
+.btn-accent:hover{background:#DB86BC}
 .btn-dark{background:var(--color-black);color:var(--color-cream)}
 .btn-dark:hover{background:#222}
 .btn-ghost{background:transparent;border:1px solid var(--color-border);color:var(--color-black)}
@@ -195,7 +196,7 @@ html.dark .theme-icon-sun{display:block}
 
 .card{background:var(--color-card);border:0.5px solid var(--color-border);border-radius:var(--radius);box-shadow:var(--shadow)}
 .card-header{padding:16px 20px;border-bottom:0.5px solid var(--color-border);display:flex;align-items:center;justify-content:space-between}
-.card-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600}
+.card-title{font-family:'League Spartan',sans-serif;font-size:18px;font-weight:600}
 .card-body{padding:20px}
 .section-gap{margin-bottom:24px}
 
@@ -205,7 +206,7 @@ table{width:100%;border-collapse:collapse}
 th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--color-warm-gray);padding:8px 16px;border-bottom:1px solid var(--color-border);font-weight:600;white-space:nowrap}
 td{padding:12px 16px;font-size:13px;border-bottom:1px solid var(--color-border);vertical-align:middle}
 tr:last-child td{border-bottom:none}
-tr:hover td{background:rgba(200,168,130,.05)}
+tr:hover td{background:rgba(231,158,203,.08)}
 
 /* ── Badges ── */
 .pill{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:99px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap}
@@ -220,14 +221,21 @@ html.dark .pill-green{background:rgba(76,174,130,.14)}
 html.dark .pill-red{background:rgba(224,117,117,.13)}
 
 /* ── Deadlines ── */
-.deadline-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:var(--radius-sm);margin-bottom:8px;border:1px solid var(--color-border)}
-.deadline-row.urgent{background:rgba(184,50,50,.08);border-color:var(--color-red)}
-.deadline-row.soon{background:rgba(181,114,10,.09);border-color:var(--color-amber)}
-.deadline-row.ok{background:rgba(26,107,74,.08);border-color:var(--color-green)}
-.deadline-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.deadline-row.urgent .deadline-dot{background:var(--color-red)}
+.deadline-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:var(--radius-sm);margin-bottom:8px;border:1px solid var(--color-border);border-left-width:4px}
+.deadline-row.urgent{background:rgba(184,50,50,.14);border-color:var(--color-red);border-left-color:var(--color-red);box-shadow:0 0 0 1px rgba(184,50,50,.25),0 4px 14px rgba(184,50,50,.18);animation:deadlinePulse 1.8s ease-in-out infinite}
+.deadline-row.soon{background:rgba(181,114,10,.12);border-color:var(--color-amber);border-left-color:var(--color-amber)}
+.deadline-row.ok{background:rgba(26,107,74,.08);border-color:var(--color-green);border-left-color:var(--color-green)}
+@keyframes deadlinePulse{0%,100%{box-shadow:0 0 0 1px rgba(184,50,50,.25),0 4px 14px rgba(184,50,50,.14)}50%{box-shadow:0 0 0 2px rgba(184,50,50,.5),0 4px 20px rgba(184,50,50,.3)}}
+.deadline-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.deadline-row.urgent .deadline-dot{background:var(--color-red);box-shadow:0 0 0 0 rgba(184,50,50,.6);animation:dotPulse 1.4s ease-out infinite}
+@keyframes dotPulse{0%{box-shadow:0 0 0 0 rgba(184,50,50,.55)}70%{box-shadow:0 0 0 8px rgba(184,50,50,0)}100%{box-shadow:0 0 0 0 rgba(184,50,50,0)}}
 .deadline-row.soon .deadline-dot{background:var(--color-amber)}
 .deadline-row.ok .deadline-dot{background:var(--color-green)}
+.deadline-countdown{font-weight:800;font-size:12.5px;padding:4px 10px;border-radius:99px;white-space:nowrap}
+.deadline-countdown.urgent{background:var(--color-red);color:#fff}
+.deadline-countdown.soon{background:rgba(181,114,10,.16);color:var(--color-amber)}
+.deadline-countdown.ok{background:rgba(26,107,74,.12);color:var(--color-green)}
+.deadline-urgent-tag{display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#fff;background:var(--color-red);padding:1px 7px;border-radius:99px;margin-left:8px;vertical-align:middle}
 
 /* ── Kanban ── */
 .kanban{display:flex;gap:14px;overflow-x:auto;padding-bottom:12px;align-items:flex-start}
@@ -257,6 +265,8 @@ html.dark .pill-red{background:rgba(224,117,117,.13)}
 .talent-name{font-weight:700;font-size:14px}
 .talent-niche{font-size:11.5px;color:var(--color-warm-gray)}
 .platform-chip{display:inline-block;font-size:10px;padding:2px 8px;border-radius:99px;background:var(--color-accent-soft);color:var(--color-accent2);margin-right:4px;margin-bottom:4px;font-weight:600}
+.platform-chip-link{cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:3px}
+.platform-chip-link:hover{background:var(--color-accent);color:#0A0A0A}
 .talent-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:12px 0;text-align:center}
 .talent-stat-val{font-weight:700;font-size:14px}
 .talent-stat-lab{font-size:9.5px;color:var(--color-warm-gray);text-transform:uppercase}
@@ -267,7 +277,7 @@ html.dark .pill-red{background:rgba(224,117,117,.13)}
 .modal{background:var(--color-card);border-radius:16px;width:640px;max-width:96vw;max-height:88vh;overflow-y:auto}
 .modal.wide{width:840px}
 .modal-head{padding:22px 24px 0;display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
-.modal-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600}
+.modal-title{font-family:'League Spartan',sans-serif;font-size:20px;font-weight:600}
 .modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--color-warm-gray)}
 .modal-body{padding:0 24px 24px}
 .modal-foot{padding:16px 24px 22px;border-top:1px solid var(--color-border);display:flex;gap:10px;justify-content:flex-end}
@@ -304,7 +314,7 @@ html.dark .pill-red{background:rgba(224,117,117,.13)}
 /* ── TrustPass ── */
 .tp-card{background:linear-gradient(180deg,#fff, #FBFAF7);border:1px solid var(--color-purple);border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(90,74,140,.1)}
 .tp-head{background:var(--color-purple);color:#fff;padding:18px 24px;display:flex;justify-content:space-between;align-items:center}
-.tp-head-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;display:flex;align-items:center;gap:8px}
+.tp-head-title{font-family:'League Spartan',sans-serif;font-size:20px;font-weight:600;display:flex;align-items:center;gap:8px}
 .tp-head-sub{font-size:11px;opacity:.8}
 .tp-section{padding:18px 24px;border-bottom:1px solid var(--color-border)}
 .tp-section:last-child{border-bottom:none}
@@ -368,6 +378,41 @@ html.dark .pill-red{background:rgba(224,117,117,.13)}
 .doc-preview-row:last-child{border-bottom:none}
 .doc-preview-head{background:var(--color-surface-soft);padding:14px 18px;font-weight:700;display:flex;justify-content:space-between}
 .doc-preview-total{background:var(--color-accent-soft);font-weight:700;font-size:14px}
+/* ── Documents réalistes (contrat / facture imprimables) ── */
+.doc2{color:#1a1a1a;font-size:13px;line-height:1.65}
+.doc2 .doc2-top{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #1a1a1a;padding-bottom:18px;margin-bottom:26px}
+.doc2 .doc2-logo{font-family:'League Spartan',sans-serif;font-size:26px;font-weight:700;letter-spacing:-.5px}
+.doc2 .doc2-logo .dot{color:#E79ECB}
+.doc2 .doc2-org{font-size:10.5px;color:#666;margin-top:6px;line-height:1.5}
+.doc2 .doc2-kind{text-align:right}
+.doc2 .doc2-kind h1{font-family:'League Spartan',sans-serif;font-size:22px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:0}
+.doc2 .doc2-kind .doc2-ref{font-size:11px;color:#666;margin-top:4px}
+.doc2 .doc2-parties{display:flex;gap:24px;margin-bottom:24px}
+.doc2 .doc2-party{flex:1;background:#F7F5F1;border-radius:6px;padding:14px 16px}
+.doc2 .doc2-party .lbl{font-size:9.5px;text-transform:uppercase;letter-spacing:.6px;color:#999;font-weight:700;margin-bottom:5px}
+.doc2 .doc2-party .nm{font-weight:700;font-size:13.5px}
+.doc2 .doc2-party .meta{font-size:11px;color:#666;margin-top:2px}
+.doc2 .doc2-meta-row{display:flex;gap:28px;font-size:11.5px;color:#444;margin-bottom:22px}
+.doc2 .doc2-meta-row b{color:#1a1a1a}
+.doc2 table.doc2-items{width:100%;border-collapse:collapse;margin-bottom:6px;font-size:12.5px}
+.doc2 table.doc2-items th{text-align:left;background:#1a1a1a;color:#fff;padding:9px 12px;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;font-weight:600}
+.doc2 table.doc2-items th.num,.doc2 table.doc2-items td.num{text-align:right}
+.doc2 table.doc2-items td{padding:10px 12px;border-bottom:1px solid #eee}
+.doc2 .doc2-totals{margin-left:auto;width:290px;margin-top:12px;font-size:12.5px}
+.doc2 .doc2-totals .tr{display:flex;justify-content:space-between;padding:7px 12px}
+.doc2 .doc2-totals .tr.grand{background:#1a1a1a;color:#fff;font-weight:700;border-radius:5px;font-size:14px;padding:11px 12px;margin-top:4px}
+.doc2 .doc2-totals .tr.net{background:#E1F5EE;color:#0f5132;font-weight:700;border-radius:5px;margin-top:4px}
+.doc2 .doc2-totals .tr.comm{color:#B83232}
+.doc2 h2.doc2-art{font-family:'League Spartan',sans-serif;font-size:13.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin:18px 0 4px;color:#1a1a1a}
+.doc2 p.doc2-p{font-size:12px;color:#333;margin:0 0 4px}
+.doc2 .doc2-sign{display:flex;gap:24px;margin-top:36px}
+.doc2 .doc2-sign .sig{flex:1;border-top:1px solid #1a1a1a;padding-top:8px;font-size:11px;color:#666}
+.doc2 .doc2-sign .sig .who{font-weight:700;color:#1a1a1a;font-size:12px}
+.doc2 .doc2-sign .sig .mark{font-family:'League Spartan',sans-serif;font-style:italic;font-size:17px;color:#1a1a1a;margin-top:10px;height:24px}
+.doc2 .doc2-foot{margin-top:32px;padding-top:14px;border-top:1px solid #ddd;font-size:9.5px;color:#999;text-align:center;line-height:1.6}
+.doc2 .doc2-pay{background:#F7F5F1;border-radius:6px;padding:12px 16px;font-size:11.5px;color:#444;margin-top:18px}
+.doc2 .doc2-pay b{color:#1a1a1a}
+.doc2 .doc2-stamp{display:inline-block;border:2px solid;border-radius:5px;padding:3px 10px;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.5px;transform:rotate(-4deg)}
 
 /* ── Indy integration ── */
 .indy-connect{background:var(--color-card);border:0.5px solid var(--color-border);border-radius:var(--radius);padding:48px 24px;text-align:center}
@@ -460,7 +505,7 @@ html.dark .pill-red{background:rgba(224,117,117,.13)}
 
 <div id="app">
   <div class="sidebar">
-    <div class="sidebar-logo">must<span>-have</span></div>
+    <div class="sidebar-logo">must-have<span>.</span></div>
     <div class="sidebar-nav" id="sidebar-nav"></div>
     <div class="sso-chip-side"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> SSO · Google Workspace</div>
     <div class="profile-panel" id="profile-panel"></div>
@@ -515,6 +560,7 @@ html.dark .pill-red{background:rgba(224,117,117,.13)}
    ICONS (inline SVG, style Lucide — pas de dépendance CDN)
 ═══════════════════════════════════════════════════════════════════ */
 const ICONS = {
+  alert:'<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
   dashboard:'<rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/>',
   pipeline:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/>',
   users:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
@@ -563,6 +609,7 @@ const talents = [
     caYtd:26500, ca2025:42000, ratePerPost:1800, status:'active', siret:'83412567800019',
     photo:'https://randomuser.me/api/portraits/women/12.jpg', email:'mahaut@agencemusthave.com', phone:'+33 6 78 12 34 56', address:'Paris 11e',
     tiktokShopActive:true, promoCode:'MAHAUT15',
+    socials:{ Instagram:'https://www.instagram.com/mahaut_.ctrr', TikTok:'https://www.tiktok.com/@mahaut_.ctrr' },
     bio:'Créatrice lifestyle parisienne, univers doux et authentique.',
     audienceAge:'18-24 (62%)', audienceGender:'F 78%', audienceTop:'Paris, Lyon, Bordeaux' },
   { id:'t2', name:'Lucas Ferreira', handle:'@lucas.ferr', niche:'Streetwear & Sneakers',
@@ -967,7 +1014,7 @@ let trustpasses = {}; // talentId -> {generatedAt, id}
 function fmtEur(n){ return Math.round(n).toLocaleString('fr-FR') + ' €'; }
 function fmtDate(d){ return new Date(d).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'}); }
 function initials(name){ return name.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase(); }
-const AVATAR_COLORS = ['#C8A882','#5A4A8C','#1A6B4A','#B5720A','#8C8880'];
+const AVATAR_COLORS = ['#E79ECB','#5A4A8C','#1A6B4A','#B5720A','#8C8880'];
 function colorFor(str){ let h=0; for(const c of str) h=(h+c.charCodeAt(0))%AVATAR_COLORS.length; return AVATAR_COLORS[h]; }
 function avatarHtml(t, size=44, fsize){
   fsize = fsize || Math.round(size*0.32);
@@ -1140,6 +1187,8 @@ function setupSidebar(){
   document.getElementById('user-avatar').textContent = initials(currentUser.name);
   document.getElementById('user-avatar').style.background = colorFor(currentUser.name);
   renderProfilePanel();
+  document.getElementById('profile-panel').classList.remove('open');
+  document.getElementById('footer-chevron').classList.remove('open');
   refreshNotifBell();
 }
 
@@ -1308,22 +1357,25 @@ function showToast(msg, type='success'){
    (window.print() → the browser's own "Save as PDF"; mailto: → user's
    mail client; Blob + <a download> → real CSV file)
 ═══════════════════════════════════════════════════════════════════ */
-function openPrintWindow(title, bodyHtml){
+function openPrintWindow(title, bodyHtml, autoPrint=true){
   const win = window.open('', '_blank');
-  if (!win) { showToast("Autorisez les pop-ups pour imprimer ce document", 'error'); return; }
+  if (!win) { showToast("Autorisez les pop-ups pour afficher ce document", 'error'); return; }
   const css = document.querySelector('style')?.textContent || '';
   win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>${css}
-      body{background:var(--color-card);padding:36px;max-width:760px;margin:0 auto}
-      .print-actions{margin-bottom:24px}
-      @media print{ .print-actions{display:none} }
+      html,body{background:#EDEAE3}
+      body{padding:32px 16px}
+      .doc-sheet{background:#fff;max-width:760px;margin:0 auto;padding:48px 52px;box-shadow:0 4px 24px rgba(0,0,0,.12);border-radius:4px}
+      .print-actions{max-width:760px;margin:0 auto 20px;display:flex;gap:10px}
+      @media print{ html,body{background:#fff} body{padding:0} .doc-sheet{box-shadow:none;max-width:none;padding:24px 8px} .print-actions{display:none} }
     </style></head><body>
-    <div class="print-actions"><button class="btn btn-dark" onclick="window.print()">${'Imprimer / Enregistrer en PDF'}</button></div>
-    ${bodyHtml}
+    <div class="print-actions"><button class="btn btn-dark" onclick="window.print()">Enregistrer en PDF / Imprimer</button></div>
+    <div class="doc-sheet">${bodyHtml}</div>
     </body></html>`);
   win.document.close();
-  setTimeout(()=>{ try{ win.focus(); win.print(); }catch(e){} }, 450);
+  if (autoPrint) setTimeout(()=>{ try{ win.focus(); win.print(); }catch(e){} }, 500);
+  else win.focus();
 }
 function mailtoOpen(subject, body){
   location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
@@ -1338,40 +1390,160 @@ function downloadCsv(filename, rows){
   URL.revokeObjectURL(url);
 }
 
-function printInvoicePdf(paymentId){
-  const p = payments.find(x=>x.id===paymentId); const t = talentById(p.talentId);
-  const under36800 = t.caYtd < 36800;
-  openPrintWindow('Facture — '+p.brand, `
-    <h1 class="serif" style="font-size:24px;margin-bottom:4px">Facture</h1>
-    <div class="doc-preview">
-      <div class="doc-preview-row"><span>Émetteur</span><span style="text-align:right">${t.name}<br><span style="font-size:11px;color:var(--color-warm-gray)">Auto-entrepreneur · SIRET ${t.siret}</span></span></div>
-      <div class="doc-preview-row"><span>Client</span><span>${p.brand}</span></div>
-      <div class="doc-preview-row"><span>Prestation</span><span>${p.type} — Réf. contrat ${p.contractId||'—'}</span></div>
-      <div class="doc-preview-row"><span>${under36800?"TVA non applicable, art. 293 B du CGI":"TVA 20%"}</span><span></span></div>
-      <div class="doc-preview-row doc-preview-total"><span>Total net à payer</span><span>${fmtEur(p.amount)}</span></div>
-    </div>
-    <div style="margin-top:24px;font-size:11px;color:var(--color-warm-gray)">Document généré par InfluenceOS — must-have</div>
-  `);
+/* ── Coordonnées de démo pour documents réalistes ── */
+const AGENCY_INFO = { name:'MUST-HAVE', legal:'Must-Have Agency SAS', address:'24 rue de Turenne, 75003 Paris', siret:'90128374600021', tva:'FR76901283746', ape:'7311Z', iban:'FR76 3000 4008 2800 0123 4567 891', bic:'BNPAFRPPXXX', email:'contact@agencemusthave.com', phone:'+33 1 84 25 60 12' };
+function brandAddress(brand){
+  // adresse fictive stable dérivée du nom de la marque (démo)
+  let h=0; for(let i=0;i<brand.length;i++) h=(h*31+brand.charCodeAt(i))>>>0;
+  const nums=[8,12,24,36,47,55,68,92,118]; const streets=['avenue Montaigne','rue du Faubourg Saint-Honoré','boulevard Haussmann','rue de Rivoli','avenue des Champs-Élysées','place Vendôme']; const cities=['75008 Paris','75001 Paris','75002 Paris','69002 Lyon','13001 Marseille'];
+  return `${nums[h%nums.length]} ${streets[(h>>3)%streets.length]}, ${cities[(h>>6)%cities.length]}`;
 }
+function docLetterhead(kind, ref, dateStr){
+  return `<div class="doc2-top">
+    <div>
+      <div class="doc2-logo">must-have<span class="dot">.</span></div>
+      <div class="doc2-org">${AGENCY_INFO.legal} · ${AGENCY_INFO.address}<br>SIRET ${AGENCY_INFO.siret} · TVA ${AGENCY_INFO.tva} · APE ${AGENCY_INFO.ape}<br>${AGENCY_INFO.email} · ${AGENCY_INFO.phone}</div>
+    </div>
+    <div class="doc2-kind">
+      <h1>${kind}</h1>
+      <div class="doc2-ref">N° ${ref}</div>
+      <div class="doc2-ref">Le ${dateStr}</div>
+    </div>
+  </div>`;
+}
+function statusStamp(status){
+  const map={ paid:['PAYÉE','#0f5132'], validated:['VALIDÉE','#5A4A8C'], sent:['ENVOYÉE','#B5720A'], draft:['BROUILLON','#8C8880'], active:['SIGNÉ','#0f5132'], pending:['À SIGNER','#B5720A'], done:['CLÔTURÉ','#8C8880'] };
+  const s=map[status]; if(!s) return '';
+  return `<span class="doc2-stamp" style="color:${s[1]};border-color:${s[1]}">${s[0]}</span>`;
+}
+
+/* ═══ CONTRAT réaliste ═══ */
+function contractDocHtml(c){
+  const t = talentById(c.talentId);
+  const ref = c.id.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,10);
+  const items = (c.deliverables||'').split(',').map(s=>s.trim()).filter(Boolean);
+  const net = c.amount - (c.commissionAgency||0);
+  return `<div class="doc2">
+    ${docLetterhead('Contrat de partenariat', ref, fmtDate(c.startDate))}
+    <div style="text-align:right;margin-top:-12px;margin-bottom:14px">${statusStamp(c.status)}</div>
+    <div class="doc2-parties">
+      <div class="doc2-party"><div class="lbl">L'Agence (mandataire)</div><div class="nm">${AGENCY_INFO.legal}</div><div class="meta">${AGENCY_INFO.address}<br>SIRET ${AGENCY_INFO.siret}</div></div>
+      <div class="doc2-party"><div class="lbl">Le Talent</div><div class="nm">${t?.name||'—'}</div><div class="meta">${t?.handle||''} · ${t?.address||''}<br>Auto-entrepreneur · SIRET ${t?.siret||'—'}</div></div>
+    </div>
+    <div class="doc2-meta-row"><span>Annonceur : <b>${c.brand}</b></span><span>Période : <b>${fmtDate(c.startDate)} → ${fmtDate(c.endDate)}</b></span></div>
+
+    <h2 class="doc2-art">Article 1 — Objet</h2>
+    <p class="doc2-p">Le présent contrat définit les conditions dans lesquelles le Talent réalise, pour le compte de l'annonceur <b>${c.brand}</b> et sous mandat de l'Agence, les prestations de création de contenu détaillées à l'article 2.</p>
+
+    <h2 class="doc2-art">Article 2 — Livrables</h2>
+    <table class="doc2-items"><thead><tr><th>Livrable</th><th class="num">Quantité</th></tr></thead><tbody>
+      ${items.length?items.map(it=>{const m=it.match(/^(\d+)\s+(.*)$/);return `<tr><td>${m?m[2]:it}</td><td class="num">${m?m[1]:'1'}</td></tr>`;}).join(''):`<tr><td>${c.deliverables||'—'}</td><td class="num">1</td></tr>`}
+    </tbody></table>
+
+    <h2 class="doc2-art">Article 3 — Rémunération</h2>
+    <div class="doc2-totals">
+      <div class="tr"><span>Montant brut du partenariat</span><span>${fmtEur(c.amount)}</span></div>
+      <div class="tr comm"><span>Commission Agence (${Math.round((c.commissionAgency/c.amount)*100)||10}%)</span><span>− ${fmtEur(c.commissionAgency||0)}</span></div>
+      <div class="tr net"><span>Net reversé au Talent</span><span>${fmtEur(net)}</span></div>
+    </div>
+    <p class="doc2-p" style="margin-top:14px">Paiement en deux échéances : 50% à la signature, 50% à la livraison validée. Règlement par virement sous 30 jours à réception de facture.</p>
+
+    <h2 class="doc2-art">Article 4 — Exclusivité & droits</h2>
+    <p class="doc2-p">Le Talent s'engage à ne pas collaborer avec une marque directement concurrente de l'annonceur pendant toute la durée du contrat. Les contenus sont cédés à l'annonceur pour une exploitation de 12 mois sur ses canaux owned et paid media.</p>
+
+    <h2 class="doc2-art">Article 5 — Obligations légales</h2>
+    <p class="doc2-p">Conformément à la loi n°2023-451 du 9 juin 2023 encadrant l'influence commerciale, tout contenu sponsorisé devra comporter la mention « Publicité » ou « Collaboration commerciale » de manière claire et lisible.</p>
+
+    <div class="doc2-sign">
+      <div class="sig"><div class="who">Pour l'Agence</div>${AGENCY_INFO.legal}<div class="mark">${c.status!=='pending'?'S. Martin':''}</div></div>
+      <div class="sig"><div class="who">Le Talent</div>${t?.name||''}<div class="mark">${c.status==='active'||c.status==='done'?t?.name.split(' ')[0]:''}</div></div>
+    </div>
+    <div class="doc2-foot">${AGENCY_INFO.legal} — SAS au capital de 20 000 € — RCS Paris ${AGENCY_INFO.siret} — TVA ${AGENCY_INFO.tva}<br>Document contractuel généré par InfluenceOS · must-have</div>
+  </div>`;
+}
+
+/* ═══ FACTURE talent (via Indy ou MustHave) réaliste ═══ */
+function talentInvoiceDocHtml(inv){
+  const t = talentById(inv.talentId);
+  const { commission, net } = invoiceNet(inv);
+  const ref = inv.indyId || inv.id.toUpperCase();
+  const under36800 = (t.caYtd||0) < 36800;
+  return `<div class="doc2">
+    <div class="doc2-top">
+      <div>
+        <div class="doc2-logo" style="font-size:22px">${t.name}</div>
+        <div class="doc2-org">Auto-entrepreneur · ${t.address||''}<br>SIRET ${t.siret} · ${t.email}<br>${inv.indySource?'Facture émise via Indy':'Facture émise via InfluenceOS'}</div>
+      </div>
+      <div class="doc2-kind"><h1>Facture</h1><div class="doc2-ref">N° ${ref}</div><div class="doc2-ref">Le ${fmtDate(inv.date)}</div></div>
+    </div>
+    <div style="text-align:right;margin-top:-12px;margin-bottom:14px">${statusStamp(inv.status)}</div>
+    <div class="doc2-parties">
+      <div class="doc2-party"><div class="lbl">Émetteur</div><div class="nm">${t.name}</div><div class="meta">${t.address||''}<br>SIRET ${t.siret}</div></div>
+      <div class="doc2-party"><div class="lbl">Facturé à</div><div class="nm">${inv.brand}</div><div class="meta">${brandAddress(inv.brand)}</div></div>
+    </div>
+    <div class="doc2-meta-row"><span>Date d'émission : <b>${fmtDate(inv.date)}</b></span><span>Échéance : <b>${fmtDate(inv.dueDate)}</b></span></div>
+
+    <table class="doc2-items"><thead><tr><th>Désignation</th><th class="num">Qté</th><th class="num">P.U. HT</th><th class="num">Total HT</th></tr></thead><tbody>
+      ${inv.lines.map(l=>`<tr><td>${l.label}</td><td class="num">${l.qty}</td><td class="num">${fmtEur(l.unitPrice)}</td><td class="num">${fmtEur(l.qty*l.unitPrice)}</td></tr>`).join('')}
+    </tbody></table>
+    <div class="doc2-totals">
+      <div class="tr"><span>Total HT</span><span>${fmtEur(inv.amount)}</span></div>
+      ${under36800?`<div class="tr"><span>TVA</span><span>Non applicable</span></div>`:`<div class="tr"><span>TVA 20%</span><span>${fmtEur(Math.round(inv.amount*0.2))}</span></div>`}
+      <div class="tr grand"><span>Total à payer</span><span>${fmtEur(under36800?inv.amount:Math.round(inv.amount*1.2))}</span></div>
+      ${commission>0?`<div class="tr comm"><span>Commission agence (${Math.round(inv.commissionRate*100)}%)</span><span>− ${fmtEur(commission)}</span></div><div class="tr net"><span>Net perçu par le talent</span><span>${fmtEur(net)}</span></div>`:''}
+    </div>
+    <div class="doc2-pay">
+      <b>Règlement par virement</b> — IBAN ${AGENCY_INFO.iban} · BIC ${AGENCY_INFO.bic}<br>
+      ${under36800?'TVA non applicable, art. 293 B du CGI. ':''}Pénalités de retard : 3× le taux d'intérêt légal. Indemnité forfaitaire de recouvrement : 40 €.
+    </div>
+    <div class="doc2-foot">${t.name} — Auto-entrepreneur — SIRET ${t.siret}<br>Facture générée le ${fmtDate(inv.date)} · InfluenceOS · must-have</div>
+  </div>`;
+}
+
+/* ═══ FACTURE agence (à partir d'un paiement) ═══ */
+function paymentInvoiceDocHtml(p){
+  const t = talentById(p.talentId);
+  const under36800 = (t.caYtd||0) < 36800;
+  const ref = p.id.toUpperCase()+'-'+(p.contractId||'X').toUpperCase();
+  return `<div class="doc2">
+    <div class="doc2-top">
+      <div><div class="doc2-logo" style="font-size:22px">${t.name}</div>
+      <div class="doc2-org">Auto-entrepreneur · ${t.address||''}<br>SIRET ${t.siret} · ${t.email}</div></div>
+      <div class="doc2-kind"><h1>Facture</h1><div class="doc2-ref">N° ${ref}</div><div class="doc2-ref">Le ${fmtDate(p.date)}</div></div>
+    </div>
+    <div style="text-align:right;margin-top:-12px;margin-bottom:14px">${statusStamp(p.status==='paid'?'paid':'sent')}</div>
+    <div class="doc2-parties">
+      <div class="doc2-party"><div class="lbl">Émetteur</div><div class="nm">${t.name}</div><div class="meta">${t.address||''}<br>SIRET ${t.siret}</div></div>
+      <div class="doc2-party"><div class="lbl">Facturé à</div><div class="nm">${p.brand}</div><div class="meta">${brandAddress(p.brand)}</div></div>
+    </div>
+    <table class="doc2-items"><thead><tr><th>Désignation</th><th class="num">Total HT</th></tr></thead><tbody>
+      <tr><td>${p.type} — partenariat ${p.brand}${p.contractId?' (réf. contrat '+p.contractId.toUpperCase()+')':''}</td><td class="num">${fmtEur(p.amount)}</td></tr>
+    </tbody></table>
+    <div class="doc2-totals">
+      <div class="tr"><span>Total HT</span><span>${fmtEur(p.amount)}</span></div>
+      <div class="tr"><span>TVA</span><span>${under36800?'Non applicable':fmtEur(Math.round(p.amount*0.2))}</span></div>
+      <div class="tr grand"><span>Total à payer</span><span>${fmtEur(under36800?p.amount:Math.round(p.amount*1.2))}</span></div>
+    </div>
+    <div class="doc2-pay"><b>Règlement par virement</b> — IBAN ${AGENCY_INFO.iban} · BIC ${AGENCY_INFO.bic}<br>${under36800?'TVA non applicable, art. 293 B du CGI. ':''}Paiement à 30 jours.</div>
+    <div class="doc2-foot">${t.name} — SIRET ${t.siret} · InfluenceOS · must-have</div>
+  </div>`;
+}
+
+/* ── Actions Voir / Télécharger ── */
+function viewContract(id){ const c=contracts.find(x=>x.id===id); if(!c)return; openPrintWindow('Contrat — '+c.brand, contractDocHtml(c), false); }
+function downloadContract(id){ const c=contracts.find(x=>x.id===id); if(!c)return; openPrintWindow('Contrat — '+c.brand, contractDocHtml(c), true); showToast('Contrat prêt — Enregistrer en PDF', 'success'); }
+function viewTalentInvoice(id){ const inv=invoices.find(x=>x.id===id); if(!inv)return; openPrintWindow('Facture — '+inv.brand, talentInvoiceDocHtml(inv), false); }
+function downloadTalentInvoice(id){ const inv=invoices.find(x=>x.id===id); if(!inv)return; openPrintWindow('Facture — '+inv.brand, talentInvoiceDocHtml(inv), true); showToast('Facture prête — Enregistrer en PDF', 'success'); }
+function viewPaymentInvoice(id){ const p=payments.find(x=>x.id===id); if(!p)return; openPrintWindow('Facture — '+p.brand, paymentInvoiceDocHtml(p), false); }
+function downloadPaymentInvoice(id){ const p=payments.find(x=>x.id===id); if(!p)return; openPrintWindow('Facture — '+p.brand, paymentInvoiceDocHtml(p), true); showToast('Facture prête — Enregistrer en PDF', 'success'); }
+
+/* Compat : anciens noms conservés */
+function printContractPdf(id){ downloadContract(id); }
+function printTalentInvoicePdf(id){ downloadTalentInvoice(id); }
+function printInvoicePdf(id){ downloadPaymentInvoice(id); }
 function emailInvoice(paymentId){
   const p = payments.find(x=>x.id===paymentId); const t = talentById(p.talentId);
   mailtoOpen(`Facture — ${p.brand}`, `Bonjour,\n\nVeuillez trouver ci-joint la facture pour ${p.brand} (${p.type}) d'un montant de ${fmtEur(p.amount)}.\n\nCordialement,\n${t.name}`);
-}
-function printTalentInvoicePdf(invoiceId){
-  const inv = invoices.find(i=>i.id===invoiceId); const t = talentById(inv.talentId);
-  const { commission, net } = invoiceNet(inv);
-  openPrintWindow('Facture — '+inv.brand, `
-    <h1 class="serif" style="font-size:24px;margin-bottom:4px">Facture ${inv.indyId||inv.id.toUpperCase()}</h1>
-    <div class="doc-preview">
-      <div class="doc-preview-row"><span>Émetteur</span><span>${t.name} · SIRET ${t.siret}</span></div>
-      <div class="doc-preview-row"><span>Client</span><span>${inv.brand}</span></div>
-      <div class="doc-preview-row"><span>Date / Échéance</span><span>${fmtDate(inv.date)} → ${fmtDate(inv.dueDate)}</span></div>
-      ${inv.lines.map(l=>`<div class="doc-preview-row"><span>${l.label} × ${l.qty}</span><span>${fmtEur(l.qty*l.unitPrice)}</span></div>`).join('')}
-      <div class="doc-preview-row"><span>Montant HT</span><span style="font-weight:700">${fmtEur(inv.amount)}</span></div>
-      ${commission>0?`<div class="doc-preview-row"><span>Commission agence (${Math.round(inv.commissionRate*100)}%)</span><span>− ${fmtEur(commission)}</span></div>`:''}
-      <div class="doc-preview-row doc-preview-total"><span>Net perçu</span><span>${fmtEur(net)}</span></div>
-    </div>
-  `);
 }
 function printTrustPassPdf(talentId){
   const t = talentById(talentId); const tp = trustpasses[talentId];
@@ -1399,22 +1571,6 @@ function printUrssafRecap(talentId, declarationId){
       <div class="doc-preview-row doc-preview-total"><span>Total à déclarer</span><span>${fmtEur(bd.total)}</span></div>
       <div class="doc-preview-row"><span>Échéance</span><span>${fmtDate(decl.dueDate||decl.paidDate)}</span></div>
     </div>
-  `);
-}
-function printContractPdf(contractId){
-  const c = contracts.find(x=>x.id===contractId); const t = talentById(c.talentId);
-  openPrintWindow('Contrat — '+c.brand, `
-    <h1 class="serif" style="font-size:24px;margin-bottom:4px">Contrat de partenariat</h1>
-    <div style="font-size:12.5px;color:var(--color-warm-gray);margin-bottom:16px">${c.brand} × ${t?.name}</div>
-    <div class="doc-preview">
-      <div class="doc-preview-row"><span>Talent</span><span>${t?.name} · SIRET ${t?.siret||'—'}</span></div>
-      <div class="doc-preview-row"><span>Marque</span><span>${c.brand}</span></div>
-      <div class="doc-preview-row"><span>Période</span><span>${fmtDate(c.startDate)} → ${fmtDate(c.endDate)}</span></div>
-      <div class="doc-preview-row"><span>Livrables</span><span style="text-align:right;max-width:360px">${c.deliverables}</span></div>
-      <div class="doc-preview-row"><span>Commission agence</span><span>${fmtEur(c.commissionAgency)}</span></div>
-      <div class="doc-preview-row doc-preview-total"><span>Montant total</span><span>${fmtEur(c.amount)}</span></div>
-    </div>
-    <div style="margin-top:20px;font-size:11px;color:var(--color-warm-gray)">Mentions légales : contrat d'agent d'influenceur conforme à la loi n°2023-451 du 9 juin 2023 encadrant l'influence commerciale. Clause d'exclusivité et conditions de paiement définies entre les parties.</div>
   `);
 }
 function previewBrief(campaignId){
@@ -1474,10 +1630,10 @@ function renderDeadlineBlock(items){
     return `<div class="deadline-row ${urg}">
       <span class="deadline-dot"></span>
       <div style="flex:1">
-        <div style="font-weight:600;font-size:13px">${it.campaign.brand} — ${it.campaign.title||''}</div>
+        <div style="font-weight:600;font-size:13px">${it.campaign.brand} — ${it.campaign.title||''}${urg==='urgent'?`<span class="deadline-urgent-tag">${ic('alert',10)} Urgent</span>`:''}</div>
         <div style="font-size:11.5px;color:var(--color-warm-gray)">${it.talent?it.talent.name:''} · ${it.label} · ${fmtDate(it.date)}</div>
       </div>
-      <div style="font-weight:700;font-size:12.5px;${urg==='urgent'?'color:var(--color-red)':urg==='soon'?'color:var(--color-amber)':'color:var(--color-green)'}">${d<=0?"AUJOURD'HUI":d+' j'}</div>
+      <div class="deadline-countdown ${urg}">${d<0?'EN RETARD':d===0?"AUJOURD'HUI":d===1?'DEMAIN':d+' j'}</div>
     </div>`;
   }).join('');
 }
@@ -1538,10 +1694,10 @@ function closeDashSearch(){ const b=document.getElementById('dash-search-results
 
 function dashToolbarHtml(tabs, activeTab, onTabFn, searchPlaceholder){
   return `<div class="dash-toolbar">
-    <div class="dash-search">${ic('search',15)}
+    ${activeTab==='ai' ? '' : `<div class="dash-search">${ic('search',15)}
       <input placeholder="${searchPlaceholder}" oninput="globalSearch(this.value)" onblur="setTimeout(closeDashSearch,200)">
       <div class="dash-search-results" id="dash-search-results"></div>
-    </div>
+    </div>`}
     <div class="tabs" style="margin:0">${tabs.map(([id,label])=>`<button class="tab ${activeTab===id?'active':''}" onclick="${onTabFn}('${id}')">${label}</button>`).join('')}</div>
     <select class="filter-select" onchange="dashPeriod=this.value;navigate(currentPage)" title="Période">
       ${[['all','Toute période'],['7j','7 derniers jours'],['30j','30 derniers jours'],['trim','Ce trimestre']].map(([v,l])=>`<option value="${v}" ${dashPeriod===v?'selected':''}>${l}</option>`).join('')}
@@ -2108,6 +2264,11 @@ RENDERERS.roster = function(){
   </div>
   <div class="talent-grid" id="roster-grid">${talents.map(rosterCardHtml).join('')}</div>`;
 };
+function platformChip(t, p){
+  const url = t.socials && t.socials[p];
+  if (url) return `<a class="platform-chip platform-chip-link" href="${url}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="Ouvrir ${p}">${p} ${ic('external',10)}</a>`;
+  return `<span class="platform-chip">${p}</span>`;
+}
 function rosterCardHtml(t){
   const activeC = contracts.filter(c=>c.talentId===t.id&&c.status==='active').length;
   return `<div class="talent-card">
@@ -2115,7 +2276,7 @@ function rosterCardHtml(t){
       ${avatarHtml(t,44)}
       <div><div class="talent-name">${t.name}</div><div class="talent-niche">${t.niche}</div></div>
     </div>
-    <div>${t.platforms.map(p=>`<span class="platform-chip">${p}</span>`).join('')}</div>
+    <div>${t.platforms.map(p=>platformChip(t,p)).join('')}</div>
     <div class="talent-stats-row">
       <div><div class="talent-stat-val">${(t.followers/1000).toFixed(0)}K</div><div class="talent-stat-lab">Followers</div></div>
       <div><div class="talent-stat-val" style="color:var(--color-green)">${t.engagement}%</div><div class="talent-stat-lab">Engagement</div></div>
@@ -2178,7 +2339,7 @@ function openTalentProfile(id){
     <div style="display:flex;gap:16px;align-items:center;margin-bottom:18px">
       ${avatarHtml(t,56,20)}
       <div><div style="font-weight:700;font-size:17px">${t.name}</div><div style="color:var(--color-warm-gray);font-size:13px">${t.handle} · ${t.niche}</div>
-      <div style="font-size:12px;margin-top:4px">${t.platforms.map(p=>`<span class="platform-chip">${p}</span>`).join('')}</div></div>
+      <div style="font-size:12px;margin-top:4px">${t.platforms.map(p=>platformChip(t,p)).join('')}</div></div>
     </div>
     <div style="font-size:13px;margin-bottom:16px;color:var(--color-warm-gray)">${t.bio}</div>
     <div class="tp-metric-grid" style="grid-template-columns:repeat(3,1fr)">
@@ -2328,6 +2489,10 @@ RENDERERS.contracts = function(){
       <div style="font-size:12.5px;color:var(--color-warm-gray);margin-bottom:10px">${c.deliverables}</div>
       <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:6px"><span>Paiement</span><span>${fmtEur(c.paidAmount)} / ${fmtEur(c.amount)} (commission ${fmtEur(c.commissionAgency)})</span></div>
       <div style="height:6px;background:var(--color-surface-soft);border-radius:3px;overflow:hidden"><div style="height:100%;width:${pct}%;background:var(--color-accent)"></div></div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn btn-ghost btn-sm" onclick="viewContract('${c.id}')">${ic('eye',13)} Voir</button>
+        <button class="btn btn-ghost btn-sm" onclick="downloadContract('${c.id}')">${ic('download',13)} Télécharger</button>
+      </div>
     </div></div>`;
   }).join('')}`;
 };
@@ -2397,7 +2562,8 @@ RENDERERS.payments = function(){
           <td style="font-weight:700">${fmtEur(inv.amount)}</td><td style="color:var(--color-accent)">${fmtEur(commission)}</td>
           <td style="color:var(--color-green);font-weight:700">${fmtEur(net)}</td><td>${fmtDate(inv.date)}</td>
           <td style="display:flex;gap:6px"><button class="btn btn-dark btn-sm" onclick="agencyValidateInvoice('${inv.id}')">Valider</button>
-          <button class="btn btn-ghost btn-sm" onclick="openAgencyInvoiceDetail('${inv.id}')">Détails</button></td></tr>`;
+          <button class="btn btn-ghost btn-sm" onclick="viewTalentInvoice('${inv.id}')" title="Voir la facture">${ic('eye',13)}</button>
+          <button class="btn btn-ghost btn-sm" onclick="downloadTalentInvoice('${inv.id}')" title="Télécharger">${ic('download',13)}</button></td></tr>`;
       }).join('')}</tbody>
     </table></div>
   </div>` : ''}
@@ -2458,6 +2624,8 @@ function openAgencyInvoiceDetail(id){
     </div>
   `, [
     {label:'Fermer', cls:'btn-ghost', fn:'closeModal()'},
+    {label:'Voir', cls:'btn-ghost', fn:`viewTalentInvoice('${inv.id}')`},
+    {label:'Télécharger', cls:'btn-ghost', fn:`downloadTalentInvoice('${inv.id}')`},
     ...(inv.status==='sent' ? [{label:'Valider', cls:'btn-dark', fn:`closeModal();agencyValidateInvoice('${inv.id}')`}] : []),
   ]);
 }
@@ -2812,7 +2980,7 @@ RENDERERS.outreach = function(){
         ${brandSignals.map(s=>`<div style="border:1px solid var(--color-border);border-radius:10px;padding:14px 16px">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
             <div><div style="font-weight:700;font-size:13.5px">${s.brand}</div><div style="font-size:11px;color:var(--color-warm-gray)">${s.niche}</div></div>
-            <span class="pill" style="background:${s.score>=85?'var(--color-accent-soft)':'#F2EFE9'};color:${s.score>=85?'#8C6A3C':'var(--color-warm-gray)'}">Score ${s.score}</span>
+            <span class="pill" style="background:${s.score>=85?'var(--color-accent-soft)':'#F2EFE9'};color:${s.score>=85?'var(--color-accent2)':'var(--color-warm-gray)'}">Score ${s.score}</span>
           </div>
           <div style="font-size:12.5px;color:var(--color-black);margin-bottom:10px">${s.signal}</div>
           <button class="btn btn-purple btn-sm" onclick="openSignalProposal('${s.brand}','${s.niche}')">✦ Générer une proposition</button>
@@ -2833,11 +3001,11 @@ RENDERERS.outreach = function(){
       <div class="card">
         <div class="card-header"><span class="card-title">Événements & concerts</span></div>
         <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
-          ${soonEvents.map(e=>`<div class="deadline-row ${deadlineUrgency(daysUntil(e.date))}">
+          ${soonEvents.map(e=>{const du=daysUntil(e.date);const eu=deadlineUrgency(du);return `<div class="deadline-row ${eu}">
             <span class="deadline-dot"></span>
-            <div style="flex:1"><div style="font-weight:600;font-size:12.5px">${e.name}</div><div style="font-size:11px;color:var(--color-warm-gray)">${e.location} · ${e.tag}</div></div>
-            <div style="font-size:11.5px;font-weight:700">${fmtDate(e.date)}</div>
-          </div>`).join('')}
+            <div style="flex:1"><div style="font-weight:600;font-size:12.5px">${e.name}${eu==='urgent'?`<span class="deadline-urgent-tag">${ic('alert',10)} Urgent</span>`:''}</div><div style="font-size:11px;color:var(--color-warm-gray)">${e.location} · ${e.tag} · ${fmtDate(e.date)}</div></div>
+            <div class="deadline-countdown ${eu}">${du<0?'PASSÉ':du===0?"AUJOURD'HUI":du===1?'DEMAIN':du+' j'}</div>
+          </div>`;}).join('')}
         </div>
       </div>
     </div>
@@ -3049,7 +3217,8 @@ RENDERERS['talent-contracts'] = function(){
     <div style="font-size:12px;color:var(--color-warm-gray);margin:6px 0">${c.deliverables}</div>
     <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:10px"><span>${fmtDate(c.startDate)} → ${fmtDate(c.endDate)}</span><strong>${fmtEur(c.amount)}</strong></div>
     <div style="display:flex;gap:8px">
-      <button class="btn btn-ghost btn-sm" onclick="printContractPdf('${c.id}')">${ic('download',12)} PDF</button>
+      <button class="btn btn-ghost btn-sm" onclick="viewContract('${c.id}')">${ic('eye',12)} Voir</button>
+      <button class="btn btn-ghost btn-sm" onclick="downloadContract('${c.id}')">${ic('download',12)} Télécharger</button>
       ${c.status==='pending'?`<button class="btn btn-accent btn-sm" onclick="signContract('${c.id}')">Signer</button>`:''}
     </div>
   </div></div>`).join('') || '<div class="empty">Aucun contrat</div>';
@@ -3190,7 +3359,10 @@ function invoiceCardHtml(inv){
       ${inv.status==='sent'?`<span style="font-size:12px;color:var(--color-amber);font-weight:600">En attente de validation agence</span>`:''}
       ${inv.status==='validated'?`<span style="font-size:12px;color:#6C63FF;font-weight:600">Validée — virement en cours</span>`:''}
       ${inv.status==='paid'?`<span style="font-size:12px;color:var(--color-green);font-weight:600">Payée${!inv.indySource?' · '+fmtEur(net)+' nets reçus':''}</span>`:''}
-      <button class="icon-btn btn-sm" style="margin-left:auto" onclick="printTalentInvoicePdf('${inv.id}')">${ic('download',12)}</button>
+      <div style="margin-left:auto;display:flex;gap:6px">
+        <button class="btn btn-ghost btn-sm" onclick="viewTalentInvoice('${inv.id}')">${ic('eye',12)} Voir</button>
+        <button class="btn btn-ghost btn-sm" onclick="downloadTalentInvoice('${inv.id}')">${ic('download',12)} Télécharger</button>
+      </div>
     </div>
   </div>`;
 }
